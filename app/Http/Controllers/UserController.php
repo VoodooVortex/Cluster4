@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class UserController extends Controller
 {
@@ -48,7 +47,8 @@ class UserController extends Controller
 
 
 
-    function create(Request $req){
+    function create(Request $req)
+    {
         $muser = new User();
         $muser->fname = $req->input('fname');
         $muser->lname = $req->input('lname');
@@ -76,7 +76,7 @@ class UserController extends Controller
         $muser->save();
         return redirect('/users');
     }
-    
+
     public function index()
     {
         $users = User::all(); // ดึงข้อมูลผู้ใช้ทั้งหมด

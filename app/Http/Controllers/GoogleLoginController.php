@@ -8,19 +8,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 
+//Pakkapon Chomcheoy 66160080
 class GoogleLoginController extends Controller
 {
-
-
     function redirectToGoogle(Request $req)
     {
+        //ไปที่หน้า login ของ google
         return Socialite::driver('google')->with(['prompt' => 'consent'])->redirect();
     }
 
-
+    //เมื่อ login สำเร็จ จะส่งกลับมาที่ callback นี้
     function googleCallback(Request $req)
     {
-
         try {
             if (Session::has('google_user')) {
                 $user = Session::get('google_user');
@@ -38,6 +37,10 @@ class GoogleLoginController extends Controller
 
         if ($userCheck) {
             Auth::login($userCheck, true);
+            if (!$userCheck->us_image) {
+                $userCheck->us_image = $user->avatar;
+                $userCheck->save();
+            }
             return view('home', ['user' => $userCheck]);
         } else {
             Session::forget('google_user');
