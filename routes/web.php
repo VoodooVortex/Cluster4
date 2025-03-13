@@ -4,6 +4,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function () {
     return view('addUser');
 });
@@ -26,3 +27,5 @@ Route::get('/login', function () {
 Route::get('auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('redirect.google');
 
 Route::get('auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
+Route::get('/manageuser',[UserController::class, 'index']);
+
