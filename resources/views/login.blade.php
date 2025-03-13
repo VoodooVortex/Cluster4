@@ -1,19 +1,5 @@
 @extends('layouts.default')
 @section('content')
-    <!DOCTYPE html>
-    <html lang="en">
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My Map</title>
-
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    </head>
 
     <body class="sm:flex items-center justify-center sm:min-h-screen bg-gray-100 sm:px-4">
         <div class="w-full md:h-[586px] h-screen sm:max-w-sm bg-white p-6 sm:p-8 sm:rounded-2xl shadow-lg">
