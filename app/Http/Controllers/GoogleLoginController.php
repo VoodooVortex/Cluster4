@@ -32,16 +32,15 @@ class GoogleLoginController extends Controller
         }
 
         // return response()->json($user);
-
         $userCheck = User::where('us_email', $user->email)->first();
 
         if ($userCheck) {
-            Auth::login($userCheck, true);
+            Auth::login($userCheck);
             if (!$userCheck->us_image) {
                 $userCheck->us_image = $user->avatar;
                 $userCheck->save();
             }
-            return view('home', ['user' => $userCheck]);
+            return view('edit', ['user' => $userCheck]);
         } else {
             Session::forget('google_user');
             Session::flush();
