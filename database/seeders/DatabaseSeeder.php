@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
                 'us_fname' => 'Nontaphat',
                 'us_lname' => 'Naja',
                 'us_email' => '66160104@go.buu.ac.th',
-                'us_role' => 'SalesSupervisor',
+                'us_role' => 'Sales Supervisor',
             ],
         ]);
     }

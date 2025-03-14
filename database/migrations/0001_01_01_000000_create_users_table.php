@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('us_fname');
             $table->string('us_lname');
             $table->string('us_email')->unique();
-            $table->enum('us_role', ['Sales', 'SalesSupervisor', 'CEO']);
+            $table->enum('us_role', ['Sales', 'Sales Supervisor', 'CEO']);
             $table->integer('us_head')->nullable();
             $table->string('us_image')->nullable();
             $table->timestamp('email_verified_at')->nullable();
