@@ -4,49 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class UserController extends Controller
 {
-    //
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    function index()
+    {
+        $users = User::all(); // ดึงข้อมูลผู้ใช้ทั้งหมด
+        return view('manageUser', compact('users'));
+    }
 
     function create(Request $req){
         $muser = new User();
@@ -76,10 +41,8 @@ class UserController extends Controller
         $muser->save();
         return redirect('/users');
     }
-    
-    public function index()
+    function addUser()
     {
-        $users = User::all(); // ดึงข้อมูลผู้ใช้ทั้งหมด
-        return view('manageUser', compact('users'));
+        return view('addUser');
     }
 }
