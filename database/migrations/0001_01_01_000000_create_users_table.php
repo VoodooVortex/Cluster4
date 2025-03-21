@@ -17,12 +17,16 @@ return new class extends Migration
             $table->string('us_lname');
             $table->string('us_email')->unique();
             $table->enum('us_role', ['Sales', 'Sales Supervisor', 'CEO']);
-            $table->integer('us_head')->nullable();
             $table->string('us_image')->nullable();
+            $table->unsignedBigInteger('us_head')->nullable()->index();
+
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->missingnullable()->nullable();
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
+            $table->foreign('us_head')->references('us_id')->on('users')->onDelete('set null');
+            $table->engine = 'InnoDB';
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

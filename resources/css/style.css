@@ -1,0 +1,18 @@
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-ios {
+    -webkit-overflow-scrolling: touch;
+}
+
+.scroll-container::after {
+    content: "";
+    display: block;
+    height: 80px;
+}
