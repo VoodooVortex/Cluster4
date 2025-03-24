@@ -23,6 +23,7 @@ class Branch extends Model
         'br_district',
         'br_province',
         'br_postalcode',
+        'br_us_id',
     ];
 
     public function manager()

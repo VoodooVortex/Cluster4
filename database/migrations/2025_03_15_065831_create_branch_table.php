@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('br_phone', 20);
             $table->integer('br_scope');
             $table->geometry('br_longlat');
-            $table->string('br_address', 255)->nullable();
+            $table->string('br_address', 255);
             $table->unsignedBigInteger('br_us_id')->nullable()->index();
             $table->string('br_subdistrict', 45);
             $table->string('br_district', 45);
