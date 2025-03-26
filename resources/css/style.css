@@ -60,14 +60,16 @@
     justify-content: center;
 }
 
-.translate-y-full {
-    transform: translateY(100%);
+#bottomDrawer.show {
+    opacity: 1;
+    pointer-events: auto;
 }
 
-.translate-y-1\/2 {
-    transform: translateY(50%);
+#drawerContent.fullscreen {
+    height: 100vh !important;
+    border-radius: 0 !important;
 }
 
-.translate-y-0 {
-    transform: translateY(0%);
+#drawerContent.halfscreen {
+    height: 35vh !important;
 }

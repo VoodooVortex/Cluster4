@@ -58,7 +58,7 @@ class MapLocation extends Component
                         ->orWhere('us_id', $user->us_id);
                 });
             })
-            ->with('image')
+            ->with(['image', 'manager'])
             ->select(
                 'br_id',
                 'br_code',
@@ -72,6 +72,7 @@ class MapLocation extends Component
                 'br_district',
                 'br_province',
                 'br_postalcode',
+                'br_us_id',
             )
             ->get();
 
@@ -79,6 +80,7 @@ class MapLocation extends Component
         foreach ($locations as $location) {
             $address = $location->br_address . ' ' . $location->br_subdistrict . ' ' . $location->br_district . ' ' . $location->br_province . ' ' . $location->br_postalcode;
             $images = $location->image->pluck('i_pathUrl');
+            $manager = $location->manager?->us_fname . ' ' . $location->manager?->us_lname;
             $arrayLocation[] = [
                 'type' => 'Feature',
                 'geometry' => [
@@ -92,6 +94,12 @@ class MapLocation extends Component
                     'address' => $address,
                     'scope' => (float)$location->br_scope,
                     'image' => $images->values()->toArray(),
+                    'phone' => $location->br_phone,
+                    'manager_id' => $location->manager?->us_id,
+                    'manager_name' => $manager,
+                    'manager_image' => $location->manager?->us_image,
+                    'manager_role' => $location->manager?->us_role,
+                    'manager_email' => $location->manager?->us_email,
                 ],
             ];
         }
@@ -168,7 +176,7 @@ class MapLocation extends Component
                     foreach ($this->imageBranch as $image) {
                         $imageName = time() . '_' . $image->getClientOriginalName();
                         $image->storeAs('images_branch', $imageName, 'public');
-                        $imageUrl = Storage::url('images_branch/' . $imageName);
+                        $imageUrl = Storage::url('/app/public/images_branch/' . $imageName);
                         $branch->image()->create([
                             'i_pathUrl' => $imageUrl,
                         ]);

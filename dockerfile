@@ -39,6 +39,7 @@ RUN chown -R www-data:www-data /var/www/html \
 # เขียนโค้ดตรงนี้
 RUN composer install --no-dev --optimize-autoloader
 
+RUN php artisan storage:link
 
 # เปิดพอร์ต 80 เพื่อให้ container สามารถรับคำขอ HTTP ได้
 # เขียนโค้ดตรงนี้

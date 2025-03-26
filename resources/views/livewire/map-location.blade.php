@@ -1,8 +1,6 @@
 <div>
     <div id='map' wire:ignore style="width: 100vw; min-height: 100dvh"></div>
-
     {{-- add branch form --}}
-
     <div wire:ignore.self id="locationForm"
         class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
         <div class="w-full h-full bg-white p-6 px-4 rounded-lg shadow-lg overflow-y-auto">
@@ -16,6 +14,7 @@
             {{-- <div>
                 <button class="px-4 py-2 mt-4 rounded-md" onclick="_testAlert()">Test Alert</button>
             </div> --}}
+
             {{-- tab --}}
             <div class="border rounded-lg shadow my-4">
                 <div class="grid grid-cols-2">
@@ -28,9 +27,10 @@
                         อื่นๆ
                     </button>
                 </div>
+
                 {{-- tab content --}}{{-- tab branch --}}
                 <form id="branchTab" wire:submit.prevent="validateBranchForm"
-                    class="tab-content pb-5 pt-5 px-7 scrollbar-ios max-h-[80vh] overflow-y-auto overscroll-contain scrollbar-hidden bg-white rounded-b-lg scroll-container">
+                    class="tab-content pb-5 pt-5 px-7 scrollbar-ios max-h-[80vh] overflow-y-auto overscroll-contain scrollbar-hidden scroll-container bg-white rounded-b-lg">
                     <label class="block mb-1">ชื่อสาขา <span class="text-red-500">*</span></label>
                     <input type="text" wire:model="nameBranch" class="border p-2 w-full rounded-md"
                         placeholder="กรุณาระบุชื่อสาขา">
@@ -117,6 +117,7 @@
                             @enderror
                         </label>
                     </div>
+
                     <div class="grid grid-cols-3 gap-2 mt-4">
                         <span class="text-left">ลองจิจูด</span><span
                             class="text-left">{{ $long }}</span><span></span>
@@ -158,6 +159,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="mt-4">
                         <span><i class="fa-solid fa-house" style="color: #4D55A0;"></i></span><span
                             class="ml-2">สถานที่ใกล้เคียง</span>
@@ -171,10 +173,115 @@
                 {{-- tab other --}}
             </div>
         </div>
-
     </div>
 
+    {{-- Bottom Sheet Madal Branch --}}
     <div id="bottomDrawer"
+        class="fixed inset-0 z-50 flex flex-col justify-end bg-black/20 backdrop-blur-none opacity-0 pointer-events-none transition-opacity duration-300">
+
+        <div id="drawerContent"
+            class="relative bg-white w-full mx-auto rounded-t-2xl shadow-lg transition-all duration-300 overflow-hidden max-h-screen"
+            style="height: 35vh;">
+            <div class="flex justify-center items-center ">
+                <div id="drawerHandle" class="relative w-full py-2 cursor-pointer flex justify-center">
+                    <div class="w-14 h-1.5 bg-gray-400 rounded-full"></div>
+                </div>
+            </div>
+            <div class="text-white border-[#4D55A0] text-2xl font-extrabold py-4 rounded-xl flex items-center w-full"
+                style="background-color: #4D55A0;">
+                <button id="backBtnForm"><span class="mx-5"></span></button>
+                <span>เพิ่มสถานที่</span>
+            </div>
+            {{-- Tab Header --}}
+            <div class="flex border-b mx-3 my-4">
+                <button
+                    class="w-1/2 py-2 text-center font-semibold  border-b-2 text-[#4D55A0] border-[#4D55A0]">ข้อมูล</button>
+                <button class="w-1/2 py-2 text-center font-semibold text-black">สถานที่ใกล้เคียง</button>
+            </div>
+
+            <div class="overflow-y-auto max-h-[calc(100dvh-4rem)] scrollbar-hidden px-4 pb-6 ">
+                {{-- Chart + Summary --}}
+                <div class="p-4 space-y-4">
+                    <h2 class="text-lg font-bold">ยอดขายในปีนี้</h2>
+                    {{-- Mock Chart --}}
+                    <img src="https://quickchart.io/chart?c={type:'bar',data:{labels:['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'],datasets:[{label:'ยอดขายของสาขา',data:[1000,4000,9000,12000,11000,8000,15000,10000,9000,8500,7000,6000],backgroundColor:'#4F46E5'},{label:'ค่าเฉลี่ยฐาน',type:'line',data:[800,3000,7000,9000,10000,9500,13000,8500,8800,7500,6500,6200],borderColor:'#EF4444'}]}}"
+                        alt="chart" class="rounded-lg">
+
+                    {{-- Filter Tabs --}}
+                    <div class="flex justify-center gap-2 mt-2">
+                        <button class="px-4 py-1 border rounded-full text-sm text-gray-600">3 เดือน</button>
+                        <button class="px-4 py-1 border rounded-full text-sm text-gray-600">6 เดือน</button>
+                        <button class="px-4 py-1 border rounded-full text-sm text-white bg-indigo-600">12
+                            เดือน</button>
+                    </div>
+
+                    {{-- Summary Card --}}
+                    <div class="bg-white shadow-md border p-4 rounded-xl flex justify-between items-center mt-4">
+                        <div>
+                            <p class="mb-2 text-gray-500">จำนวนออเดอร์ทั้งหมดของปีนี้</p>
+                            <p class="text-xl font-bold text-black">12,000 ชิ้น</p>
+                        </div>
+                        <div class="">
+                            <i class="fa-solid fa-box fa-2xl" style="color: #4D55A0;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center my-4">
+                    <div class="flex-grow h-0.5 bg-gray-300"></div>
+                    <span class="px-3 text-gray-500 text-sm">ผู้ดูแล</span>
+                    <div class="flex-grow h-0.5 bg-gray-300"></div>
+                </div>
+
+                {{-- Manager Info --}}
+                <div class="flex justify-center items-center gap-4">
+                    <img id="manager-image" class="w-12 h-12 rounded-full" />
+                    <div>
+                        <p id="manager-name" class="text-black"></p>
+                    </div>
+                </div>
+
+                <div class="flex items-center my-4">
+                    <div class="flex-grow h-0.5 bg-gray-300"></div>
+                </div>
+                <div class="px-4 py-4 space-y-3">
+
+                    <p id="code-branch" class="font-bold text-lg text-black"></p>
+                    <div class="flex items-start text-sm text-gray-800 gap-4">
+                        <span><i class="fa-solid fa-location-dot" style="color: #4D55A0;"></i></span>
+                        <p id="address-branch"></p>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm text-gray-800">
+                        <span><i class="fa-solid fa-phone" style="color: #4D55A0;"></i></span>
+                        <p id="phone-branch"></p>
+                    </div>
+                    <div id="latlong-branch" class="text-sm text-blue-600 mt-2"></div>
+
+                    <div class="flex justify-between mt-4">
+                        <button class="w-1/2 bg-gray-200 text-black py-2 rounded-lg font-semibold">ลบ</button>
+                        <button
+                            class="w-1/2 ml-2 bg-indigo-600 text-white py-2 rounded-lg font-semibold">แก้ไข</button>
+                    </div>
+                </div>
+                {{-- Nearby Places --}}
+                {{-- <div class="border-t mt-2 px-4 pb-6">
+                    <div class="space-y-3">
+                        @foreach ([['name' => 'มหาวิทยาลัยบูรพา', 'image' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Burapha_University_logo.svg/2048px-Burapha_University_logo.svg.png', 'distance' => '1'], ['name' => 'สถาบันวิทยาศาสตร์ทางทะเล', 'image' => 'https://www.bims.buu.ac.th/marine/wp-content/uploads/2020/07/logo-1-1.png', 'distance' => '1.2'], ['name' => 'แหลมทอง บางแสน', 'image' => 'https://media.timeout.com/images/105240238/image.jpg', 'distance' => '1.5'], ['name' => 'หาดบางแสน', 'image' => 'https://www.paiduaykan.com/travel/wp-content/uploads/2019/04/3-1.jpg', 'distance' => '1.7']] as $place)
+                            <div class="bg-white rounded-xl shadow flex items-center overflow-hidden">
+                                <img src="{{ $place['image'] }}" class="w-24 h-24 object-cover" />
+                                <div class="p-3">
+                                    <p class="font-semibold text-black truncate w-52">{{ $place['name'] }}</p>
+                                    <p class="text-sm text-gray-500">ระยะทาง {{ $place['distance'] }} กิโลเมตร</p>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div> --}}
+            </div>
+
+        </div>
+    </div>
+    {{-- <div id="bottomDrawer"
         class="fixed bottom-0 left-0 right-0 z-50 w-full max-h-[90vh] h-[50vh] translate-y-full overflow-y-auto bg-white transition-transform duration-300 rounded-t-2xl shadow-lg">
         <div class="w-12 h-1 bg-gray-400 mx-auto rounded my-2 cursor-pointer" id="drawerHandle"></div>
         <div class="px-4 pb-6">
@@ -183,8 +290,11 @@
             <div class="flex flex-wrap gap-2 mt-4" id="drawerImages">
                 <!-- Images -->
             </div>
+            <h2 class="text-xl font-semibold" id="drawerManager">ชื่อผู้ดูแล</h2>
+            <p class="text-gray-600" id="drawerManagerEmail">อีเมล</p>
+            <h2 class="text-xl font-semibold" id="drawerManagerPhone">เบอร์โทรศัพท์</h2>
         </div>
-    </div>
+    </div> --}}
 
 </div>
 
@@ -311,7 +421,7 @@
     })
 </script>
 
-{{-- Tab Script --}}
+{{-- Add Location Tab --}}
 <script>
     function _openTab(event, tabId) {
         $('.tab-content').each(() => {
@@ -396,51 +506,87 @@
     });
 </script>
 
+{{-- Bottom Sheet Madal Branch --}}
 <script>
-    const drawer = $('#bottomDrawer');
-    const drawerHandle = $('#drawerHandle');
-    let startY = 0;
-    let currentY = 0;
-    let isDragging = false;
+    const drawer = document.getElementById("bottomDrawer");
+    const drawerContent = document.getElementById("drawerContent");
+    const drawerHandle = document.getElementById("drawerHandle");
 
-    function _openDrawer(properties) {
-        drawer.removeClass('translate-y-full').addClass('translate-y-1/2');
+    let isDragging = false,
+        startY, startHeight;
 
-        $('#drawerTitle').text(properties.name);
-        $('#drawerAddress').text(properties.address);
+    function _openDrawer(data, latLong) {
+        drawer.classList.add("show");
+        drawerContent.classList.remove("fullscreen");
+        drawerContent.style.height = "35vh";
+        document.body.style.overflow = "hidden";
 
-        const images = Array.isArray(properties.image) ? properties.image : JSON.parse(properties.image);
-        const imageHtml = images.map(img => `
-            <img src="${img}" class="w-24 h-24 object-cover rounded" />`).join('');
-        $('#drawerImages').html(imageHtml);
+        // Set data
+        $('#manager-name').html(
+            `${data.manager_name} <span id="manager-role" class="text-black">( ${data.manager_role} )</span>`);
+        $('#manager-email').text(data.manager_email);
+        $('#manager-image').attr('src', data.manager_image + '?t=' + Date.now());
+        $('#code-branch').html(`รหัสสาขา : <span class="text-black font-bold"> ${data.code} </span>`);
+        $('#address-branch').text(data.address);
+        $('#phone-branch').text(data.phone);
+        $('#latlong-branch').html(
+            `(${latLong[1].toFixed(5)}, ${latLong[0].toFixed(5)}) <i class="ml-1 fa-solid fa-copy" style="color: #4D55A0;"></i>`
+        );
+
+
+        const images = Array.isArray(data.image) ? data.image : JSON.parse(data.image);
+        const imageHtml = images.map(img => `<img src="${img}" class="w-24 h-24 object-cover rounded" />`).join(
+            '');
+        document.getElementById("drawerImages").innerHTML = imageHtml;
     }
-    $(document).ready(function() {
-        // Gesture: ลาก modal
-        drawerHandle.on('touchstart', (e) => {
-            isDragging = true;
-            startY = e.originalEvent.touches[0].clientY;
-        });
 
-        drawerHandle.on('touchmove', (e) => {
-            if (!isDragging) return;
-            currentY = e.originalEvent.touches[0].clientY;
-            const diff = currentY - startY;
+    function _closeDrawer() {
+        drawer.classList.remove("show");
+        document.body.style.overflow = "auto";
+    }
 
-            if (diff > 50) {
-                // ลากลง → ปิด
-                drawer.classList.add('translate-y-full');
-                drawer.classList.remove('translate-y-1/2');
-                drawer.classList.remove('translate-y-0');
-            } else if (diff < -50) {
-                // ลากขึ้น → เต็มจอ
-                drawer.classList.add('translate-y-0');
-                drawer.classList.remove('translate-y-1/2');
-            }
-        });
+    function updateDrawerHeight(height) {
+        drawerContent.style.height = `${height}vh`;
+        drawerContent.classList.toggle("fullscreen", height >= 100);
+    }
 
-        drawerHandle.on('touchend', () => {
-            isDragging = false;
-        });
+    const dragStart = (e) => {
+        isDragging = true;
+        startY = e.pageY || e.touches?.[0].pageY;
+        startHeight = parseFloat(drawerContent.style.height);
+        drawerContent.style.transition = "none";
+    };
+
+    const dragging = (e) => {
+        if (!isDragging) return;
+        const delta = startY - (e.pageY || e.touches?.[0].pageY);
+        const newHeight = startHeight + (delta / window.innerHeight * 100);
+        updateDrawerHeight(newHeight);
+    };
+
+    const dragStop = () => {
+        isDragging = false;
+        drawerContent.style.transition = "";
+        const currentHeight = parseFloat(drawerContent.style.height);
+
+        if (currentHeight < 25) {
+            _closeDrawer();
+        } else if (currentHeight > 50) {
+            updateDrawerHeight(100);
+        } else {
+            updateDrawerHeight(35);
+        }
+    };
+
+    drawerHandle.addEventListener("mousedown", dragStart);
+    drawerHandle.addEventListener("touchstart", dragStart);
+    document.addEventListener("mousemove", dragging);
+    document.addEventListener("touchmove", dragging);
+    document.addEventListener("mouseup", dragStop);
+    document.addEventListener("touchend", dragStop);
+
+    drawer.addEventListener("click", (e) => {
+        if (e.target === drawer) _closeDrawer(); // click background
     });
 </script>
 
@@ -515,7 +661,7 @@
                 if (marker) {
                     marker.remove();
                 }
-                _openDrawer(feature.properties);
+                _openDrawer(feature.properties, feature.geometry.coordinates);
                 return;
             }
 
@@ -539,7 +685,7 @@
                             <span class="text-left" id="long">${lngLat.lng.toFixed(5)}</span>
                         </div>
                     </div>
-                    <hr class="my-2 ">
+                    <hr class="my-2">
                     <div id="addLocationBtn" class="flex flex-row justify-center">
                         <span class="mr-2"><i class=" fa-solid fa-circle-plus" style="color: #3b82f6;"></i></span>
                         <span class="text-blue-500">เพิ่มสถานที่</span>
@@ -594,8 +740,15 @@
                     name,
                     address,
                     scope,
-                    image
+                    image,
+                    phone,
+                    manager_id,
+                    manager_name,
+                    manager_image,
+                    manager_role,
+                    manager_email,
                 } = properties;
+
                 const center = geometry.coordinates;
 
                 console.log(image);
@@ -611,7 +764,12 @@
                     name,
                     address,
                     scope,
-                    image
+                    image,
+                    phone,
+                    manager_id,
+                    manager_name,
+                    manager_role,
+                    manager_email,
                 };
 
                 circleFeatures.push(circle);
