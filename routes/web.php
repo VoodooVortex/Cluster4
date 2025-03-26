@@ -12,11 +12,11 @@ Route::get('/', [UserController::class, 'index']);
 
 Route::get('/manage-user', [UserController::class, 'index']);
 
-Route::get('/add-user', [UserController::class, 'addUser']);
+Route::get('/add-user', [UserController::class, 'add_user']);
 
 Route::delete('/delete-user', [UserController::class, '']);
 
-Route::get('/edit-user/{id}', [UserController::class, 'edit']);
+Route::get('/edit-user/{id}', [UserController::class, 'edit_user']);
 
 Route::put('/edit-user', [UserController::class, 'edit_action']);
 

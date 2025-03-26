@@ -24,7 +24,7 @@ class UserController extends Controller
         return redirect('/users');
     }
 
-    function edit($id)
+    function edit_user($id)
     {
         $user = User::find($id);
         $data = $user;
@@ -45,7 +45,7 @@ class UserController extends Controller
     }
 
 
-    function addUser()
+    function add_user()
     {
         return view('addUser');
     }
