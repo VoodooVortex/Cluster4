@@ -20,6 +20,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+  
     protected $primaryKey = 'us_id';
     public $timestamps = true;
     protected $fillable = [

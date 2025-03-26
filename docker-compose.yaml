@@ -6,4 +6,3 @@ services:
       - "1304:80"
     env_file:
       - .env
-

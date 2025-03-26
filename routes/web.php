@@ -7,20 +7,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
-Route::get('/', function () {
-    return view('addUser');
-});
 
+Route::get('/', [UserController::class, 'index']);
 
-Route::get('/manage-user', [UserController::class, '']);
+Route::get('/manage-user', [UserController::class, 'index']);
 
-Route::get('/add-user', [UserController::class, '']);
-
-Route::post('/add-user', [UserController::class, '']);
+Route::get('/add-user', [UserController::class, 'addUser']);
 
 Route::delete('/delete-user', [UserController::class, '']);
 
-Route::put('/edit-user', [UserController::class, '']);
+Route::get('/edit-user/{id}', [UserController::class, 'edit']);
+
+Route::put('/edit-user', [UserController::class, 'edit_action']);
 
 Route::get('/login', function () {
     return view('login');
@@ -37,8 +35,6 @@ Route::get('/logout', function () {
 Route::get('/map', MapLocation::class)->name('map');
 
 
-
 Route::get('auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('redirect.google');
 
 Route::get('auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
-Route::get('/manageuser', [UserController::class, 'index']);

@@ -7,45 +7,11 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    //
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    function index()
+    {
+        $users = User::all(); // ดึงข้อมูลผู้ใช้ทั้งหมด
+        return view('manageUser', compact('users'));
+    }
 
     function create(Request $req)
     {
@@ -58,28 +24,29 @@ class UserController extends Controller
         return redirect('/users');
     }
 
-
     function edit($id)
     {
         $user = User::find($id);
-        $data['user'] = $user;
-        return view('/user.edit', $data);
+        $data = $user;
+        $allUser = User::all();
+        return view('edit', ['users' => $data], compact('allUser'));
     }
+
     function edit_action(Request $req)
     {
         $muser = User::find($req->id);
-        $muser->fname = $req->fname;
-        $muser->lname = $req->lname;
-        $muser->role = $req->role;
-        $muser->saleSupervisor = $req->esaleSupervisor;
-        $muser->email = $req->email;
+        $muser->us_fname = $req->fname;
+        $muser->us_lname = $req->lname;
+        $muser->us_role = $req->role;
+        $muser->us_head = $req->head;
+        $muser->us_email = $req->email;
         $muser->save();
-        return redirect('/users');
+        return redirect('/manage-user');
     }
 
-    public function index()
+
+    function addUser()
     {
-        $users = User::all(); // ดึงข้อมูลผู้ใช้ทั้งหมด
-        return view('manageUser', compact('users'));
+        return view('addUser');
     }
 }
