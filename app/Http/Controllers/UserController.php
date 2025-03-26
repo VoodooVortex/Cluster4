@@ -13,7 +13,8 @@ class UserController extends Controller
         return view('manageUser', compact('users'));
     }
 
-    function create(Request $req){
+    function create(Request $req)
+    {
         $muser = new User();
         $muser->fname = $req->input('fname');
         $muser->lname = $req->input('lname');
@@ -42,6 +43,7 @@ class UserController extends Controller
         $muser->save();
         return redirect('/manage-user');
     }
+
 
     function addUser()
     {
