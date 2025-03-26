@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -11,6 +12,8 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    use SoftDeletes;
+
 
     /**
      * The attributes that are mass assignable.
@@ -18,11 +21,16 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $primaryKey = 'us_id';
+    public $timestamps = true;
     protected $fillable = [
         'us_fname',
         'us_lname',
         'us_email',
         'us_role',
+    ];
+
+    protected $casts = [
+        'us_role' => 'string',
     ];
 
     /**
@@ -46,5 +54,30 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function head()
+    {
+        return $this->belongsTo(User::class, 'us_head', 'us_id')
+            ->where('us_role', 'Sales Supervisor');
+    }
+    public function salesTeam()
+    {
+        return $this->hasMany(User::class, 'us_head', 'us_id')
+            ->where('us_role', 'Sales');
+    }
+
+    public function branch()
+    {
+        return $this->hasMany(Branch::class, 'br_us_id', 'us_id');
+    }
+
+    public function interestLocation()
+    {
+        return $this->hasMany(InterestLocation::class, 'il_us_id', 'us_id');
+    }
+
+    public function order()
+    {
+        return $this->hasMany(Order::class, 'od_us_id', 'us_id');
     }
 }

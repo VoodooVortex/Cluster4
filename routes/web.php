@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
+use App\Livewire\MapLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -31,6 +32,11 @@ Route::get('/logout', function () {
     Auth::logout();
     return Redirect('/login');
 });
+
+
+Route::get('/map', MapLocation::class)->name('map');
+
+
 
 Route::get('auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('redirect.google');
 
