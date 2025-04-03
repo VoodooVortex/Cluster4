@@ -40,7 +40,7 @@ class MapLocation extends Component
     public function generateCodeBranch()
     {
         $zipcode = substr($this->zipcodeBranch ?? '', 0, 2);
-        $this->codeBranch = $zipcode . '-' . str_pad(Branch::count() + 1, 4, '0', STR_PAD_LEFT);
+        $this->codeBranch = $zipcode . '-' . str_pad(Branch::withTrashed()->count() + 1, 4, '0', STR_PAD_LEFT);
     }
 
     public function loadBranchLocation()
@@ -124,7 +124,6 @@ class MapLocation extends Component
             'provinceBranch' => 'required',
             'amphoeBranch' => 'required',
             'districtBranch' => 'required',
-            'imageBranch' => 'required',
             'imageBranch.*' => 'image|max:2048',
         ], [
             'nameBranch.required' => 'กรุณากรอกชื่อสาขา',
@@ -138,7 +137,6 @@ class MapLocation extends Component
             'provinceBranch.required' => 'กรุณากรอกจังหวัด',
             'amphoeBranch.required' => 'กรุณากรอกอำเภอ',
             'districtBranch.required' => 'กรุณากรอกตำบล',
-            'imageBranch.required' => 'กรุณาอัปโหลดรูปภาพ',
             'imageBranch.image' => 'ไฟล์ที่อัปโหลดต้องเป็นรูปภาพ',
             'imageBranch.max' => 'ขนาดไฟล์รูปภาพต้องไม่เกิน 2MB',
             'imageBranch.*.image' => 'ไฟล์ที่อัปโหลดต้องเป็นรูปภาพ',
@@ -195,7 +193,24 @@ class MapLocation extends Component
         }
     }
 
-
+    #[On('delete-branch')]
+    public function deleteBranch($id)
+    {
+        try {
+            DB::transaction(function () use ($id) {
+                $branch = Branch::findOrFail($id);
+                $branch->image()->delete();
+                $branch->delete();
+            });
+            $this->loadBranchLocation();
+            $this->dispatch('deleteBranchLocation', $this->geoJsonBranch);
+            $this->dispatch('branch-deleted-alert');
+        } catch (\Exception $e) {
+            // dd($e);
+            $this->dispatch('error', 'เกิดข้อผิดพลาดในการลบสาขา กรุณาลองใหม่อีกครั้ง');
+            return;
+        }
+    }
 
     #[On('updateZipBranch')]
     public function setZipcodeBranch($zipcode = null)
