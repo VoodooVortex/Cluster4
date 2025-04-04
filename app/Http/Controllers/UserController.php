@@ -29,7 +29,7 @@ class UserController extends Controller
         $user = User::find($id);
         $data = $user;
         $allUser = User::all();
-        return view('editUser', ['users' => $data], compact('allUser'));
+        return view('edit', ['users' => $data], compact('allUser'));
     }
 
     function edit_action(Request $req)
@@ -44,9 +44,59 @@ class UserController extends Controller
         return redirect('/manage-user');
     }
 
-
     function add_user()
     {
         return view('addUser');
     }
+
+    /* --}}
+    @title : ทำ Contorller ลบบัญชี
+    @author : Yothin Sisaitham 66160088
+    @create date : 04/04/2568
+    --}} */
+    function delete_user (Request $req){
+
+    if ($req->has('id')) { // ตรวจว่ามี ID ถูกส่งมาไหม
+        $ids = $req->input('id'); // รับค่า ID
+
+        // เช็คว่าเป็น array หรือไม่ ** checkbox ที่ให้กดได้หลายคน
+        if (is_array($ids)) {
+            // ลบแบบ batch ในกรณีที่มีหลาย ID
+            $chunkSize = 500;  // กำหนดขนาด batch ที่ต้องการ
+            foreach (array_chunk($ids, $chunkSize) as $chunk) {
+                User::whereIn('id', $chunk)->delete();
+            }
+        } else {
+            // ลบผู้ใช้คนเดียว
+            $muser = User::find($ids);
+            if ($muser) {
+                $muser->delete();
+            } else {
+                return view('manageUser', ['message' => 'ไม่พบผู้ใช้ที่ต้องการลบ']);
+                //return response()->noContent();
+            }
+        }
+        return redirect(to: 'manageUser');
+    }
+        // ถ้าไม่มี ID → แสดงรายการผู้ใช้ทั้งหมด
+        $users = User::all();
+        return view('manageUser', compact('users'));
+    }
+    /*
+    // --------------- Not Use ---------------
+    // Ver.1 - เลือกหลายรายการไม่ได้
+
+     function delete_user(Request $req){
+    if ($req->has('id')) {
+        $muser = User::find($req->id); // ถ้าค้นหาด้วยค่า ID มา → ลบผู้ใช้นั้น
+        if ($muser) {
+            $muser->delete();
+            return redirect('/manage-user'); // กลับไปหน้ารายการปกติ
+        }
+        return response()->noContent(); // ถ้าไม่เจอ ID
+    }
+    // ถ้าไม่มี ID → แสดงรายการผู้ใช้ทั้งหมด
+    $users = User::all();
+    return view('manage-user', compact('users'));
+    } */
 }
