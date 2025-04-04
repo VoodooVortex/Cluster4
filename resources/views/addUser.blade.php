@@ -1,29 +1,29 @@
 @extends('layouts.default')
 @section('content')
-    <div class="pt-16 max-w-lg mx-auto p-4 bg-white min-h-screen w-full">
-        <div class="mb-4 px-4">
-            <a href="{{ url('/manage-user') }}" 
-               class="text-white border-[#4D55A0] text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
-               style="background-color: #4D55A0;">
+    <div class="pt-16 h-screen mx-auto p-4 bg-white min-h-screen w-full" >
+
+        <div class="mb-4 ">
+            <a href="{{ url('/manage-user') }}"
+                class="text-white border-[#4D55A0] text-2xl font-extrabold py-3  rounded-2xl flex items-center w-full"
+                style="background-color: #4D55A0;">
                 <i class="fa-solid fa-arrow-left mx-3 fa-l"></i>
-                แก้ไขข้อมูล
+                เพิ่มบัญชีผู้ใช้
             </a>
         </div>
 
-        <div class="flex items-center justify-center h-auto bg-gray-100">
+        <div class="flex items-center justify-center h-auto bg-gray-100 ">
             <form action="{{ url('/add-user') }}" method="post" id="editForm"
-            class="w-full max-w-3xl bg-white p-6 rounded-lg shadow-lg">
-            @csrf
+                class="w-full h-fit max-w-none bg-white p-6 rounded-lg shadow-lg">
+                @csrf
                 <div class="border-b border-gray-900/10 pb-12">
-                    <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div class="mt-6 grid grid-cols-1 gap-6">
                         <div>
                             <label for="username" class="block text-sm font-medium text-gray-900">
                                 ชื่อ <span class="text-red-500">*</span>
                             </label>
                             <input type="text" name="username" id="username" placeholder="กรุณาระบุชื่อ"
                                 class="mt-2 block w-full rounded-md border border-slate-200 p-2 text-gray-900 outline-indigo-600">
-                        </div>
-                        <div>
+
                             <label for="lastname" class="block text-sm font-medium text-gray-900">
                                 นามสกุล <span class="text-red-500">*</span>
                             </label>
@@ -50,14 +50,16 @@
                                 <label for="ceo" class="text-sm font-medium text-gray-900">CEO</label>
                             </div>
                         </div>
-                        
-                        <div class="mt-6">
+
+                        <div class="mt-6" id="headContainer">
                             <label for="head" class="block text-sm font-medium text-gray-900">หัวหน้างาน<span
-                                style="color: red"> *</span></label>
-                            <select id="head" name="head" class="mt-2 block w-full rounded-md border-2 border-gray-300 p-2 text-gray-900 outline-indigo-600">
+                                    style="color: red"> *</span></label>
+                            <select id="head" name="head"
+                                class="mt-2 block w-full rounded-md border-2 border-gray-300 p-2 text-gray-900 outline-indigo-600 ">
                                 @foreach ($allUser as $muser)
-                                    @if ( $muser->us_role == "Sales Supervisor")
-                                        <option value="{{ $muser->us_id }}">{{ $muser->us_fname }} {{ $muser->us_lname }}</option>
+                                    @if ($muser->us_role == 'Sales Supervisor')
+                                        <option value="{{ $muser->us_id }}">{{ $muser->us_fname }} {{ $muser->us_lname }}
+                                        </option>
                                     @endif
                                 @endforeach
                             </select>
@@ -70,69 +72,95 @@
                                 class="mt-2 block w-full rounded-md border border-slate-200 p-2 text-gray-900 outline-indigo-600">
                         </div>
                     </fieldset>
+
+
+
+
                     <div class="mt-6 flex items-center justify-between">
-                        <!-- ปุ่มยกเลิก -->
+
                         <button type="button" onclick="window.location.href='{{ url('/manage-user') }}'"
                             class="w-[120px] bg-white text-black border border-black px-6 py-2 rounded-lg font-bold text-base">
                             ยกเลิก
                         </button>
-                        <!-- ปุ่มยืนยัน -->
-                        <button type="button" onclick="confirmAddUser()"
+
+                        <button onclick="confirmAddUser()"
                             class="w-[120px] bg-[#4D55A0] text-white border border-transparent px-6 py-2 rounded-lg font-bold text-base">
-                            ยืนยัน
+                            บันทึก
                         </button>
 
-                <!-- โหลด SweetAlert -->
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                <script>
-                function confirmAddUser() {
-                    const branchAlert = '/public/alert-icon/BranchAlert.png';
-                    const deleteAlert = '/public/alert-icon/DeleteAlert.png';
-                    const editAlert = '/public/alert-icon/EditAlert.png';
-                    const errorAlert = '/public/alert-icon/ErrorAlert.png';
-                    const orderAlert = '/public/alert-icon/OrderAlert.png';
-                    const successAlert = '/public/alert-icon/SuccessAlert.png';
-                    const userAlert = '/public/alert-icon/UserAlert.png';
-                    Swal.fire({
-                        title: 'ยืนยันการเพิ่มบัญชี',
-                        imageUrl: userAlert,
-                        showCancelButton: true,
-                        confirmButtonText: 'ยืนยัน',
-                        cancelButtonText: 'ยกเลิก',
-                        reverseButtons: true,
-                        customClass: {
-                            actions: 'flex gap-4 justify-center',
-                            cancelButton: 'w-[120px] bg-white text-black border border-black px-6 py-2 rounded-lg font-bold text-base',
-                            confirmButton:'w-[120px] bg-[#4D55A0] text-white border border-transparent px-6 py-2 rounded-lg font-bold text-base'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.getElementById('editForm').submit(); // <- ต้องตรงกับ id ของ form
-                        }
-                    });
-                }
-                </script>
-                <script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const salesRadio = document.getElementById("sales");
-                        const headSelect = document.getElementById("head");
-                        const positionRadios = document.querySelectorAll('input[name="role"]'); // เปลี่ยนจาก 'position' เป็น 'role'
-                    
-                        function toggleHeadSelect() {
-                            // ตรวจสอบว่าเลือก Sales หรือไม่
-                            headSelect.disabled = !salesRadio.checked;
-                            if (!salesRadio.checked) {
-                                headSelect.value = ""; // รีเซ็ตค่าเมื่อไม่เลือก Sales
+                        <!-- โหลด SweetAlert -->
+                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                        <script>
+                            const branchAlert = '/public/alert-icon/BranchAlert.png';
+                            const deleteAlert = '/public/alert-icon/DeleteAlert.png';
+                            const editAlert = '/public/alert-icon/EditAlert.png';
+                            const errorAlert = '/public/alert-icon/ErrorAlert.png';
+                            const orderAlert = '/public/alert-icon/OrderAlert.png';
+                            const successAlert = '/public/alert-icon/SuccessAlert.png';
+                            const userAlert = '/public/alert-icon/UserAlert.png';
+
+                            function confirmAddUser() {
+                                Swal.fire({
+                                    title: 'ยืนยันการเพิ่มบัญชี',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'ยืนยัน',
+                                    cancelButtonText: 'ยกเลิก',
+                                    reverseButtons: true,
+                                    imageUrl: userAlert,
+                                    customClass: {
+                                        confirmButton: 'swal2-confirm-custom',
+                                        cancelButton: 'swal2-cancel-custom',
+                                        title: 'no-padding-title',
+                                        actions: 'swal2-actions-gap',
+                                    },
+                                    buttonsStyling: false
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        Swal.fire({
+                                            title: 'ดำเนินการเสร็จสิ้น',
+                                            confirmButtonText: 'ตกลง',
+                                            imageUrl: successAlert,
+                                            customClass: {
+                                                confirmButton: 'swal2-success-custom',
+                                                title: 'no-padding-title',
+                                            },
+                                            buttonsStyling: false
+
+                                        }).then(() => {
+                                            document.getElementById('editForm').submit();
+                                        })
+
+
+                                    }
+                                });
                             }
-                        }
-                    
-                        toggleHeadSelect();
-                        
-                        // ฟังการเปลี่ยนแปลงของตำแหน่ง
-                        positionRadios.forEach(radio => {
-                            radio.addEventListener("change", toggleHeadSelect);
-                        });
-                    });
-                </script>
-        
-@endsection
+                        </script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const headContainer = document.getElementById("headContainer");
+                                const headSelect = document.getElementById("head");
+                                const positionRadios = document.querySelectorAll(
+                                    'input[name="role"]'); // เปลี่ยนจาก 'position' เป็น 'role'
+
+                                function toggleHeadSelect() {
+                                    const selectedRole = document.querySelector('input[name="role"]:checked')
+                                        ?.value; // ดึงค่าที่เลือกอยู่ใน radio
+                                    if (selectedRole === "Sales") {
+                                        headContainer.classList.remove("hidden");
+                                        headSelect.disabled = false;
+                                    } else {
+                                        headContainer.classList.add("hidden");
+                                        headSelect.disabled = true;
+                                        headSelect.value = ""; // ล้างค่าเมื่อไม่ใช่ Sales
+                                    }
+                                }
+
+                                toggleHeadSelect();
+
+                                // ฟังการเปลี่ยนแปลงของตำแหน่ง
+                                positionRadios.forEach(radio => {
+                                    radio.addEventListener("change", toggleHeadSelect);
+                                });
+                            });
+                        </script>
+                    @endsection
