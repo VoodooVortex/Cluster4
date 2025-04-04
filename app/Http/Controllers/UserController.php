@@ -54,9 +54,9 @@ class UserController extends Controller
     @author : Yothin Sisaitham 66160088
     @create date : 04/04/2568
     --}} */
-    function delete_user (Request $req){
-
-    if ($req->has('id')) { // ตรวจว่ามี ID ถูกส่งมาไหม
+    public function delete_user(Request $req){
+    // ตรวจสอบว่ามี ID ถูกส่งมาหรือไม่
+    if ($req->has('id')) {
         $ids = $req->input('id'); // รับค่า ID
 
         // เช็คว่าเป็น array หรือไม่ ** checkbox ที่ให้กดได้หลายคน
@@ -72,15 +72,16 @@ class UserController extends Controller
             if ($muser) {
                 $muser->delete();
             } else {
-                return view('manageUser', ['message' => 'ไม่พบผู้ใช้ที่ต้องการลบ']);
-                //return response()->noContent();
+                return response()->noContent(); // ถ้าไม่พบผู้ใช้
             }
         }
-        return redirect(to: 'manageUser');
+        // เมื่อการลบเสร็จสิ้นให้ redirect ไปที่หน้ารายการผู้ใช้
+        return redirect('/manageUser'); // ใช้เส้นทางที่เหมาะสม
     }
-        // ถ้าไม่มี ID → แสดงรายการผู้ใช้ทั้งหมด
-        $users = User::all();
-        return view('manageUser', compact('users'));
+
+    // ถ้าไม่มี ID → แสดงรายการผู้ใช้ทั้งหมด
+    $users = User::all();
+    return view('manageUser', compact('users'));
     }
     /*
     // --------------- Not Use ---------------
