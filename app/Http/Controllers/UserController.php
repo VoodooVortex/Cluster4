@@ -29,7 +29,7 @@ class UserController extends Controller
         $user = User::find($id);
         $data = $user;
         $allUser = User::all();
-        return view('edit', ['users' => $data], compact('allUser'));
+        return view('editUser', ['users' => $data], compact('allUser'));
     }
 
     function edit_action(Request $req)
