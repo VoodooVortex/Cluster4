@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 
-//Pakkapon Chomcheoy 66160080
+
+
+// @author : Pakkapon Chomchoey 66160080
+
 class GoogleLoginController extends Controller
 {
     function redirectToGoogle(Request $req)
