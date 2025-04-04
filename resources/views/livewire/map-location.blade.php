@@ -11,7 +11,7 @@
         class="hidden fixed inset-0 top-[50px] h-[calc(100dvh-50px)] bg-gray-900 bg-opacity-50 flex items-center justify-center">
         <div class="w-full h-full bg-white p-6 pb-0 px-4 rounded-md shadow-lg overflow-y-auto">
             {{-- header --}}
-            <div class="text-white border-[#4D55A0] text-lg px-4 py-3 rounded-2xl flex items-center w-full"
+            <div class="text-white border-[#4D55A0] px-4 text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
                 style="background-color: #4D55A0;">
                 <button id="backBtnForm"><i class="fa-solid mr-3 fa-arrow-left" style="color: #ffffff;"></i></button>
                 เพิ่มสถานที่
@@ -191,8 +191,9 @@
             </div>
             {{-- Header --}}
             <div id="name-branch"
-                class="text-white border-[#4D55A0] tabToScroll text-lg px-4 py-3 rounded-2xl flex items-center w-full"
-                style="background-color: #4D55A0;"></div>
+                class="text-white border-[#4D55A0] tabToScroll px-4 text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
+                style="background-color: #4D55A0;">
+            </div>
 
             {{-- Tab Header --}}
             <div class="flex border-b mx-3 mt-4">
@@ -291,6 +292,174 @@
 
         </div>
     </div>
+
+    {{-- Edit Location --}}
+    <div wire:ignore.self id="editBranchForm"
+        class="hidden fixed inset-0 top-[50px] h-[calc(100dvh-50px)] bg-gray-900 bg-opacity-50 flex items-center justify-center">
+        <div class="w-full h-full bg-white p-6 pb-0 px-4 rounded-md shadow-lg overflow-y-auto">
+            {{-- header --}}
+            <div class="text-white border-[#4D55A0] px-4 text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
+                style="background-color: #4D55A0;">
+                <button id="backBtnEditBranchForm"><i class="fa-solid mr-3 fa-arrow-left"
+                        style="color: #ffffff;"></i></button>
+                แก้ไขสาขา
+            </div>
+
+            {{-- tab --}}
+            <div class="border rounded-lg shadow my-4 mb-0">
+                <div class="grid ">
+                    <div class="text-center py-2 border-b-2">
+                        <label for="">สาขา</label>
+                    </div>
+                </div>
+
+                {{-- tab content --}}{{-- tab branch --}}
+                <form wire:submit.prevent="validateEditBranchForm"
+                    class="pb-normal tab-content pt-5 px-7 scrollbar-ios max-h-[80vh] overflow-y-auto overscroll-contain scrollbar-hidden scroll-container bg-white rounded-b-lg">
+                    <label class="block mb-1">ชื่อสาขา <span class="text-red-500">*</span></label>
+                    <input type="text" wire:model="nameBranch" class="border p-2 w-full rounded-md"
+                        placeholder="กรุณาระบุชื่อสาขา">
+                    @error('nameBranch')
+                        <small class="text-red-600">{{ $message }}</small>
+                    @enderror
+                    <label class="block mt-4 mb-1">รหัสสาขา</label>
+                    <input type="text" wire:model="codeBranch" class="border p-2 w-full bg-gray-100 rounded-md"
+                        placeholder="รหัสสาขาจะแสดงหลังจากกรอกรหัสไปรษณีย์" readonly>
+                    @error('codeBranch')
+                        <small class="text-red-600">{{ $message }}</small>
+                    @enderror
+                    <label class="block mt-4 mb-1">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label>
+                    <input type="text" wire:model="phoneBranch" class="border p-2 w-full rounded-md"
+                        placeholder="กรุณาระบุเบอร์โทรศัพท์">
+                    @error('phoneBranch')
+                        <small class="text-red-600">{{ $message }}</small>
+                    @enderror
+                    <label class="block mt-4 mb-1">บ้านเลขที่ <span class="text-red-500">*</span></label>
+                    <input type="text" wire:model="addressBranch" class="border p-2 w-full rounded-md"
+                        placeholder="กรุณาระบุบ้านเลขที่">
+                    @error('addressBranch')
+                        <small class="text-red-600">{{ $message }}</small>
+                    @enderror
+                    <label class="block mt-4 mb-1">รหัสไปรษณีย์ <span class="text-red-500">*</span></label>
+                    <div wire:ignore>
+                        <input type="text" wire:model="zipcodeBranch" id="zipcodeEdit"
+                            class="border p-2 w-full rounded-md" placeholder="กรุณาระบุรหัสไปรษณีย์">
+                    </div>
+                    @error('zipcodeBranch')
+                        <small class="text-red-600">{{ $message }}</small>
+                    @enderror
+                    <label class="block mt-4 mb-1">จังหวัด</label>
+                    <div wire:ignore>
+                        <input type="text" wire:model="provinceBranch" id="provinceEdit"
+                            class="border p-2 w-full rounded-md" placeholder="กรุณาระบุจังหวัด">
+                    </div>
+                    @error('provinceBranch')
+                        <small class="text-red-600">{{ $message }}</small>
+                    @enderror
+                    <label class="block mt-4 mb-1">อำเภอ</label>
+                    <div wire:ignore>
+                        <input type="text" wire:model="amphoeBranch" id="amphoeEdit"
+                            class="border p-2 w-full rounded-md" placeholder="กรุณาระบุอำเภอ">
+                    </div>
+                    @error('amphoeBranch')
+                        <small class="text-red-600">{{ $message }}</small>
+                    @enderror
+                    <label class="block mt-4 mb-1">ตำบล</label>
+                    <div wire:ignore>
+                        <input type="text" wire:model="districtBranch" id="districtEdit"
+                            class="border p-2 w-full rounded-md" placeholder="กรุณาระบุตำบล">
+                    </div>
+                    @error('districtBranch')
+                        <small class="text-red-600">{{ $message }}</small>
+                    @enderror
+
+                    <div class="w-full mt-4 mx-auto">
+                        <label for="images"
+                            class="block w-full border rounded-lg p-6 text-center cursor-pointe hover:bg-gray-200">
+                            <div wire:loading wire:target="imageBranch">
+                                <p class="text-sm mb-2 text-gray-500">กำลังโหลดรูปภาพ...</p>
+                            </div>
+                            @if ($imageBranch)
+                                <div class="flex flex-wrap justify-center space-x-2 mb-3">
+                                    @foreach ($imageBranch as $image)
+                                        <img class="w-15 h-15 rounded-md" src="{{ $image->temporaryUrl() }}">
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            <div class="flex flex-col items-center justify-center">
+                                <span class=""><i class="fa-solid fa-image fa-2xl"
+                                        style="color: #808080;"></i></span>
+                                <p class="text-gray-500 mt-2">อัปโหลดรูปภาพ</p>
+                            </div>
+                            <input type="file" wire:model="imageBranch" multiple id="images" multiple
+                                class="hidden">
+                            @error('imageBranch.*')
+                                <small class="text-red-600">{{ $message }}</small>
+                            @enderror
+                            @error('imageBranch')
+                                <small class="text-red-600">{{ $message }}</small>
+                            @enderror
+                        </label>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 mt-4">
+                        <span class="text-left">ลองจิจูด</span><span
+                            class="text-left">{{ $long }}</span><span></span>
+                        <span class="text-left">ละติจูด</span><span
+                            class="text-left">{{ $lat }}</span><span></span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 mt-4">
+                        <span class="content-center">
+                            ขอบเขตของสาขา
+                        </span>
+                        <div class=" items-center justify-center">
+                            <div class="relative group">
+                                <div id="dropdown-button-edit"
+                                    class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500">
+                                    <span class="mr-2" wire:key="scope">{{ $scope }} กิโลเมตร</span>
+                                    <span class="justify-center"><i class="fa-solid fa-chevron-down"></i></span>
+                                </div>
+                                <div id="dropdown-menu-edit"
+                                    class="hidden absolute bottom-full right-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1">
+                                    <input id="search-input-edit"
+                                        class="block w-full px-4 py-2 text-gray-800 border rounded-md  border-gray-300 focus:outline-none"
+                                        type="text" placeholder="เพิ่มขอบเขต" autocomplete="off">
+                                    <a href="#" data-value="5"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md">5
+                                        กิโลเมตร</a>
+                                    <a href="#" data-value="10"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md">10
+                                        กิโลเมตร</a>
+                                    <a href="#" data-value="15"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md">15
+                                        กิโลเมตร
+                                    </a>
+                                    <a href="#" data-value="20"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md">20
+                                        กิโลเมตร
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <span><i class="fa-solid fa-house" style="color: #4D55A0;"></i></span><span
+                            class="ml-2">สถานที่ใกล้เคียง</span>
+                    </div>
+
+                    <div class="flex justify-center mt-4">
+                        <button type="submit" style="background-color: #4D55A0;"
+                            class="w-[120px] bg-[#4D55A0] text-white border border-transparent px-6 py-2 rounded-lg font-bold text-base">บันทึก</button>
+                    </div>
+                </form>
+                {{-- tab other --}}
+            </div>
+        </div>
+    </div>
+
     {{-- <div id="bottomDrawer"
         class="fixed bottom-0 left-0 right-0 z-50 w-full max-h-[90vh] h-[50vh] translate-y-full overflow-y-auto bg-white transition-transform duration-300 rounded-t-2xl shadow-lg">
         <div class="w-12 h-1 bg-gray-400 mx-auto rounded my-2 cursor-pointer" id="drawerHandle"></div>
@@ -355,47 +524,55 @@
 
 {{-- AutoFill --}}
 <script>
-    $.Thailand({
-        $district: $('#district'),
-        $amphoe: $('#amphoe'),
-        $province: $('#province'),
-        $zipcode: $('#zipcode'),
-    });
-    document.addEventListener("livewire:init", function() {
-        $(document).ready(function() {
-            $('#zipcode').on('change', function() {
-                let zipcode = $(this).val();
-                Livewire.dispatch('updateZipBranch', {
-                    zipcode: zipcode
+    document.addEventListener('DOMContentLoaded', function() {
+        $.Thailand({
+            $district: $('#districtEdit'),
+            $amphoe: $('#amphoeEdit'),
+            $province: $('#provinceEdit'),
+            $zipcode: $('#zipcodeEdit'),
+        });
+        $.Thailand({
+            $district: $('#district'),
+            $amphoe: $('#amphoe'),
+            $province: $('#province'),
+            $zipcode: $('#zipcode'),
+        });
+        document.addEventListener("livewire:init", function() {
+            $(document).ready(function() {
+                $('#zipcode').on('change', function() {
+                    let zipcode = $(this).val();
+                    Livewire.dispatch('updateZipBranch', {
+                        zipcode: zipcode
+                    });
+                    Livewire.dispatch('generateCodeBranch');
                 });
-                Livewire.dispatch('generateCodeBranch');
+
+                $('#province').on('change', function() {
+                    let province = $(this).val();
+                    Livewire.dispatch('updateProBranch', {
+                        province: province
+                    })
+                })
+
+                $('#amphoe').on('change', function() {
+                    let amphoe = $(this).val();
+                    Livewire.dispatch('updateAmpBranch', {
+                        amphoe: amphoe
+                    })
+                })
+
+                $('#district').on('change', function() {
+                    let district = $(this).val();
+                    Livewire.dispatch('updateDisBranch', {
+                        district: district
+                    })
+                })
             });
-
-            $('#province').on('change', function() {
-                let province = $(this).val();
-                Livewire.dispatch('updateProBranch', {
-                    province: province
-                })
-            })
-
-            $('#amphoe').on('change', function() {
-                let amphoe = $(this).val();
-                Livewire.dispatch('updateAmpBranch', {
-                    amphoe: amphoe
-                })
-            })
-
-            $('#district').on('change', function() {
-                let district = $(this).val();
-                Livewire.dispatch('updateDisBranch', {
-                    district: district
-                })
-            })
         });
     });
 </script>
 
-{{-- Dropdown --}}
+{{-- Dropdown Add Branch --}}
 <script>
     document.addEventListener("livewire:init", function() {
         $(document).ready(function() {
@@ -476,6 +653,87 @@
     })
 </script>
 
+{{-- Dropdown Edit Branch --}}
+<script>
+    document.addEventListener("livewire:init", function() {
+        $(document).ready(function() {
+            const dropdownButton = $('#dropdown-button-edit');
+            const dropdownMenu = $('#dropdown-menu-edit');
+            const searchInput = $('#search-input-edit');
+            let isOpen = false;
+
+            function _toggleDropdown(forceOpen = null) {
+                if (forceOpen !== null) {
+                    isOpen = forceOpen;
+                } else {
+                    isOpen = !isOpen;
+                }
+                dropdownMenu.toggleClass('hidden', !isOpen);
+            }
+
+            // Set initial state
+            _toggleDropdown();
+
+            dropdownButton.on('click', () => {
+                $('#temp-item-edit').remove();
+                _toggleDropdown();
+            });
+
+            searchInput.on('input', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                let found = false;
+
+                dropdownMenu.find('a').each(function() {
+                    const text = $(this).text().toLowerCase();
+                    if (text.includes(searchTerm) || searchTerm === '') {
+                        $(this).show();
+                        found = true;
+                    } else {
+                        $(this).hide();
+                    }
+                    if (!found && searchTerm.match(/^\d+$/)) {
+                        $('#temp-item-edit').remove();
+                        dropdownMenu.append(`
+                            <a href="#" id="temp-item-edit" data-value="${searchTerm}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md">
+                                ${searchTerm} กิโลเมตร
+                            </a>
+                        `);
+                    }
+                    if (searchTerm === '') {
+                        $('#temp-item-edit').remove();
+                    }
+                });
+            });
+
+            //เมื่อกด enter
+            searchInput.on('keypress', function(event) {
+                if (event.which === 13) { // Enter Key
+                    event.preventDefault();
+                    let newValue = $(this).val().trim();
+
+                    if (newValue.match(/^\d+$/)) {
+                        Livewire.dispatch('updateScope', {
+                            scope: newValue
+                        });
+                        _toggleDropdown(false);
+                    }
+                }
+            });
+
+            $(document).on('click', '#dropdown-menu-edit a', function() {
+                let selectValue = $(this).data('value');
+                console.log(selectValue);
+
+                Livewire.dispatch('updateScope', {
+                    scope: selectValue
+                });
+
+                _toggleDropdown(false);
+            });
+        })
+    })
+</script>
+
 {{-- Add Location Tab --}}
 <script>
     function _openTab(event, tabId) {
@@ -508,6 +766,7 @@
     // }
 
     document.addEventListener('livewire:init', () => {
+        //Alert Confirm Add Branch
         Livewire.on('showConfirmCreateBranch', () => {
             Swal.fire({
                 title: 'ยืนยันการเพิ่มสาขา',
@@ -530,6 +789,7 @@
             });
         });
 
+        //Alert Success Add branch
         Livewire.on('branch-added-alert', () => {
             Swal.fire({
                 title: 'ดำเนินการเสร็จสิ้น',
@@ -545,6 +805,7 @@
             });
         })
 
+        //Alert Error
         Livewire.on('error', (message) => {
             console.log(message);
             Swal.fire({
@@ -559,6 +820,7 @@
             });
         });
 
+        //Alert Delete Branch Success
         Livewire.on('branch-deleted-alert', () => {
             Swal.fire({
                 title: 'ดำเนินการเสร็จสิ้น',
@@ -576,6 +838,46 @@
             });
         });
 
+        //Alert Confirm Edit Branch
+        Livewire.on('showConfirmEditBranch', () => {
+            Swal.fire({
+                title: 'ยืนยันการแก้ไขสาขา',
+                showCancelButton: true,
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true,
+                imageUrl: editAlert,
+                customClass: {
+                    confirmButton: 'swal2-confirm-custom',
+                    cancelButton: 'swal2-cancel-custom',
+                    title: 'no-padding-title',
+                    actions: 'swal2-actions-gap',
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('save-edit-branch');
+                }
+            });
+        });
+
+        Livewire.on('branch-edit-alert', () => {
+            Swal.fire({
+                title: 'ดำเนินการเสร็จสิ้น',
+                confirmButtonText: 'ตกลง',
+                imageUrl: successAlert,
+                customClass: {
+                    confirmButton: 'swal2-success-custom',
+                    title: 'no-padding-title',
+                },
+                buttonsStyling: false
+            }).then(() => {
+                $('#editBranchForm').addClass('hidden');
+                Livewire.dispatch('update-edit-sheet-branch');
+            });
+        });
+
+        //Alert Confirm Delete Branch
         _confirmDelete = (branchCode, branchId) => {
             Swal.fire({
                 title: 'ยืนยันการลบสาขา',
@@ -688,8 +990,16 @@
 
     $(document).off('click', '#editBranchBtn').on('click', '#editBranchBtn', function() {
         if (dataBranch) {
-            Livewire.emit('edit-branch', dataBranch);
+            Livewire.dispatch('edit-branch', {
+                id: dataBranch.id
+            });
+            $('#editBranchForm').removeClass('hidden');
         }
+    });
+
+    $(document).off('click', '#backBtnEditBranchForm').on('click', '#backBtnEditBranchForm', function() {
+        $('#editBranchForm').addClass('hidden');
+        Livewire.dispatch('clearEditBranchForm');
     });
 
     function _closeDrawer() {
@@ -814,6 +1124,7 @@
             const features = map.queryRenderedFeatures(e.point);
             const clickedLayerIds = features.map(f => f.layer.id);
 
+            //กดหมุด
             if (clickedLayerIds.includes('branch-marker-layer')) {
                 const feature = features.find(f => f.layer.id === 'branch-marker-layer');
                 if (marker) {
@@ -1010,6 +1321,10 @@
         })
 
         Livewire.on('deleteBranchLocation', (geoJson) => {
+            _loadBranchs(JSON.parse(geoJson));
+        })
+
+        Livewire.on('updateEditBranchLocation', (geoJson) => {
             _loadBranchs(JSON.parse(geoJson));
         })
     });

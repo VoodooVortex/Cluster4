@@ -31,7 +31,7 @@ class MapLocation extends Component
         $this->mapBoxToken = env('MAPBOX_ACCESS_TOKEN');
     }
 
-    public $nameBranch, $codeBranch, $phoneBranch, $addressBranch, $zipcodeBranch, $provinceBranch, $amphoeBranch, $districtBranch, $imageBranch;
+    public $branchId, $nameBranch, $codeBranch, $phoneBranch, $addressBranch, $zipcodeBranch, $provinceBranch, $amphoeBranch, $districtBranch, $imageBranch;
 
 
     public $geoJsonBranch;
@@ -145,6 +145,38 @@ class MapLocation extends Component
         $this->dispatch('showConfirmCreateBranch');
     }
 
+    public function validateEditBranchForm()
+    {
+        $validate = $this->validate([
+            'nameBranch' => 'required',
+            'codeBranch' => 'required',
+            'phoneBranch' => 'required|min:10',
+            'addressBranch' => 'required',
+            'zipcodeBranch' => 'required|numeric',
+            'provinceBranch' => 'required',
+            'amphoeBranch' => 'required',
+            'districtBranch' => 'required',
+            'imageBranch.*' => 'image|max:2048',
+        ], [
+            'nameBranch.required' => 'กรุณากรอกชื่อสาขา',
+            'nameBranch.unique' => 'ชื่อสาขานี้มีอยู่ในระบบแล้ว',
+            'codeBranch.required' => 'กรุณากรอกรหัสสาขา',
+            'codeBranch.unique' => 'รหัสสาขานี้มีอยู่ในระบบแล้ว',
+            'phoneBranch.required' => 'กรุณากรอกเบอร์โทรศัพท์',
+            'phoneBranch.min' => 'กรุณากรอกเบอร์โทรศัพท์ให้ครบ',
+            'addressBranch.required' => 'กรุณากรอกบ้านเลขที่',
+            'zipcodeBranch.required' => 'กรุณากรอกรหัสไปรษณีย์',
+            'provinceBranch.required' => 'กรุณากรอกจังหวัด',
+            'amphoeBranch.required' => 'กรุณากรอกอำเภอ',
+            'districtBranch.required' => 'กรุณากรอกตำบล',
+            'imageBranch.image' => 'ไฟล์ที่อัปโหลดต้องเป็นรูปภาพ',
+            'imageBranch.max' => 'ขนาดไฟล์รูปภาพต้องไม่เกิน 2MB',
+            'imageBranch.*.image' => 'ไฟล์ที่อัปโหลดต้องเป็นรูปภาพ',
+        ]);
+
+        $this->dispatch('showConfirmEditBranch');
+    }
+
     #[On('create-branch')]
     public function createBranch()
     {
@@ -211,6 +243,81 @@ class MapLocation extends Component
             return;
         }
     }
+
+    #[On('edit-branch')]
+    public function editBranch($id)
+    {
+        $branchData = Branch::select(
+            '*',
+            DB::raw('ST_Y(br_longlat) as lat'),
+            DB::raw('ST_X(br_longlat) as lng')
+        )->findOrFail($id);
+
+        $this->branchId = $branchData->br_id;
+        $this->nameBranch = $branchData->br_name;
+        $this->codeBranch = $branchData->br_code;
+        $this->phoneBranch = $branchData->br_phone;
+        $this->addressBranch = $branchData->br_address;
+        $this->zipcodeBranch = $branchData->br_postalcode;
+        $this->provinceBranch = $branchData->br_province;
+        $this->amphoeBranch = $branchData->br_subdistrict;
+        $this->districtBranch = $branchData->br_district;
+        $this->scope = $branchData->br_scope;
+        $this->lat = $branchData->lat;
+        $this->long = $branchData->lng;
+    }
+
+
+    #[On('save-edit-branch')]
+    public function saveEditBranch()
+    {
+        try {
+            DB::transaction(function () {
+                $branch = Branch::findOrFail($this->branchId);
+
+                $branch->update([
+                    'br_code' => $this->codeBranch,
+                    'br_name' => $this->nameBranch,
+                    'br_phone' => $this->phoneBranch,
+                    'br_scope' => $this->scope,
+                    'br_longlat' => DB::raw("ST_GeomFromText('POINT($this->long $this->lat)', 4326)"),
+                    'br_address' => $this->addressBranch,
+                    'br_subdistrict' => $this->amphoeBranch,
+                    'br_district' => $this->districtBranch,
+                    'br_province' => $this->provinceBranch,
+                    'br_postalcode' => $this->zipcodeBranch,
+                    'br_us_id' => auth()->id(),
+                ]);
+
+                if ($this->imageBranch) {
+                    foreach ($this->imageBranch as $image) {
+                        $imageName = time() . '_' . $image->getClientOriginalName();
+                        $image->storeAs('images_branch', $imageName, 'public');
+                        $imageUrl = Storage::url('/app/public/images_branch/' . $imageName);
+                        $branch->image()->create([
+                            'i_pathUrl' => $imageUrl,
+                        ]);
+                    }
+                }
+            });
+
+            $this->reset(['branchId', 'codeBranch', 'nameBranch', 'phoneBranch', 'addressBranch', 'zipcodeBranch', 'provinceBranch', 'amphoeBranch', 'districtBranch', 'imageBranch']);
+            $this->dispatch('branch-edit-alert');
+            $this->loadBranchLocation();
+            $this->dispatch('updateEditBranchLocation', $this->geoJsonBranch);
+        } catch (\Exception $e) {
+            // dd($e);
+            $this->dispatch('error', 'เกิดข้อผิดพลาดในการสร้างสาขา กรุณาลองใหม่อีกครั้ง');
+            return;
+        }
+    }
+
+    #[On('clearEditBranchForm')]
+    public function clearEditBranch()
+    {
+        $this->reset(['codeBranch', 'nameBranch', 'phoneBranch', 'addressBranch', 'zipcodeBranch', 'provinceBranch', 'amphoeBranch', 'districtBranch', 'imageBranch']);
+    }
+
 
     #[On('updateZipBranch')]
     public function setZipcodeBranch($zipcode = null)

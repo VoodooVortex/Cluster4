@@ -1,3 +1,9 @@
+{{--
+    @title : Layout Map
+    @author : Pakkapon Chomchoey 66160080
+    @create date : 21/02/2568
+--}}
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
