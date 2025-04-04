@@ -4,7 +4,8 @@
     <div class="pt-16 bg-white-100 w-full">
         {{-- ปุ่มย้อนกลับและหัวข้อ --}}
         <div class="mb-4 px-4">
-            <a href="#" class="text-white bg-indigo-600 px-4 py-3 rounded-2xl flex items-center justify-left w-full" style="background-color: #4D55A0;">
+            <a href="#" class="text-white bg-indigo-600 px-4 py-3 rounded-2xl flex items-center justify-left w-full"
+                style="background-color: #4D55A0;">
                 <i class="fa-solid fa-arrow-left mr-5"></i>
                 จัดการบัญชีผู้ใช้
             </a>
@@ -14,8 +15,8 @@
         <div class="flex space-x-2 mb-4 px-4">
             <input type="text" placeholder="ค้นหาบัญชี"
                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
-            <a href="{{ url('/add-user') }}"
-                class="bg-indigo-600 text-white whitespace-nowrap px-5 py-2 rounded-2xl" style="background-color: #4D55A0;">เพิ่มบัญชี</a>
+            <a href="{{ url('/add-user') }}" class="bg-indigo-600 text-white whitespace-nowrap px-5 py-2 rounded-2xl"
+                style="background-color: #4D55A0;">เพิ่มบัญชี</a>
         </div>
 
         {{-- หมวดหมู่บัญชี --}}
@@ -26,12 +27,15 @@
         {{-- รายชื่อบัญชี --}}
         <div id="user-list px-4">
             <div class="bg-white mt-4 px-3 rounded-lg">
-                <div class="flex items-center justify-between bg-gray-200 rounded-lg py-3" style="background-color: #D9D9D9;">
+                <div class="flex items-center justify-between bg-gray-200 rounded-lg py-3"
+                    style="background-color: #D9D9D9;">
                     <div class="flex items-center pl-2">
                         <input type="checkbox" id="selectAll" class="mr-2 h-15 w-10" onclick="toggleAllCheckboxes()">
                         <span class="text-gray-700">เลือกทั้งหมด</span>
                     </div>
-                    <button id="deleteButton" class="hidden bg-red-500 text-white px-4 py-1 rounded-lg text-sm hover:bg-red-600" onclick="deleteUsers()">
+                    <button id="deleteButton"
+                        class="hidden bg-red-500 text-white px-4 py-1 rounded-lg text-sm hover:bg-red-600"
+                        onclick="deleteUsers()">
                         ลบ (<span id="selectedCount">0</span>)
                     </button>
                 </div>
@@ -40,17 +44,18 @@
                     <div class="flex space-x-2 mt-2">
                         <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm active"
                             value="all">ทั้งหมด</button>
-                        <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm" value="Sale">Sale</button>
+                        <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm"
+                            value="Sale">Sale</button>
                         <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm"
                             value="Sales Supervisor">Sales Supervisor</button>
-                        <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm" value="CEO">CEO</button>
+                        <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm"
+                            value="CEO">CEO</button>
                     </div>
                 </div>
 
                 <ul>
                     @foreach ($users as $user)
-                        <li class="user-item flex items-center justify-between p-2 border-b"
-                            value="{{ $user->us_role }}">
+                        <li class="user-item flex items-center justify-between p-2 border-b" value="{{ $user->us_role }}">
                             <div class="flex items-center space-x-2">
                                 <input type="checkbox" class="user-checkbox h-5 w-5" onclick="toggleDeleteButton()">
                                 <img src="{{ $user->us_image }}" class="w-10 h-10 rounded-full" alt="User Image">
@@ -70,6 +75,15 @@
                             <a href="{{ url('/edit-user/' . $user->us_id) }}">
                                 <button class="btn btn-warning">Edit</button>
                             </a>
+
+                            <!-- ลบบัญชี -->
+                            <form action="{{ url('/delete-user') }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                                @method('delete')
+                                <input type="hidden" name="user_id" value="{{ $user->us_id }}">
+                            </form>
+
                         </li>
                     @endforeach
                 </ul>
@@ -142,10 +156,43 @@
             selectedCount.textContent = count;
         }
 
-        function deleteUsers() {
-            alert("ลบบัญชีที่เลือกแล้ว!");
-            location.reload();
+        function deleteUsers(us_id) {
+            const branchAlert = '/public/alert-icon/BranchAlert.png';
+            const deleteAlert = '/public/alert-icon/DeleteAlert.png';
+            const editAlert = '/public/alert-icon/EditAlert.png';
+            const errorAlert = '/public/alert-icon/ErrorAlert.png';
+            const orderAlert = '/public/alert-icon/OrderAlert.png';
+            const successAlert = '/public/alert-icon/SuccessAlert.png';
+            const userAlert = '/public/alert-icon/UserAlert.png';
+
+            Swal.fire({
+                title: 'ยืนยันการลบบัญชี',
+                showCancelButton: true,
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true,
+                imageUrl: deleteAlert,
+                customClass: {
+                    confirmButton: 'swal2-delete-custom',
+                    cancelButton: 'swal2-cancel-custom',
+                    title: 'no-padding-title',
+                    actions: 'swal2-actions-gap',
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'ดำเนินการเสร็จสิ้น',
+                        confirmButtonText: 'ตกลง',
+                        imageUrl: successAlert,
+                        customClass: {
+                            confirmButton: 'swal2-success-custom',
+                            title: 'no-padding-title',
+                        },
+                        buttonsStyling: false
+                    })
+                }
+            });
         }
     </script>
-
 @endsection
