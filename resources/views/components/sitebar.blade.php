@@ -19,31 +19,42 @@
         <ul class="pt-5 mt-4">
             <li class="{{ Request::is('#') ? 'bg-indigo-100 text-indigo-600' : '' }}">
                 <a href="#" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
-                    <i class="fa-solid fa-house mr-3" style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i> หน้าแรก
+                    <i class="fa-solid fa-house mr-3"
+                        style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
+                    หน้าแรก
                 </a>
             </li>
 
-            <li class="{{ Request::is('#') ? 'bg-indigo-100 text-indigo-600' : '' }}">
-                <a href="#" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
-                    <i class="fa-solid fa-globe mr-3" style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i> แผนที่
+            <li class="{{ Request::is('map') ? 'bg-indigo-100 text-indigo-600' : '' }}">
+                <a href="{{ route('map') }}" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
+                    <i class="fa-solid fa-globe mr-3"
+                        style="color: {{ Request::is('map') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
+                    แผนที่
                 </a>
             </li>
 
             <li class="{{ Request::is('manage-user') ? 'bg-indigo-100 text-indigo-600' : '' }}">
-                <a href="{{ url('/manage-user') }}" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
-                    <i class="fa-solid fa-circle-user mr-3" style="color: {{ Request::is('manage-user') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i> จัดการบัญชี
+                <a href="{{ route('manage.user') }}"
+                    class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
+                    <i class="fa-solid fa-circle-user mr-3"
+                        style="color: {{ Request::is('manage-user') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
+                    จัดการบัญชี
                 </a>
             </li>
 
             <li class="{{ Request::is('#') ? 'bg-indigo-100 text-indigo-600' : '' }}">
                 <a href="#" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
-                    <i class="fa-solid fa-chart-column mr-3" style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i> ยอดขาย
+                    <i class="fa-solid fa-chart-column mr-3"
+                        style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
+                    ยอดขาย
                 </a>
             </li>
 
             <li class="{{ Request::is('#') ? 'bg-indigo-100 text-indigo-600' : '' }}">
                 <a href="#" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
-                    <i class="fa-regular fa-calendar-days mr-3" style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i> รายงาน
+                    <i class="fa-regular fa-calendar-days mr-3"
+                        style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
+                    รายงาน
                 </a>
             </li>
 

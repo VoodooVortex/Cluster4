@@ -31,7 +31,7 @@ class GoogleLoginController extends Controller
                 Session::put('google_user', $user);
             }
         } catch (\Exception $e) {
-            return redirect('/login');
+            return redirect()->route('login');
         }
 
         // return response()->json($user);

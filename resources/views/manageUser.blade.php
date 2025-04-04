@@ -11,7 +11,7 @@
         {{-- ปุ่มย้อนกลับและหัวข้อ --}}
         <div class="mb-4 px-4">
             <a href="{{ url('/manage-user') }}"
-               class="text-white border-[#4D55A0] text-2xl font-extrabold px-4 py-3 rounded-2xl flex items-center w-full"
+                class="text-white border-[#4D55A0] text-2xl font-extrabold px-4 py-3 rounded-2xl flex items-center w-full"
                 style="background-color: #4D55A0;">
                 จัดการบัญชีผู้ใช้
             </a>
@@ -57,18 +57,15 @@
                             class="filter-btn px-2 py-1 border border-black-1000 text-black-700 rounded-full text-xs active border-[#4D55A0] text-[#4D55A0]"
                             value="all">
                             ทั้งหมด (<span id="count-all">0</span>)</button>
-                        <button
-                            class="filter-btn px-2 py-1 border border-black-1000 text-black-700 rounded-full text-xs"
+                        <button class="filter-btn px-2 py-1 border border-black-1000 text-black-700 rounded-full text-xs"
                             value="Sales">
                             Sales (<span id="count-sales">0</span>)</button>
 
-                        <button
-                            class="filter-btn px-2 py-1 border border-black-1000 text-black-700 rounded-full text-xs"
+                        <button class="filter-btn px-2 py-1 border border-black-1000 text-black-700 rounded-full text-xs"
                             value="Sales Supervisor">
                             Sales Supervisor (<span id="count-supervisor">0</span>)</button>
 
-                        <button
-                            class="filter-btn px-2 py-1 border border-black-1000 text-black-700 rounded-full text-xs"
+                        <button class="filter-btn px-2 py-1 border border-black-1000 text-black-700 rounded-full text-xs"
                             value="CEO">
                             CEO (<span id="count-ceo">0</span>)
                         </button>
@@ -87,8 +84,7 @@
                                     <p class="text-sm text-gray-500">{{ $user->us_email }}</p>
                                     <span
                                         class="px-2 mt-1 border rounded-full text-xs bg-white
-                                        @if ($user->us_role == 'CEO')
-                                            border-yellow-700 text-yellow-700
+                                        @if ($user->us_role == 'CEO') border-yellow-700 text-yellow-700
                                         @elseif ($user->us_role == 'Sales Supervisor')
                                             border-purple-500 text-purple-500
                                         @else
@@ -156,7 +152,8 @@
                     const role = this.getAttribute("value");
 
                     // ลบ active ออกจากทุกปุ่ม
-                    filterButtons.forEach(btn => btn.classList.remove("border-[#4D55A0]", "text-[#4D55A0]"));
+                    filterButtons.forEach(btn => btn.classList.remove("border-[#4D55A0]",
+                        "text-[#4D55A0]"));
                     this.classList.add("border-[#4D55A0]", "text-[#4D55A0]");
 
                     // แสดงหรือซ่อนบัญชี
@@ -177,8 +174,10 @@
                 let found = false; // ตัวแปรเพื่อตรวจสอบว่าพบผู้ใช้ที่ตรงตามเงื่อนไขหรือไม่
 
                 userItems.forEach(item => { // ค้นหาชื่อและอีเมล
-                    const userName = item.querySelector('.font-semibold').innerText.toLowerCase(); // ชื่อผู้ใช้
-                    const userEmail = item.querySelector('.text-sm').innerText.toLowerCase(); // อีเมลผู้ใช้
+                    const userName = item.querySelector('.font-semibold').innerText
+                        .toLowerCase(); // ชื่อผู้ใช้
+                    const userEmail = item.querySelector('.text-sm').innerText
+                        .toLowerCase(); // อีเมลผู้ใช้
                     const shouldShow = userName.includes(searchTerm) || userEmail.includes(
                         searchTerm); // ตรวจสอบว่าชื่อหรืออีเมลตรงกับคำค้นหาหรือไม่
 
@@ -237,7 +236,8 @@
 
             // เพิ่ม IDs ที่เลือกลงในฟอร์ม
             checkboxes.forEach(checkbox => { // วนลูปผ่าน checkbox ที่เลือก
-                const userId = checkbox.closest('.user-item').querySelector('input[type="hidden"]').value; // ดึง ID ของผู้ใช้
+                const userId = checkbox.closest('.user-item').querySelector('input[type="hidden"]')
+                    .value; // ดึง ID ของผู้ใช้
                 const input = document.createElement('input'); // สร้าง input ใหม่
                 input.type = 'hidden'; // กำหนด type เป็น hidden
                 input.name = 'ids[]'; // กำหนดชื่อเป็น ids[]

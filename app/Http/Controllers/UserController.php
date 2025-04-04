@@ -29,7 +29,7 @@ class UserController extends Controller
         $user = User::find($id);
         $data = $user;
         $allUser = User::all();
-        return view('edit', ['users' => $data], compact('allUser'));
+        return view('editUser', ['users' => $data], compact('allUser'));
     }
 
     function edit_action(Request $req)
@@ -41,7 +41,7 @@ class UserController extends Controller
         $muser->us_head = $req->head;
         $muser->us_email = $req->email;
         $muser->save();
-        return redirect('/manage-user');
+        return redirect()->route('manage.user');
     }
 
     function add_user()
@@ -61,24 +61,6 @@ class UserController extends Controller
         } else if ($req->has('id')) { // ถ้ามี id เดียว
             User::where('us_id', $req->id)->delete(); // ถ้ามี id เดียวให้ลบรายการนั้น
         }
-        return redirect('/manage-user');
+        return redirect()->route('manage.user');
     }
-
-    /*
-    // --------------- Not Use ---------------
-    // Ver.1 - เลือกหลายรายการไม่ได้
-
-     function delete_user(Request $req){
-    if ($req->has('id')) {
-        $muser = User::find($req->id); // ถ้าค้นหาด้วยค่า ID มา → ลบผู้ใช้นั้น
-        if ($muser) {
-            $muser->delete();
-            return redirect('/manage-user'); // กลับไปหน้ารายการปกติ
-        }
-        return response()->noContent(); // ถ้าไม่เจอ ID
-    }
-    // ถ้าไม่มี ID → แสดงรายการผู้ใช้ทั้งหมด
-    $users = User::all();
-    return view('manage-user', compact('users'));
-    } */
 }

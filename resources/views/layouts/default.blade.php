@@ -84,8 +84,8 @@
                 $("#sidebar").addClass("-translate-x-full");
                 $("#overlay").addClass("hidden");
             });
-        </script>
-    </nav>
+        });
+    </script>
 </body>
 
 </html>

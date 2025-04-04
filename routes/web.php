@@ -10,26 +10,26 @@ use Illuminate\Support\Facades\Session;
 
 Route::get('/', [UserController::class, 'index']);
 
-Route::get('/manage-user', [UserController::class, 'index']);
+Route::get('/manage-user', [UserController::class, 'index'])->name('manage.user');
 
-Route::get('/add-user', [UserController::class, 'add_user']);
+Route::get('/add-user', [UserController::class, 'add_user'])->name('add.user');
 
-Route::delete('/delete-user', [UserController::class, 'delete_user']);
+Route::delete('/delete-user', [UserController::class, 'delete_user'])->name('delete.user');
 
 Route::get('/edit-user/{id}', [UserController::class, 'edit_user']);
 
-Route::put('/edit-user', [UserController::class, 'edit_action']);
+Route::put('/edit-user', [UserController::class, 'edit_action'])->name('edit.user');
 
 Route::get('/login', function () {
     return view('login');
-});
+})->name('login');
 
 Route::get('/logout', function () {
     Session::forget('google_user');
     Session::flush();
     Auth::logout();
     return Redirect('/login');
-});
+})->name('logout');
 
 
 Route::get('/map', MapLocation::class)->name('map');
