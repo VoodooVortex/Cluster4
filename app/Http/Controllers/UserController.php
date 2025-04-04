@@ -13,16 +13,28 @@ class UserController extends Controller
         return view('manageUser', compact('users'));
     }
 
-    function create(Request $req)
+    // Aninthita Prasoetsang 66160381
+    public function create(Request $request)
     {
-        $muser = new User();
-        $muser->fname = $req->input('fname');
-        $muser->lname = $req->input('lname');
-        $muser->role = $req->role;
-        $muser->email = $req->email;
-        $muser->save();
-        return redirect('/users');
+    // ตรวจสอบค่าที่รับมา
+    $request->validate([
+        'username' => 'required|string|max:255',
+        'lastname' => 'required|string|max:255',
+        'role' => 'required|string',
+        'email' => 'nullable|email|max:255',
+        'head' => 'nullable|exists:users,us_id', // ต้องมีเฉพาะบางตำแหน่ง
+    ]);
+       // สร้างผู้ใช้ใหม่ในฐานข้อมูล
+       User::create([
+        'us_fname' => $request->username,
+        'us_lname' => $request->lastname,
+        'us_email' => $request->email,
+        'us_role' => $request->role,
+        'us_head' => $request->head ?? null, // ถ้าไม่มีหัวหน้างาน ให้เป็น null
+    ]);
+        return redirect('/manage-user')->with('success', 'เพิ่มผู้ใช้งานสำเร็จ');
     }
+
 
     function edit_user($id)
     {
@@ -45,8 +57,10 @@ class UserController extends Controller
     }
 
 
-    function add_user()
+    public function add_user()
     {
-        return view('addUser');
+        $allUser = User::where('us_role', 'Sales Supervisor')->get();
+        return view('addUser', compact('allUser'));
     }
+    
 }
