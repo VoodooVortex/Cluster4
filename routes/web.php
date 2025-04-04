@@ -14,7 +14,7 @@ Route::get('/manage-user', [UserController::class, 'index']);
 
 Route::get('/add-user', [UserController::class, 'add_user']);
 
-Route::delete('/delete-user', [UserController::class, '']);
+Route::delete('/delete-user', [UserController::class, 'delete_user']);
 
 Route::get('/edit-user/{id}', [UserController::class, 'edit_user']);
 
