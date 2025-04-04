@@ -54,35 +54,16 @@ class UserController extends Controller
     @author : Yothin Sisaitham 66160088
     @create date : 04/04/2568
     --}} */
-    public function delete_user(Request $req){
-    // ตรวจสอบว่ามี ID ถูกส่งมาหรือไม่
-    if ($req->has('id')) {
-        $ids = $req->input('id'); // รับค่า ID
-
-        // เช็คว่าเป็น array หรือไม่ ** checkbox ที่ให้กดได้หลายคน
-        if (is_array($ids)) {
-            // ลบแบบ batch ในกรณีที่มีหลาย ID
-            $chunkSize = 500;  // กำหนดขนาด batch ที่ต้องการ
-            foreach (array_chunk($ids, $chunkSize) as $chunk) {
-                User::whereIn('id', $chunk)->delete();
-            }
-        } else {
-            // ลบผู้ใช้คนเดียว
-            $muser = User::find($ids);
-            if ($muser) {
-                $muser->delete();
-            } else {
-                return response()->noContent(); // ถ้าไม่พบผู้ใช้
-            }
+    public function delete_user(Request $req)
+    {
+        if ($req->has('ids')) { // เช็คว่ามี ids หรือไม่
+            User::whereIn('us_id', $req->ids)->delete(); // ใช้ whereIn เพื่อลบหลายรายการพร้อมกัน
+        } else if ($req->has('id')) { // ถ้ามี id เดียว
+            User::where('us_id', $req->id)->delete(); // ถ้ามี id เดียวให้ลบรายการนั้น
         }
-        // เมื่อการลบเสร็จสิ้นให้ redirect ไปที่หน้ารายการผู้ใช้
-        return redirect('/manageUser'); // ใช้เส้นทางที่เหมาะสม
+        return redirect('/manage-user');
     }
 
-    // ถ้าไม่มี ID → แสดงรายการผู้ใช้ทั้งหมด
-    $users = User::all();
-    return view('manageUser', compact('users'));
-    }
     /*
     // --------------- Not Use ---------------
     // Ver.1 - เลือกหลายรายการไม่ได้

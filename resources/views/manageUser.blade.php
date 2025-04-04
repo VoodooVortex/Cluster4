@@ -13,7 +13,7 @@
 
         {{-- ช่องค้นหา + ปุ่มเพิ่มบัญชี --}}
         <div class="flex space-x-2 mb-4 px-4">
-            <input type="text" placeholder="ค้นหาบัญชี"
+            <input type="text" id="searchInput" placeholder="ค้นหาบัญชี"
                 class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
             <a href="{{ url('/add-user') }}" class="bg-indigo-600 text-white whitespace-nowrap px-5 py-2 rounded-2xl"
                 style="background-color: #4D55A0;">เพิ่มบัญชี</a>
@@ -33,11 +33,14 @@
                         <input type="checkbox" id="selectAll" class="mr-2 h-15 w-10" onclick="toggleAllCheckboxes()">
                         <span class="text-gray-700">เลือกทั้งหมด</span>
                     </div>
-                    <button id="deleteButton"
+
+                    <!-- ปุ่มลบ -->
+                    <button type="button" id="deleteButton"
                         class="hidden bg-red-500 text-white px-4 py-1 rounded-lg text-sm hover:bg-red-600"
                         onclick="deleteUsers()">
                         ลบ (<span id="selectedCount">0</span>)
                     </button>
+
                 </div>
 
                 <div class="bg-white p-3 rounded-lg">
@@ -58,6 +61,7 @@
                         <li class="user-item flex items-center justify-between p-2 border-b" value="{{ $user->us_role }}">
                             <div class="flex items-center space-x-2">
                                 <input type="checkbox" class="user-checkbox h-5 w-5" onclick="toggleDeleteButton()">
+                                <input type="hidden" value="{{ $user->us_id }}">
                                 <img src="{{ $user->us_image }}" class="w-10 h-10 rounded-full" alt="User Image">
                                 <div>
                                     <p class="font-semibold">{{ $user->us_fname }}</p>
@@ -72,16 +76,19 @@
                                 </div>
                             </div>
                             {{-- <a href="{{ url('/user/' . $user->id) }}" class="text-indigo-600">Edit</a> --}}
-                            <a href="{{ url('/edit-user/' . $user->us_id) }}">
-                                <button class="btn btn-warning">Edit</button>
-                            </a>
+                            <div class="flex items-center ml-auto">
+                                <a href="{{ url('/edit-user/' . $user->us_id) }}">
+                                    <button class="btn btn-warning">Edit</button>
+                                </a>
+                            </div>
 
                             <!-- ลบบัญชี -->
-                            <form action="{{ url('/delete-user') }}" method="POST"
-                                style="display: none;">
+                            <form id="deleteUserForm" action="{{ url('/delete-user') }}" method="POST">
                                 @csrf
                                 @method('delete')
-                                <input type="hidden" name="user_id" value="{{ $user->us_id }}">
+                                <div id="selected-ids-container">
+                                    <!-- IDs จะถูกเพิ่มที่นี่ด้วย JavaScript -->
+                                </div>
                             </form>
 
                         </li>
@@ -102,6 +109,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const filterButtons = document.querySelectorAll(".filter-btn");
             const userItems = document.querySelectorAll(".user-item");
+            const searchInput = document.getElementById('searchInput');
 
             filterButtons.forEach(button => {
                 button.addEventListener("click", function() {
@@ -122,6 +130,28 @@
                     });
                 });
             });
+
+            // Search User
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase(); // คำค้นหาที่ผู้ใช้ป้อน
+
+                let found = false; // ตัวแปรเพื่อตรวจสอบว่าพบผู้ใช้ที่ตรงตามเงื่อนไขหรือไม่
+
+                userItems.forEach(item => { // ค้นหาชื่อและอีเมล
+                    const userName = item.querySelector('.font-semibold').innerText.toLowerCase(); // ชื่อผู้ใช้
+                    const userEmail = item.querySelector('.text-sm').innerText.toLowerCase(); // อีเมลผู้ใช้
+                    const shouldShow = userName.includes(searchTerm) || userEmail.includes(
+                        searchTerm); // ตรวจสอบว่าชื่อหรืออีเมลตรงกับคำค้นหาหรือไม่
+
+                    item.classList.toggle('hidden', !shouldShow); // ซ่อนรายการที่ไม่ตรงกับคำค้นหา
+                    if (shouldShow) found = true; // ถ้าพบผู้ใช้ที่ตรงตามเงื่อนไข
+                });
+
+                updateSelectAllCheckbox(); // อัปเดต checkbox "เลือกทั้งหมด"
+                updateDeleteButtonVisibility(); // อัปเดตปุ่มลบ
+                updateAccountCount(); // อัปเตตจำนวนบัญชีที่แสดง
+            });
+
         });
 
         function toggleAllCheckboxes() {
@@ -156,41 +186,54 @@
             selectedCount.textContent = count;
         }
 
-        function deleteUsers(us_id) {
-            const branchAlert = '/public/alert-icon/BranchAlert.png';
+        // Delete User
+        function deleteUsers() {
             const deleteAlert = '/public/alert-icon/DeleteAlert.png';
-            const editAlert = '/public/alert-icon/EditAlert.png';
-            const errorAlert = '/public/alert-icon/ErrorAlert.png';
-            const orderAlert = '/public/alert-icon/OrderAlert.png';
             const successAlert = '/public/alert-icon/SuccessAlert.png';
-            const userAlert = '/public/alert-icon/UserAlert.png';
+            const checkboxes = document.querySelectorAll('.user-checkbox:checked'); // ดึง checkbox ที่ถูกเลือก
+            const form = document.getElementById('deleteUserForm'); // ดึงฟอร์มลบผู้ใช้
+
+            // เคลียร์ IDs ที่เลือกก่อนหน้านี้
+            document.getElementById('selected-ids-container').innerHTML = '';
+
+            // เพิ่ม IDs ที่เลือกลงในฟอร์ม
+            checkboxes.forEach(checkbox => { // วนลูปผ่าน checkbox ที่เลือก
+                const userId = checkbox.closest('.user-item').querySelector('input[type="hidden"]').value; // ดึง ID ของผู้ใช้
+                const input = document.createElement('input'); // สร้าง input ใหม่
+                input.type = 'hidden'; // กำหนด type เป็น hidden
+                input.name = 'ids[]'; // กำหนดชื่อเป็น ids[]
+                input.value = userId; // กำหนดค่าเป็น ID ของผู้ใช้
+                document.getElementById('selected-ids-container').appendChild(input); // เพิ่ม input ลงในฟอร์ม
+            });
 
             Swal.fire({
-                title: 'ยืนยันการลบบัญชี',
-                showCancelButton: true,
-                confirmButtonText: 'ยืนยัน',
-                cancelButtonText: 'ยกเลิก',
-                reverseButtons: true,
-                imageUrl: deleteAlert,
-                customClass: {
-                    confirmButton: 'swal2-delete-custom',
-                    cancelButton: 'swal2-cancel-custom',
-                    title: 'no-padding-title',
-                    actions: 'swal2-actions-gap',
+                title: 'ยืนยันการลบบัญชี', // ข้อความยืนยันการลบ
+                showCancelButton: true, // แสดงปุ่มยกเลิก
+                confirmButtonText: 'ยืนยัน', // ปุ่มยืนยัน
+                cancelButtonText: 'ยกเลิก', // ปุ่มยกเลิก
+                reverseButtons: true, // ปรับตำแหน่งปุ่ม
+                imageUrl: deleteAlert, // รูปภาพแจ้งเตือน
+                customClass: { // กำหนด class ของปุ่ม
+                    confirmButton: 'swal2-delete-custom', // class ปุ่มยืนยัน
+                    cancelButton: 'swal2-cancel-custom', // class ปุ่มยกเลิก
+                    title: 'no-padding-title', // class title
+                    actions: 'swal2-actions-gap', // class actions
                 },
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: 'ดำเนินการเสร็จสิ้น',
-                        confirmButtonText: 'ตกลง',
-                        imageUrl: successAlert,
-                        customClass: {
-                            confirmButton: 'swal2-success-custom',
-                            title: 'no-padding-title',
+                buttonsStyling: false // ปิดการใช้งานสไตล์ปุ่มเริ่มต้นของ SweetAlert
+            }).then((result) => { // เมื่อกดปุ่ม
+                if (result.isConfirmed) { // ถ้ากดปุ่มยืนยัน
+                    Swal.fire({ // แสดง SweetAlert ใหม่
+                        title: 'ดำเนินการเสร็จสิ้น', // ข้อความแจ้งเตือน
+                        confirmButtonText: 'ตกลง', // ปุ่มตกลง
+                        imageUrl: successAlert, // รูปภาพแจ้งเตือน
+                        customClass: { // กำหนด class ของปุ่ม
+                            confirmButton: 'swal2-success-custom', // class ปุ่มตกลง
+                            title: 'no-padding-title', // class title
                         },
-                        buttonsStyling: false
-                    })
+                        buttonsStyling: false // ปิดการใช้งานสไตล์ปุ่มเริ่มต้นของ SweetAlert
+                    }).then(() => { // เมื่อกดปุ่มตกลง
+                        form.submit(); // ส่งฟอร์มลบผู้ใช้
+                    });
                 }
             });
         }
