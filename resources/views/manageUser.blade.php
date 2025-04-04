@@ -5,7 +5,7 @@
         {{-- ปุ่มย้อนกลับและหัวข้อ --}}
         <div class="mb-4 px-4">
             <a href="#" class="text-white bg-indigo-600 px-4 py-3 rounded-2xl flex items-center justify-left w-full" style="background-color: #4D55A0;">
-                <i class="fa-solid fa-arrow-left mr-5"></i>
+                <i class="text-4xl"></i>
                 จัดการบัญชีผู้ใช้
             </a>
         </div>
@@ -38,9 +38,9 @@
 
                 <div class="bg-white p-3 rounded-lg">
                     <div class="flex space-x-2 mt-2">
-                        <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm active"
+                        <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm active bg-indigo-500 text-white"
                             value="all">ทั้งหมด</button>
-                        <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm" value="Sale">Sale</button>
+                        <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm" value="Sales">Sales</button>
                         <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm"
                             value="Sales Supervisor">Sales Supervisor</button>
                         <button class="filter-btn px-3 py-1 border bg-gray-200 rounded-full text-sm" value="CEO">CEO</button>
