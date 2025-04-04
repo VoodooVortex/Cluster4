@@ -1,3 +1,9 @@
+{{--
+    @title : sidebar
+    @author : Nontapat Sinthum 66160104
+    @create date : 04/04/2568
+--}}
+
 <aside class="app-sidebar">
     <!-- Sidebar -->
     <div id="sidebar"
@@ -11,29 +17,38 @@
 
         <!-- Sidebar Menu -->
         <ul class="pt-5 mt-4">
-            <li class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
-                <i class="fa-solid fa-house mr-3" style="color: #595959;"></i> หน้าแรก
-            </li>
-            <li class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
-                <i class="fa-solid fa-globe mr-3" style="color: #595959;"></i> แผนที่
-            </li>
-            <li class="{{ Request::is('manage-user') ? 'bg-indigo-100 text-indigo-600' : '' }}">
-                <a href="{{ url('/manage-user') }}" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
-                    <i class="fa-solid fa-circle-user mr-3" style="color: #595959;"></i> จัดการบัญชี
+            <li class="{{ Request::is('#') ? 'bg-indigo-100 text-indigo-600' : '' }}">
+                <a href="#" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
+                    <i class="fa-solid fa-house mr-3" style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i> หน้าแรก
                 </a>
             </li>
-            {{-- <a href="{{ url('/manage-user') }}">
-                <li class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
-                    <i class="fa-solid fa-circle-user mr-3" style="color: #595959;"></i> จัดการบัญชี
-                </li>
-            </a> --}}
-            <li class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
-                <i class="fa-solid fa-chart-column mr-3" style="color: #595959;"></i> ยอดขาย
+
+            <li class="{{ Request::is('#') ? 'bg-indigo-100 text-indigo-600' : '' }}">
+                <a href="#" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
+                    <i class="fa-solid fa-globe mr-3" style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i> แผนที่
+                </a>
             </li>
-            <li class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
-                <i class="fa-regular fa-calendar-days mr-3" style="color: #595959;"></i> รายงาน
+
+            <li class="{{ Request::is('manage-user') ? 'bg-indigo-100 text-indigo-600' : '' }}">
+                <a href="{{ url('/manage-user') }}" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
+                    <i class="fa-solid fa-circle-user mr-3" style="color: {{ Request::is('manage-user') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i> จัดการบัญชี
+                </a>
             </li>
+
+            <li class="{{ Request::is('#') ? 'bg-indigo-100 text-indigo-600' : '' }}">
+                <a href="#" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
+                    <i class="fa-solid fa-chart-column mr-3" style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i> ยอดขาย
+                </a>
+            </li>
+
+            <li class="{{ Request::is('#') ? 'bg-indigo-100 text-indigo-600' : '' }}">
+                <a href="#" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
+                    <i class="fa-regular fa-calendar-days mr-3" style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i> รายงาน
+                </a>
+            </li>
+
             <hr class="my-2">
+
             <li class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                 <i class="fa-solid fa-right-from-bracket mr-3" style="color: #595959;"></i> ออกจากระบบ
             </li>
