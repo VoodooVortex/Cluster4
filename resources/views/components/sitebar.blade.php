@@ -17,11 +17,16 @@
             <li class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                 <i class="fa-solid fa-globe mr-3" style="color: #595959;"></i> แผนที่
             </li>
-            <a href="{{ url('/manage-user') }}">
+            <li class="{{ Request::is('manage-user') ? 'bg-indigo-100 text-indigo-600' : '' }}">
+                <a href="{{ url('/manage-user') }}" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
+                    <i class="fa-solid fa-circle-user mr-3" style="color: #595959;"></i> จัดการบัญชี
+                </a>
+            </li>
+            {{-- <a href="{{ url('/manage-user') }}">
                 <li class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                     <i class="fa-solid fa-circle-user mr-3" style="color: #595959;"></i> จัดการบัญชี
                 </li>
-            </a>
+            </a> --}}
             <li class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                 <i class="fa-solid fa-chart-column mr-3" style="color: #595959;"></i> ยอดขาย
             </li>

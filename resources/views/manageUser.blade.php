@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-    <div class="pt-16 bg-white-100 min-h-screen w-full">
+    <div class="pt-16 bg-white-100 w-full">
         {{-- ปุ่มย้อนกลับและหัวข้อ --}}
         <div class="mb-4 px-4">
             <a href="#" class="text-white bg-indigo-600 px-4 py-3 rounded-2xl flex items-center justify-left w-full" style="background-color: #4D55A0;">
