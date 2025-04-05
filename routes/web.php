@@ -14,6 +14,8 @@ use PHPUnit\Runner\HookMethod;
 
 Route::get('/', [UserController::class, 'index']);
 
+Route::get('/', [UserController::class, 'index']);
+
 //kuy mork
 Route::get('/dashboard', [DashboardController::class, 'branchGrowthRate'])->name('dashboard.branch.growth');
 
