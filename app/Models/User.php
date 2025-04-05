@@ -15,7 +15,6 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
     use SoftDeletes;
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -29,6 +28,8 @@ class User extends Authenticatable
         'us_lname',
         'us_email',
         'us_role',
+        'us_head',
+
     ];
 
     protected $casts = [
