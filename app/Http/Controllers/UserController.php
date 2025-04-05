@@ -17,23 +17,23 @@ class UserController extends Controller
     // Aninthita Prasoetsang 66160381
     public function create(Request $request)
     {
-    // ตรวจสอบค่าที่รับมา
-    $request->validate([
-        'username' => 'required|string|max:255',
-        'lastname' => 'required|string|max:255',
-        'role' => 'required|string',
-        'email' => 'nullable|email|max:255',
-        'head' => 'nullable|exists:users,us_id', // ต้องมีเฉพาะบางตำแหน่ง
-    ]);
-       // สร้างผู้ใช้ใหม่ในฐานข้อมูล
-       User::create([
-        'us_fname' => $request->username,
-        'us_lname' => $request->lastname,
-        'us_email' => $request->email,
-        'us_role' => $request->role,
-        'us_head' => $request->head ?? null, // ถ้าไม่มีหัวหน้างาน ให้เป็น null
-    ]);
-        return redirect('/manage-user')->with('success', 'เพิ่มผู้ใช้งานสำเร็จ');
+        // ตรวจสอบค่าที่รับมา
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'role' => 'required|string',
+            'email' => 'nullable|email|max:255',
+            'head' => 'nullable|exists:users,us_id', // ต้องมีเฉพาะบางตำแหน่ง
+        ]);
+        // สร้างผู้ใช้ใหม่ในฐานข้อมูล
+        User::create([
+            'us_fname' => $request->username,
+            'us_lname' => $request->lastname,
+            'us_email' => $request->email,
+            'us_role' => $request->role,
+            'us_head' => $request->head ?? null, // ถ้าไม่มีหัวหน้างาน ให้เป็น null
+        ]);
+        return redirect()->route('manage.user')->with('success', 'เพิ่มผู้ใช้งานสำเร็จ');
     }
 
 
@@ -97,7 +97,11 @@ class UserController extends Controller
         }
 
         return view('EmployeeGrowthRate', compact(
-            'salesCount', 'supervisorCount', 'ceoCount', 'totalEmployees', 'growthData'
+            'salesCount',
+            'supervisorCount',
+            'ceoCount',
+            'totalEmployees',
+            'growthData'
         ));
     }
 }

@@ -14,7 +14,7 @@ class HomeController extends Controller
 {
     function index()
     {
-      //@auther : guitar
+        //@auther : guitar
         $currentYear = Carbon::now()->year + 543;  // Convert to Thai year
         $currentMonth = Carbon::now()->month;
 
@@ -54,16 +54,16 @@ class HomeController extends Controller
             ->take(5)  // เลือกแค่ 5 อันดับแรก
             ->get();
 
-      //@auther : riw
-      // หาพนักงานที่เพิ่มสาขามากที่สุด
+        //@auther : riw
+        // หาพนักงานที่เพิ่มสาขามากที่สุด
         $topUsers = User::withCount('branch')  // ดึงจำนวนสาขา
             ->orderByDesc('branch_count')  // เรียงลำดับตามจำนวนสาขา
             ->take(5)  // ดึง 5 คน
             ->get();
 
 
-      //@auther : boom
-      $monthMap = [
+        //@auther : boom
+        $monthMap = [
             'มกราคม' => 1,
             'กุมภาพันธ์' => 2,
             'มีนาคม' => 3,
@@ -84,7 +84,7 @@ class HomeController extends Controller
         $totalSales = Order::sum('od_amount');
 
         // ยอดขายเดือนก่อนหน้า
-        $previousMonthSales = Order::where('od_month' , date('m') - 1)->sum('od_amount');
+        $previousMonthSales = Order::where('od_month', date('m') - 1)->sum('od_amount');
 
         //หา % การเติบโต (ยอดขายเดือนปัจจุบัน - ยอดขายเดือนก่อน / ยอดขายเดือนก่อน )* 100
         $growthPercentage = $previousMonthSales > 0 ? (($totalSales - $previousMonthSales) / $previousMonthSales) * 100 : 0;
@@ -94,16 +94,16 @@ class HomeController extends Controller
 
         // ดึงข้อมูลยอดขายรายเดือน
         $salesData = Order::where('od_year', 2568) // ปีล่าสุด
-        ->selectRaw('od_month, SUM(od_amount) as total_sales')
-        ->groupBy('od_month')
-        ->orderByRaw("FIELD(od_month, 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม')")
-        ->get();
+            ->selectRaw('od_month, SUM(od_amount) as total_sales')
+            ->groupBy('od_month')
+            ->orderByRaw("FIELD(od_month, 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม')")
+            ->get();
 
         // เตรียมข้อมูลยอดขายรายเดือน
         $monthlySales = [];
         foreach ($salesData as $sale) {
-        $monthNumber = $monthMap[$sale->od_month]; // แปลงชื่อเดือนเป็นหมายเลขเดือน
-        $monthlySales[$monthNumber] = $sale->total_sales;
+            $monthNumber = $monthMap[$sale->od_month]; // แปลงชื่อเดือนเป็นหมายเลขเดือน
+            $monthlySales[$monthNumber] = $sale->total_sales;
         }
 
         // กรณีที่บางเดือนไม่มีข้อมูล ยอดขายจะเป็น 0
@@ -112,6 +112,6 @@ class HomeController extends Controller
         // ชื่อเดือน
         $labels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
 
-        return view('homePage', compact('topBranch', 'topUsers', 'totalSales' , 'averageSales' , 'growthPercentage' , 'labels' , 'monthlySales'));
+        return view('homePage', compact('topBranch', 'topUsers', 'totalSales', 'averageSales', 'growthPercentage', 'labels', 'monthlySales'));
     }
 }

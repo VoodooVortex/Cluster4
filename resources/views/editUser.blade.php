@@ -9,7 +9,7 @@
     <div class="pt-16 bg-white-100 w-full">
         {{-- ปุ่มย้อนกลับและหัวข้อ --}}
         <div class="mb-4 px-4">
-            <a href="{{ url('/manage-user') }}"
+            <a href="{{ route('manage.user') }}"
                 class="text-white border-[#4D55A0] text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
                 style="background-color: #4D55A0;">
                 <i class="fa-solid fa-arrow-left mx-3 fa-l"></i>
@@ -18,7 +18,7 @@
         </div>
         {{-- ส่วนแสดงรุูปภาพ --}}
         <div class="flex space-x-2 mb-4">
-            <form action="{{ url('/edit-user') }}" method="post" id="editForm"
+            <form action="{{ route('edit.user') }}" method="post" id="editForm"
                 class="w-full max-w-3xl bg-white p-6 rounded-lg shadow-lg">
                 @csrf
                 @method('put')
@@ -118,7 +118,7 @@
                 </div>
                 <div class="mt-6 flex items-center justify-between">
                     {{-- ปุ่มยกเลิก --}}
-                    <a href="{{ url('/manage-user') }}">
+                    <a href="{{ route('manage.user') }}">
                         <button type="button"
                             class="w-[120px] bg-white text-black border border-black px-6 py-2 rounded-lg font-bold text-base">ยกเลิก</button>
                     </a>

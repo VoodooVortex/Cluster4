@@ -130,14 +130,6 @@
                 @endforeach
             </ul>
         </div>
-
-
-
-
-        {{-- Footer --}}
-        <footer class="mt-6 text-center text-gray-500 text-sm px-4">
-            © mymap.com
-        </footer>
     </div>
 @endsection
 
