@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\branchController;
 use App\Http\Controllers\HomeController;
+
 use App\Livewire\MapLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +63,10 @@ Route::get('auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->n
 Route::get('auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
 
 
+// Aninthita 66160381
+Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
+
+
 Route::get('/order',[OrderController::class, 'index']);
 
 Route::get('/add-order', [OrderController::class, 'add_order']);
@@ -69,4 +74,5 @@ Route::get('/add-order', [OrderController::class, 'add_order']);
 Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
 
 Route::get('/employee',[UserController::class, 'Emp_GrowRate']);
+
 
