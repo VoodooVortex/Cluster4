@@ -67,12 +67,10 @@ Route::get('auth/google/callback', [GoogleLoginController::class, 'googleCallbac
 Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
 
 
-Route::get('/order',[OrderController::class, 'index']);
+Route::get('/order', [OrderController::class, 'index'])->name('order');
 
 Route::get('/add-order', [OrderController::class, 'add_order']);
 
 Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
 
-Route::get('/employee',[UserController::class, 'Emp_GrowRate']);
-
-
+Route::get('/employee', [UserController::class, 'Emp_GrowRate']);

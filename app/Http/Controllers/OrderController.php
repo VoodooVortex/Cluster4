@@ -43,16 +43,13 @@ class OrderController extends Controller
 
         return view('orderDetail', compact('branch', 'totalSales', 'growthRates'));
     }
-}
-
-
 
     function index()
     {
         $orders = User::join('branch as b', 'users.us_id', '=', 'b.br_us_id') // ดึงข้อมูลผู้ใช้ทั้งหมด
-        ->join('order as o', 'b.br_id', '=', 'o.od_br_id')
-        ->select('b.br_id', 'b.br_code', 'users.us_image', 'users.us_email', 'o.od_amount')
-        ->get();
+            ->join('order as o', 'b.br_id', '=', 'o.od_br_id')
+            ->select('b.br_id', 'b.br_code', 'users.us_image', 'users.us_email', 'o.od_amount')
+            ->get();
         return view('order', compact('orders'));
     }
 
@@ -60,6 +57,4 @@ class OrderController extends Controller
     {
         return view('addOrder');
     }
-
 }
-
