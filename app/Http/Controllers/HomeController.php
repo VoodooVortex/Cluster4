@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     function index()
     {
+      //@auther : guitar
         $currentYear = Carbon::now()->year + 543;  // Convert to Thai year
         $currentMonth = Carbon::now()->month;
 
@@ -30,7 +31,7 @@ class HomeController extends Controller
             11 => 'พฤศจิกายน',
             12 => 'ธันวาคม',
         ];
-
+        
         $currentMonthName = $months[$currentMonth];
 
         $topBranch = DB::table('users as u')
@@ -51,6 +52,14 @@ class HomeController extends Controller
             ->orderByDesc('o.od_amount')  // เรียงตามยอดขายจากมากไปน้อย
             ->take(5)  // เลือกแค่ 5 อันดับแรก
             ->get();
-        return view('homePage', compact('topBranch'));
+      
+      //@auther : riw
+      // หาพนักงานที่เพิ่มสาขามากที่สุด
+        $topUsers = User::withCount('branch')  // ดึงจำนวนสาขา
+            ->orderByDesc('branch_count')  // เรียงลำดับตามจำนวนสาขา
+            ->take(5)  // ดึง 5 คน
+            ->get();
+      
+        return view('homePage', compact('topBranch', 'topUsers'));
     }
 }
