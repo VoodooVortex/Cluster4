@@ -2,17 +2,6 @@
 @section('content')
     <div class="pt-16 max-w-lg mx-auto p-4 bg-gray-100 min-h-screen w-full">
         {{-- ปุ่มย้อนกลับและหัวข้อ --}}
-        <div class="mb-2">
-            <a href="{{ url('/manage-user') }}"
-                class="text-white bg-indigo-600 px-4 py-3 rounded-2xl flex items-left justify-left w-full">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7m0 0l7-7" />
-                </svg>
-                แก้ไขข้อมูล
-            </a>
-        </div>
-
         <div class="flex space-x-2 mb-4">
             <form action="{{ url('/edit-user') }}" method="post" id="editForm"
                 class="w-full max-w-3xl bg-white p-6 rounded-lg shadow-lg">
