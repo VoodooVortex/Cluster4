@@ -12,7 +12,10 @@ Route::get('/', [UserController::class, 'index']);
 
 Route::get('/manage-user', [UserController::class, 'index'])->name('manage.user');
 
+
 Route::get('/add-user', [UserController::class, 'add_user'])->name('add.user');
+Route::post('/add-user', [UserController::class, 'create'])->name('create.user');
+
 
 Route::delete('/delete-user', [UserController::class, 'delete_user'])->name('delete.user');
 
