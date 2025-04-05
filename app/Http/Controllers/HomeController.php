@@ -32,7 +32,7 @@ class HomeController extends Controller
             11 => 'พฤศจิกายน',
             12 => 'ธันวาคม',
         ];
-        
+
         $currentMonthName = $months[$currentMonth];
 
         $topBranch = DB::table('users as u')
@@ -53,15 +53,15 @@ class HomeController extends Controller
             ->orderByDesc('o.od_amount')  // เรียงตามยอดขายจากมากไปน้อย
             ->take(5)  // เลือกแค่ 5 อันดับแรก
             ->get();
-      
+
       //@auther : riw
       // หาพนักงานที่เพิ่มสาขามากที่สุด
         $topUsers = User::withCount('branch')  // ดึงจำนวนสาขา
             ->orderByDesc('branch_count')  // เรียงลำดับตามจำนวนสาขา
             ->take(5)  // ดึง 5 คน
             ->get();
-      
-      
+
+
       //@auther : boom
       $monthMap = [
             'มกราคม' => 1,
@@ -92,7 +92,7 @@ class HomeController extends Controller
         //ค่าเฉลี่ย
         $averageSales = Order::avg('od_amount');
 
-// ดึงข้อมูลยอดขายรายเดือน
+        // ดึงข้อมูลยอดขายรายเดือน
         $salesData = Order::where('od_year', 2568) // ปีล่าสุด
         ->selectRaw('od_month, SUM(od_amount) as total_sales')
         ->groupBy('od_month')
@@ -113,6 +113,5 @@ class HomeController extends Controller
         $labels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
 
         return view('homePage', compact('topBranch', 'topUsers', 'totalSales' , 'averageSales' , 'growthPercentage' , 'labels' , 'monthlySales'));
-
     }
 }
