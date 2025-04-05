@@ -50,3 +50,5 @@ Route::get('/map', MapLocation::class)->name('map');
 Route::get('auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('redirect.google');
 
 Route::get('auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
+
+Route::get('/employee',[UserController::class, 'Emp_GrowRate']);
