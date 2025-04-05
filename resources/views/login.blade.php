@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Map</title>
     <link rel="icon" type="image/png" href="/public/assets/image/logo-mymap.png">
 
@@ -40,52 +40,21 @@
 
     {{-- Import CSS form --}}
     <link rel="stylesheet" href="/resources/css/style.css">
-
-    @yield('styles')
 </head>
 
-<body>
-    <!-- Navbar -->
-    <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-10 flex justify-between items-center px-4 py-2">
-        <!-- Hamburger Menu Button -->
-        <button id="menuToggle" class="text-gray-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-        </button>
-
-        <!-- Profile Icon -->
-        <div class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-400">
-            <i class="fa-regular fa-user text-2xl"></i>
+<body class="sm:flex items-center justify-center sm:min-h-screen bg-gray-100 sm:px-4">
+    <div class="w-full md:h-[586px] h-screen sm:max-w-sm bg-white p-6 sm:p-8 sm:rounded-2xl shadow-lg">
+        <!-- โลโก้ -->
+        <div class="flex justify-center mb-6 md:mt-36 mt-36">
+            <img src="public/assets/image/logo-mymap.png" alt="Login Image" class="w-32 h-32">
         </div>
-    </nav>
 
-    <!-- Sidebar -->
-    @include('components.sitebar')
-
-    <!-- Main Content Wrapper -->
-    <div class="min-h-screen overflow-y-auto">
-        @yield('content')
+        <!-- ปุ่ม Google Login -->
+        <a id="google-login" href="{{ route('redirect.google') }}"
+            class="w-full flex items-center border border-gray-300 justify-center py-3 rounded-2xl bg-white hover:bg-gray-100">
+            <img src="public/assets/image/icon-google.png" class="w-5 h-5 mr-3"> Log in with Google
+        </a>
     </div>
-
-    @yield('scripts')
-    @livewireScripts
-
-    <!-- Script เปิด/ปิดเมนู -->
-    <script>
-        $(document).ready(function() {
-            $("#menuToggle").click(function() {
-                $("#sidebar").removeClass("-translate-x-full");
-                $("#overlay").removeClass("hidden");
-            });
-
-            $("#closeMenu, #overlay").click(function() {
-                $("#sidebar").addClass("-translate-x-full");
-                $("#overlay").addClass("hidden");
-            });
-        });
-    </script>
 </body>
 
 </html>

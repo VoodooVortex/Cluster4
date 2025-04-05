@@ -12,17 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->us_id();
+            $table->id('us_id');
             $table->string('us_fname');
             $table->string('us_lname');
             $table->string('us_email')->unique();
-            $table->enum('us_role', ['Sales', 'SalesSupervisor', 'CEO']);
-            $table->integer('us_head');
-            $table->string('us_image');
+            $table->enum('us_role', ['Sales', 'Sales Supervisor', 'CEO']);
+            $table->string('us_image')->nullable();
+            $table->unsignedBigInteger('us_head')->nullable()->index();
+
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->missingnullable()->nullable();
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
+            $table->foreign('us_head')->references('us_id')->on('users')->onDelete('set null');
+            $table->engine = 'InnoDB';
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
