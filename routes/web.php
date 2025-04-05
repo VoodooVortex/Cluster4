@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
+use App\Http\Controllers\HomeController;
 use App\Livewire\MapLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,8 @@ use Illuminate\Support\Facades\Session;
 
 
 Route::get('/', [UserController::class, 'index']);
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/manage-user', [UserController::class, 'index'])->name('manage.user');
 
