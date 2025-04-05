@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>My Map</title>
     <link rel="icon" type="image/png" href="/public/assets/image/logo-mymap.png">
 
@@ -56,12 +56,8 @@
         </button>
 
         <!-- Profile Icon -->
-        <div class="rounded-full border p-1">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M5.121 17.804A9 9 0 1118.879 17.804M12 12a4 4 0 100-8 4 4 0 000 8z" />
-            </svg>
+        <div class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-400">
+            <i class="fa-regular fa-user text-2xl"></i>
         </div>
     </nav>
 

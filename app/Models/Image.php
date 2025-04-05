@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+// @author : Pakkapon Chomchoey 66160080
 class Image extends Model
 {
     //

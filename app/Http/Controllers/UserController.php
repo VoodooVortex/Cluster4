@@ -53,14 +53,27 @@ class UserController extends Controller
         $muser->us_head = $req->head;
         $muser->us_email = $req->email;
         $muser->save();
-        return redirect('/manage-user');
+        return redirect()->route('manage.user');
     }
-
 
     public function add_user()
     {
         $allUser = User::where('us_role', 'Sales Supervisor')->get();
         return view('addUser', compact('allUser'));
     }
-    
+
+    /* --}}
+    @title : ทำ Contorller ลบบัญชี
+    @author : Yothin Sisaitham 66160088
+    @create date : 04/04/2568
+    --}} */
+    public function delete_user(Request $req)
+    {
+        if ($req->has('ids')) { // เช็คว่ามี ids หรือไม่
+            User::whereIn('us_id', $req->ids)->delete(); // ใช้ whereIn เพื่อลบหลายรายการพร้อมกัน
+        } else if ($req->has('id')) { // ถ้ามี id เดียว
+            User::where('us_id', $req->id)->delete(); // ถ้ามี id เดียวให้ลบรายการนั้น
+        }
+        return redirect()->route('manage.user');
+    }
 }
