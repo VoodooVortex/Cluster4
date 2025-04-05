@@ -5,6 +5,7 @@
 --}}
 
 <div>
+    <livewire:search-bar />
     <div id='map' wire:ignore style="width: 100vw; min-height: 100dvh"></div>
     {{-- add branch form --}}
     <div wire:ignore.self id="locationForm"
@@ -1309,6 +1310,40 @@
                     }
                 });
             }
+
+            let iconUrl =
+                `https://api.mapbox.com/v4/marker/pin-m-library+28A745.png?access_token=${mapboxgl.accessToken}`;
+            let iconILName = `school-icon`;
+
+            map.loadImage(iconUrl, (error, image) => {
+                if (!map.hasImage(iconILName)) {
+                    map.addImage(iconILName, image);
+                }
+            });
+
+            //ดึงข้อมูลสถานที่ที่น่า่สนใจ
+            map.addSource('interest', {
+                type: 'vector',
+                url: 'mapbox://pktonnam.1p9c1btr'
+            });
+
+            //เพิ่ม layer มหาวิทยาลัย + icon
+            map.addLayer({
+                id: 'college-layer',
+                type: 'symbol',
+                source: 'interest',
+                'source-layer': '22collegeanduniversity',
+                layout: {
+                    'icon-image': 'school-icon',
+                    'text-field': ['get', 'name'],
+                    'text-size': 12,
+                    'text-offset': [0, 1.2],
+                    'text-anchor': 'top'
+                },
+                paint: {
+                    'text-color': '#333',
+                }
+            });
         }
 
         map.on('load', () => {
@@ -1327,5 +1362,14 @@
         Livewire.on('updateEditBranchLocation', (geoJson) => {
             _loadBranchs(JSON.parse(geoJson));
         })
+
+        Livewire.on('locationsUpdate', (center) => {
+            let userLocation = [center[0][0][0], center[0][0][1]]
+            map.flyTo({
+                center: userLocation,
+                zoom: 15,
+                essential: true
+            });
+        });
     });
 </script>
