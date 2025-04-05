@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\branchController;
@@ -60,4 +61,12 @@ Route::get('auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->n
 
 Route::get('auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
 
+
+Route::get('/order',[OrderController::class, 'index']);
+
+Route::get('/add-order', [OrderController::class, 'add_order']);
+
+Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
+
 Route::get('/employee',[UserController::class, 'Emp_GrowRate']);
+
