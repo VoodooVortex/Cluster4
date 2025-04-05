@@ -17,10 +17,10 @@
 
         <!-- Sidebar Menu -->
         <ul class="pt-5 mt-4">
-            <li class="{{ Request::is('#') ? 'bg-indigo-100 text-indigo-600' : '' }}">
-                <a href="#" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
+            <li class="{{ Request::is('home') ? 'bg-indigo-100 text-indigo-600' : '' }}">
+                <a href="{{ route('home') }}" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                     <i class="fa-solid fa-house mr-3"
-                        style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
+                        style="color: {{ Request::is('home') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
                     หน้าแรก
                 </a>
             </li>

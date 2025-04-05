@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -75,5 +76,28 @@ class UserController extends Controller
             User::where('us_id', $req->id)->delete(); // ถ้ามี id เดียวให้ลบรายการนั้น
         }
         return redirect()->route('manage.user');
+    }
+    function Emp_GrowRate()
+    {
+        $salesCount = User::where('us_role', 'Sales')->count();
+        $supervisorCount = User::where('us_role', 'Sales Supervisor')->count();
+        $ceoCount = User::where('us_role', 'CEO')->count();
+        $totalEmployees = User::count();
+        $monthGrowrate = User::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', 2025)
+            ->whereNotNull('created_at')
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->pluck('total', 'month');
+
+        $label = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+        $growthData = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $growthData[] = $monthGrowrate[$i] ?? 0; // ถ้าเดือนไหนไม่มี ให้ใส่ 0
+        }
+
+        return view('EmployeeGrowthRate', compact(
+            'salesCount', 'supervisorCount', 'ceoCount', 'totalEmployees', 'growthData'
+        ));
     }
 }
