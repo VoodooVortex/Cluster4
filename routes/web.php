@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Livewire\MapLocation;
@@ -38,3 +39,11 @@ Route::get('/map', MapLocation::class)->name('map');
 Route::get('auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('redirect.google');
 
 Route::get('auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
+
+
+
+Route::get('/order',[OrderController::class, 'index']);
+
+Route::get('/add-order', [OrderController::class, 'add_order']);
+
+Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
