@@ -1,3 +1,9 @@
+body {
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+}
+
 .scrollbar-hidden::-webkit-scrollbar {
     display: none;
 }
@@ -40,6 +46,18 @@
     margin-left: 8px;
 }
 
+.swal2-delete-custom {
+    background-color: #DE3E3E;
+    color: white;
+    border: 1px solid transparent;
+    padding: 8px 24px;
+    margin: 0 !important;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    margin-left: 8px;
+}
+
 .swal2-cancel-custom {
     background-color: white;
     color: black;
@@ -72,4 +90,12 @@
 
 #drawerContent.halfscreen {
     height: 35vh !important;
+}
+
+.pb-safe {
+    padding-bottom: 350px;
+}
+
+.pb-normal {
+    padding-bottom: 60px;
 }

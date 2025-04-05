@@ -15,10 +15,12 @@ class CheckGoogleLogin
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
+
+    // @author : Pakkapon Chomchoey 66160080
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check() || !Session::has('google_user')) {
-            return redirect('/login');
+            return redirect()->route('login');
         }
         return $next($request);
     }

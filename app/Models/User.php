@@ -8,19 +8,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+// @author : Pakkapon Chomchoey 66160080
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
     use SoftDeletes;
 
-
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
-  
+
     protected $primaryKey = 'us_id';
     public $timestamps = true;
     protected $fillable = [
@@ -28,6 +28,8 @@ class User extends Authenticatable
         'us_lname',
         'us_email',
         'us_role',
+        'us_head',
+
     ];
 
     protected $casts = [
