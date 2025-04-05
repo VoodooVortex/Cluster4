@@ -7,11 +7,18 @@ use App\Livewire\MapLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\DashboardController;
 use PHPUnit\Runner\HookMethod;
+
+
 
 Route::get('/', [UserController::class, 'index']);
 
-Route::get('/home', [HomeController::class, 'index']);
+//kuy mork
+Route::get('/dashboard', [DashboardController::class, 'branchGrowthRate'])->name('dashboard.branch.growth');
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
 
 Route::get('/manage-user', [UserController::class, 'index'])->name('manage.user');
 
