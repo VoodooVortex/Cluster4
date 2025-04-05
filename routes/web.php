@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
+use App\Http\Controllers\OrderController;
 use App\Livewire\MapLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -38,3 +39,7 @@ Route::get('/map', MapLocation::class)->name('map');
 Route::get('auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('redirect.google');
 
 Route::get('auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
+
+// Aninthita 66160381
+Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
+
