@@ -6,9 +6,11 @@ use App\Livewire\MapLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
-
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', [UserController::class, 'index']);
+
+Route::get('/dashboard', [DashboardController::class, 'branchGrowthRate'])->name('dashboard.branch.growth');
 
 Route::get('/manage-user', [UserController::class, 'index'])->name('manage.user');
 
