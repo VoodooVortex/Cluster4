@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
+use App\Http\Controllers\HomeController;
 use App\Livewire\MapLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -10,7 +11,11 @@ use App\Http\Controllers\DashboardController;
 
 Route::get('/', [UserController::class, 'index']);
 
+//kuy mork
 Route::get('/dashboard', [DashboardController::class, 'branchGrowthRate'])->name('dashboard.branch.growth');
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
 
 Route::get('/manage-user', [UserController::class, 'index'])->name('manage.user');
 
