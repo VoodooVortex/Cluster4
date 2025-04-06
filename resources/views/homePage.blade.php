@@ -24,7 +24,7 @@
             <div id="branchRank">
                 @foreach ($topBranch as $index => $alluser)
                     <div
-                        class="p-4 {{ $index == 0 ? 'bg-[#4D55A0] text-white w-full shadow-[0px_4px_5px_rgba(0,0,0,0.5)]' : 'bg-white border border-[#CAC4D0] rounded-lg mx-4' }}  mb-4 pb-2 flex items-center ">
+                        class="p-4 {{ $index == 0 ? 'bg-[#4D55A0] text-white w-full shadow-[0px_4px_5px_rgba(0,0,0,1)]' : 'bg-white border border-[#CAC4D0] rounded-lg mx-4 shadow-[0px_4px_5px_rgba(0,0,0,0.2)]' }}  mb-4 pb-2 flex items-center min-h-[140px]">
                         <div class="flex flex-col">
                             <h2 class="text-lg font-bold">สาขาที่ {{ $alluser->br_id }}</h2>
                             <div class="flex items-center my-2">
@@ -79,6 +79,69 @@
 
             {{-- อับดับพนักงาน --}}
             <div id="userRank" style="display: none;">
+                {{-- ต้าแก้ --}}
+                @foreach ($topUsers as $index => $topUser)
+                    <div
+                        class="p-4 {{ $index == 0 ? 'bg-[#4D55A0] text-white w-full shadow-[0px_4px_5px_rgba(0,0,0,1)]' : 'bg-white border border-[#CAC4D0] rounded-lg mx-4 shadow-[0px_4px_5px_rgba(0,0,0,0.2)]' }}  mb-4 pb-2 flex items-center min-h-[140px]">
+                        <img src="{{ $topUser->us_image }}" class="w-12 h-12 rounded-full border-2 border-white"
+                            alt="user">
+                        <div class="ml-4">
+                            <p class="font-semibold">{{ $topUser->us_fname }} {{ $topUser->us_lname }}</p>
+                            <p class="text-sm">
+                                <span
+                                    class="px-2 mt-1 border rounded-full text-xs bg-white
+                            @if ($topUser->us_role == 'CEO') border-yellow-700 text-yellow-700
+                            @elseif ($topUser->us_role == 'Sales Supervisor') border-purple-500 text-purple-500
+                            @else border-blue-300 text-blue-300 @endif">
+                                    {{ $topUser->us_role }}
+                                </span>
+                            </p>
+                            <p class="text-xs">{{ $topUser->us_email }}</p>
+                        </div>
+
+                        <div class="ml-auto text-xl font-bold flex flex-col items-center">
+                            @if ($index == 0)
+                                <div class="relative inline-block text-center">
+                                    <i class="fa-solid fa-crown text-[#FFD43B] text-6xl"></i>
+                                    <span
+                                        class="absolute inset-0 flex justify-center items-center text-white text-3xl font-bold pt-3">
+                                        1
+                                    </span>
+                                </div>
+                                <span class="text-sm font-semibold mt-1"
+                                    id="amountUser{{ $index }}">{{ number_format($topUser->branch_count) }}
+                                    </span>
+                            @elseif ($index == 1)
+                                <div class="relative inline-block text-center">
+                                    <i class="fa-solid fa-crown text-[#D2CFC6] text-5xl"></i>
+                                    <span
+                                        class="absolute inset-0 flex justify-center items-center text-white text-lg font-bold pt-3">
+                                        2
+                                    </span>
+                                </div>
+                                <span class="text-sm font-semibold mt-1"
+                                    id="amountUser{{ $index }}">{{ number_format($topUser->branch_count) }}
+                                    </span>
+                            @elseif ($index == 2)
+                                <div class="relative inline-block text-center">
+                                    <i class="fa-solid fa-crown text-[#CD7F32] text-5xl"></i>
+                                    <span
+                                        class="absolute inset-0 flex justify-center items-center text-white text-lg font-bold pt-3">
+                                        3
+                                    </span>
+                                </div>
+                                <span class="text-sm font-semibold mt-1"
+                                    id="amountUser{{ $index }}">{{ number_format($topUser->branch_count) }}
+                                    </span>
+                            @else
+                                <span class="text-sm font-semibold mt-1"
+                                    id="amountUser{{ $index }}">{{ number_format($topUser->branch_count) }}
+                                    </span>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+
                 {{-- อันดับ 1 --}}
                 @if (count($topUsers) > 0)
                     <div class="w-full bg-[#4D55A0] text-white flex items-center shadow-md min-h-[130px] px-6">
@@ -289,6 +352,7 @@
                             branchData.style.display = 'none';
 
                             userData.style.display = 'block';
+
                         } else {
                             // เปลี่ยนข้อความปุ่มกลับ
                             button.innerHTML = 'จำนวนยอดขาย <i class="fa-solid fa-repeat"></i>';
@@ -303,10 +367,16 @@
                         }
 
                         // สำหรับทุกยอดขายที่แสดงในหน้า
-                        const amounts = document.querySelectorAll('[id^="amount"]');
-                        amounts.forEach(function(amount) {
+                        const amountsBranch = document.querySelectorAll('[id^="amountBranch"]');
+                        amountsBranch.forEach(function(amountBranch) {
                             // ใช้ toLocaleString เพื่อแสดงผลยอดขายด้วยเครื่องหมายคั่นพัน
-                            amount.innerText = parseInt(amount.innerText.replace(/[^0-9]/g, '')).toLocaleString() + " ชิ้น";
+                            amountBranch.innerText = parseInt(amountBranch.innerText.replace(/[^0-9]/g, '')).toLocaleString() + " ชิ้น";
+                        });
+
+                        const amountsUser = document.querySelectorAll('[id^="amountUser"]');
+                        amountsUser.forEach(function(amountUser) {
+                            // ใช้ toLocaleString เพื่อแสดงผลยอดขายด้วยเครื่องหมายคั่นพัน
+                            amountUser.innerText = parseInt(amountUser.innerText.replace(/[^0-9]/g, '')).toLocaleString() + " สาขา";
                         });
                     }
                 </script>
