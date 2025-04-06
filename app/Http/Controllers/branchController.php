@@ -18,9 +18,4 @@ class branchController extends Controller
         $user = User::with('head')->find($id);
         return view('branchMyMap', ['branch' => $user]);
     }
-   public function user()
-{
-    return $this->belongsTo(User::class, 'br_us_id', 'us_id');
 }
-}
-

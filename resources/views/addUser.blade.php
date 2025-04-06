@@ -1,9 +1,9 @@
 @extends('layouts.default')
 @section('content')
-    <div class="pt-16 h-screen mx-auto p-4 bg-white min-h-screen w-full" >
+    <div class="pt-16 h-screen mx-auto p-4 bg-white min-h-screen w-full">
 
         <div class="mb-4 ">
-            <a href="{{ url('/manage-user') }}"
+            <a href="{{ route('manage.user') }}"
                 class="text-white border-[#4D55A0] text-2xl font-extrabold py-3  rounded-2xl flex items-center w-full"
                 style="background-color: #4D55A0;">
                 <i class="fa-solid fa-arrow-left mx-3 fa-l"></i>
@@ -12,7 +12,7 @@
         </div>
 
         <div class="flex items-center justify-center h-auto bg-gray-100 ">
-            <form action="{{ url('/add-user') }}" method="post" id="editForm"
+            <form action="{{ route('create.user') }}" method="post" id="editForm"
                 class="w-full h-fit max-w-none bg-white p-6 rounded-lg shadow-lg">
                 @csrf
                 <div class="border-b border-gray-900/10 pb-12">
@@ -78,7 +78,7 @@
 
                     <div class="mt-6 flex items-center justify-between">
 
-                        <button type="button" onclick="window.location.href='{{ url('/manage-user') }}'"
+                        <button type="button" onclick="window.location.href='{{ route('manage.user') }}'"
                             class="w-[120px] bg-white text-black border border-black px-6 py-2 rounded-lg font-bold text-base">
                             ยกเลิก
                         </button>
@@ -163,4 +163,9 @@
                                 });
                             });
                         </script>
-                    @endsection
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection

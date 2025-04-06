@@ -10,7 +10,7 @@
     <div class="pt-16 bg-white-100 w-full">
         {{-- ปุ่มย้อนกลับและหัวข้อ --}}
         <div class="mb-4 px-4">
-            <a href="{{ url('/manage-user') }}"
+            <a href="{{ route('manage.user') }}"
                 class="text-white border-[#4D55A0] text-2xl font-extrabold px-4 py-3 rounded-2xl flex items-center w-full"
                 style="background-color: #4D55A0;">
                 จัดการบัญชีผู้ใช้
@@ -24,7 +24,7 @@
                 <input type="text" id="searchInput" placeholder="ค้นหาบัญชี"
                     class="w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
             </div>
-            <a href="{{ url('/add-user') }}" class="bg-indigo-600 text-white whitespace-nowrap px-5 py-2 rounded-2xl"
+            <a href="{{ route('add.user') }}" class="bg-indigo-600 text-white whitespace-nowrap px-5 py-2 rounded-2xl"
                 style="background-color: #4D55A0;">เพิ่มบัญชี</a>
         </div>
         {{-- หมวดหมู่บัญชี --}}
@@ -95,13 +95,13 @@
                             </div>
                             {{-- <a href="{{ url('/user/' . $user->id) }}" class="text-indigo-600">Edit</a> --}}
                             <div class="flex items-center ml-auto">
-                                <a href="{{ url('/edit-user/' . $user->us_id) }}">
+                                <a href="{{ url('/cluster4/edit-user/' . $user->us_id) }}">
                                     <button class="btn btn-warning text-[#4D55A0]">Edit</button>
                                 </a>
                             </div>
 
                             <!-- ลบบัญชี -->
-                            <form id="deleteUserForm" action="{{ url('/delete-user') }}" method="POST">
+                            <form id="deleteUserForm" action="{{ route('delete.user') }}" method="POST">
                                 @csrf
                                 @method('delete')
                                 <div id="selected-ids-container">
