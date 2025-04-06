@@ -23,6 +23,8 @@ class InterestLocation extends Model
         'il_district',
         'il_province',
         'il_postalcode',
+        'il_tl_id',
+        'il_us_id',
     ];
 
     public function user()
