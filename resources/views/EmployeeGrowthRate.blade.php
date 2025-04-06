@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-    <div class="max-w-md mx-auto mt-16 px-4 space-y-6">
+    <div class="w-full  mx-auto mt-16 space-y-6 px-6">
 
         {{-- การ์ดแสดงจำนวนพนักงาน --}}
         <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow">
@@ -11,11 +11,14 @@
                 <i class="fa-solid fa-users text-indigo-600 text-2xl"></i>
             </div>
             <hr class="my-3">
-            <p class="text-base text-gray-700"> Sales <span class="float-right text-indigo-500 font-medium">{{ $salesCount }} คน</span></p>
+            <p class="text-base text-gray-700"> Sales <span
+                    class="float-right text-indigo-500 font-medium">{{ $salesCount }} คน</span></p>
             <hr class="my-3">
-            <p class="text-base text-gray-700"> Sales Supervisor <span class="float-right text-indigo-500 font-medium">{{ $supervisorCount }} คน</span></p>
+            <p class="text-base text-gray-700"> Sales Supervisor <span
+                    class="float-right text-indigo-500 font-medium">{{ $supervisorCount }} คน</span></p>
             <hr class="my-3">
-            <p class="text-base text-gray-700"> CEO <span class="float-right text-indigo-500 font-medium">{{ $ceoCount }} คน</span></p>
+            <p class="text-base text-gray-700"> CEO <span
+                    class="float-right text-indigo-500 font-medium">{{ $ceoCount }} คน</span></p>
         </div>
 
         {{-- การ์ดกราฟแสดงการเติบโต --}}
@@ -36,7 +39,9 @@
         const growthChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.',
+                    'ธ.ค.'
+                ],
                 datasets: [{
                     data: @json($growthData),
                     borderColor: '#3B82F6',
@@ -61,11 +66,15 @@
                 },
                 scales: {
                     y: {
-                        beginAtZero: true,  // สามารถเปลี่ยนเป็น false ได้หากต้องการให้เริ่มจากค่าต่ำสุดที่เหมาะสม
-                        suggestedMin: 0,    // กำหนดค่าเริ่มต้นของแกน Y ให้ต่ำสุดเป็น 0
+                        beginAtZero: true,
+                        suggestedMin: 0,
                         ticks: {
+                            stepSize:1,
                             font: {
                                 size: 12
+                            },
+                            callback: function(value) {
+                                return Math.round(value); // ปัดเศษให้ไม่มีทศนิยม
                             }
                         },
                         grid: {
@@ -85,6 +94,7 @@
                         }
                     }
                 }
+
             }
         });
     </script>

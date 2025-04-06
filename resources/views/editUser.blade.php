@@ -6,7 +6,7 @@
     @create date : 04/04/2568
 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <div class="pt-16 bg-white-100 w-full">
+    <div class="pt-16 bg-white-100 w-full mx-auto">
         {{-- ปุ่มย้อนกลับและหัวข้อ --}}
         <div class="mb-4 px-4">
             <a href="{{ route('manage.user') }}"
@@ -19,7 +19,7 @@
         {{-- ส่วนแสดงรุูปภาพ --}}
         <div class="flex space-x-2 mb-4">
             <form action="{{ route('edit.user') }}" method="post" id="editForm"
-                class="w-full max-w-3xl bg-white p-6 rounded-lg shadow-lg">
+                class="w-full max-w-screen-2xl bg-white px-4 sm:px-6 lg:px-8 py-8 rounded-lg shadow-lg mx-auto">
                 @csrf
                 @method('put')
                 <div class="col-span-full">
