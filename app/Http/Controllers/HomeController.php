@@ -54,7 +54,8 @@ class HomeController extends Controller
             ->take(5)  // เลือกแค่ 5 อันดับแรก
             ->get();
 
-        //@auther : riw
+
+        //@auther : ryu
         // หาพนักงานที่เพิ่มสาขามากที่สุด
         $topUsers = User::withCount('branch')  // ดึงจำนวนสาขา
             ->orderByDesc('branch_count')  // เรียงลำดับตามจำนวนสาขา
@@ -112,6 +113,67 @@ class HomeController extends Controller
         // ชื่อเดือน
         $labels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
 
-        return view('homePage', compact('topBranch', 'topUsers', 'totalSales', 'averageSales', 'growthPercentage', 'labels', 'monthlySales'));
+
+
+
+        // wave
+        $salesCount = User::where('us_role', 'Sales')->count();
+        $supervisorCount = User::where('us_role', 'Sales Supervisor')->count();
+        $ceoCount = User::where('us_role', 'CEO')->count();
+        $totalEmployees = User::count();
+        $monthGrowrate = User::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', 2025)
+            ->whereNotNull('created_at')
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->pluck('total', 'month');
+
+        $label = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+        $growthData = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $growthData[] = $monthGrowrate[$i] ?? 0; // ถ้าเดือนไหนไม่มี ให้ใส่ 0
+        }
+
+
+
+        //Mork
+        $currentYear = Carbon::now()->year;
+
+        $totalBranches = Branch::whereNull('deleted_at')->count();
+
+        $branchGrowth = Branch::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $currentYear)
+            ->whereNull('deleted_at')
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->pluck('total', 'month');
+
+        $labels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+        $growthRates = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $growthRates[$labels[$i - 1]] = $branchGrowth[$i] ?? 0;
+        }
+
+        $growthPercentage = $totalBranches > 0
+            ? round(array_sum($growthRates) / $totalBranches * 100, 2)
+            : 0;
+
+        return view('homePage', compact(
+            'topBranch',
+            'topUsers',
+            'totalSales',
+            'averageSales',
+            'growthPercentage',
+            'labels',
+            'monthlySales',
+            'salesCount',
+            'supervisorCount',
+            'ceoCount',
+            'totalEmployees',
+            'growthData',
+            'totalBranches',
+            'growthRates',
+            'growthPercentage'
+        ));
     }
 }
