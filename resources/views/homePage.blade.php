@@ -181,37 +181,10 @@
             </div>
         </div> --}}
 
+
         {{-- wave --}}
         {{-- EmployeeGrowthRate --}}
         {{-- การ์ดแสดงจำนวนพนักงาน --}}
-        {{-- <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow">
-            <p class="font-semibold text-lg mb-3">จำนวนพนักงานทั้งหมด</p>
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="text-2xl font-bold text-gray-900">{{ $totalEmployees }} คน</h2>
-                <i class="fa-solid fa-users text-indigo-600 text-2xl"></i>
-            </div>
-            <hr class="my-3">
-            <p class="text-base text-gray-700"> Sales <span
-                    class="float-right text-indigo-500 font-medium">{{ $salesCount }} คน</span></p>
-            <hr class="my-3">
-            <p class="text-base text-gray-700"> Sales Supervisor <span
-                    class="float-right text-indigo-500 font-medium">{{ $supervisorCount }} คน</span></p>
-            <hr class="my-3">
-            <p class="text-base text-gray-700"> CEO <span
-                    class="float-right text-indigo-500 font-medium">{{ $ceoCount }} คน</span></p>
-        </div> --}}
-
-        {{-- การ์ดกราฟแสดงการเติบโต --}}
-        {{-- <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow">
-            <p class="font-semibold text-lg mb-4">อัตราการเติบโตของพนักงานในปีนี้</p>
-            <div class="w-full" style="height: 200px;">
-                <canvas id="growthChart"></canvas>
-            </div>
-        </div> --}}
-
-
-
-        {{-- การ์ดแสดงจำนวนพนักงาน --}}
         <div class="bg-white border border-gray-200 rounded-2xl m-3 p-5 shadow">
             <p class="font-semibold text-lg mb-3">จำนวนพนักงานทั้งหมด</p>
             <div class="flex justify-between items-center mb-3">
@@ -232,12 +205,34 @@
         {{-- การ์ดกราฟแสดงการเติบโต --}}
         <div class="bg-white border border-gray-200 rounded-2xl m-3 p-5 shadow">
             <p class="font-semibold text-lg mb-4">อัตราการเติบโตของพนักงานในปีนี้</p>
-            <div class="w-full" style="height: 200px;">
+            <div class="w-full">
                 <canvas id="growthChart"></canvas>
             </div>
         </div>
 
 
+        {{-- Mork --}}
+        {{-- กล่องข้อมูลสรุป --}}
+        <div class="bg-white border border-gray-200 rounded-2xl m-3 p-5 mb-2 shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500">จำนวนสาขาทั้งหมด</p>
+                    <p class="text-3xl font-bold">{{ number_format($totalBranches) }} สาขา</p>
+                    <p class="text-green-600 text-sm">จำนวนสาขาเพิ่มขึ้นเฉลี่ย {{ $growthPercentage }}%</p>
+                </div>
+                <div class="p-4 rounded-full">
+                    <i class="fa-solid fa-warehouse fa-2xl" style="color: #4D55A0;"></i>
+                </div>
+            </div>
+        </div>
+
+        {{-- กล่องกราฟ --}}
+        <div class="bg-white border border-gray-200 rounded-2xl m-3 mb-2 p-5 shadow">
+            <p class="font-semibold text-lg mb-4">อัตราการเติบโตของสาขาภายในปีนี้</p>
+            <div class="w-full">
+                <canvas id="branchGrowthChart"></canvas>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -404,12 +399,12 @@
                         beginAtZero: true,
                         suggestedMin: 0,
                         ticks: {
-                            stepSize: 1,
+                            precision: 0, // <<< บอก Chart.js ว่าให้แสดงแค่จำนวนเต็มเท่านั้น
                             font: {
                                 size: 12
                             },
                             callback: function(value) {
-                                return Math.round(value); // ปัดเศษให้ไม่มีทศนิยม
+                                return Number(value).toFixed(0); // <<< ปัดเศษแบบไม่มีทศนิยม
                             }
                         },
                         grid: {
@@ -430,6 +425,62 @@
                     }
                 }
 
+            }
+        });
+
+        //Mork
+        const ctxBranch = document.getElementById('branchGrowthChart').getContext('2d');
+        const branchGrowthChart = new Chart(ctxBranch, {
+            type: 'line',
+            data: {
+                labels: {!! json_encode(array_keys($growthRates)) !!},
+                datasets: [{
+                    data: {!! json_encode(array_values($growthRates)) !!},
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#3B82F6',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMin: 0,
+                        ticks: {
+                            precision: 0, // บอก Chart.js ว่าให้แสดงแค่จำนวนเต็มเท่านั้น
+                            font: {
+                                size: 12
+                            },
+                            callback: function(value) {
+                                return Number(value).toFixed(0); // ปัดเศษแบบไม่มีทศนิยม
+                            }
+                        },
+                        grid: {
+                            color: '#E5E7EB'
+                        },
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            color: '#E5E7EB'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
             }
         });
     </script>
