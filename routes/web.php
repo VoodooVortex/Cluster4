@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SalesTeamController;
 use App\Http\Middleware\CheckGoogleLogin;
 use Doctrine\DBAL\Driver\Middleware;
 use PHPUnit\Runner\HookMethod;
@@ -34,9 +35,6 @@ Route::get('/cluster4/auth/google/callback', [GoogleLoginController::class, 'goo
 Route::middleware([CheckGoogleLogin::class])->group(
     function () {
         Route::get('/', [UserController::class, 'index'])->name('home');
-
-        //kuy mork
-        Route::get('/cluster4/dashboard', [DashboardController::class, 'branchGrowthRate'])->name('dashboard.branch.growth');
 
         Route::get('/cluster4/home', [HomeController::class, 'index'])->name('home');
 
@@ -68,6 +66,15 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/cluster4/order-status', [OrderController::class, 'status'])->name('order.status');
 
-        Route::get('/cluster4/employee', [UserController::class, 'Emp_GrowRate']);
+
+Route::get('/cluster4/order-status', [OrderController::class, 'status'])->name('order.status');
+
+Route::get('/cluster4/report/team/{id}', [SalesTeamController::class, 'detail']);
+      
+      
+      
+      
+      
     }
 );
+
