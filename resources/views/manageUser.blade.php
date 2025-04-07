@@ -92,7 +92,6 @@
                                     </span>
                                 </div>
                             </div>
-                            {{-- <a href="{{ url('/user/' . $user->id) }}" class="text-indigo-600">Edit</a> --}}
                             <div class="flex items-center ml-auto">
                                 <a href="{{ route('edit.user.id', $user->us_id) }}">
                                     <button class="btn btn-warning text-[#4D55A0]">Edit</button>
