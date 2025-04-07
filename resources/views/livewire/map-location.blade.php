@@ -223,7 +223,7 @@
                     <div class="bg-white shadow-md border p-4 rounded-xl flex justify-between items-center mt-4">
                         <div>
                             <p class="mb-2">จำนวนออเดอร์ทั้งหมดของปีนี้</p>
-                            <p class="text-xl font-bold text-black">12,000 ชิ้น</p>
+                            <p class="text-xl font-bold text-black" id="order-branch"></p>
                         </div>
                         <div class="">
                             <i class="fa-solid fa-box fa-2xl" style="color: #4D55A0;"></i>
@@ -940,6 +940,7 @@
         $('#phone-branch').empty();
         $('#latlong-branch').empty();
         $('#name-branch').empty();
+        $('#order-branch').empty();
 
         drawer.classList.remove("opacity-0", "pointer-events-none");
         drawer.classList.add("opacity-100");
@@ -967,7 +968,12 @@
             `(${latLong[1].toFixed(5)}, ${latLong[0].toFixed(5)}) <i class="ml-1 fa-solid fa-copy" style="color: #4D55A0;"></i>`
         );
         $('#name-branch').text(data.name);
+        console.log(data.orders);
+        let orders = data.orders;
+        orders = JSON.parse(orders);
+        let totalAmount = orders.reduce((sum, item) => sum + (item.amount ?? 0), 0);
 
+        $('#order-branch').html(`${totalAmount} ชิ้น`);
         // const images = Array.isArray(data.image) ? data.image : JSON.parse(data.image);
         // const imageHtml = images.map(img => `<img src="${img}" class="w-24 h-24 object-cover rounded" />`).join(
         //     '');
@@ -1217,6 +1223,7 @@
                     manager_image,
                     manager_role,
                     manager_email,
+                    orders,
                 } = properties;
 
                 const center = geometry.coordinates;
@@ -1239,6 +1246,7 @@
                     manager_name,
                     manager_role,
                     manager_email,
+                    orders,
                 };
 
                 circleFeatures.push(circle);
@@ -1310,44 +1318,68 @@
                     }
                 });
             }
-
-            let iconUrl =
-                `https://api.mapbox.com/v4/marker/pin-m-library+28A745.png?access_token=${mapboxgl.accessToken}`;
-            let iconILName = `school-icon`;
-
-            map.loadImage(iconUrl, (error, image) => {
-                if (!map.hasImage(iconILName)) {
-                    map.addImage(iconILName, image);
-                }
-            });
-
-            //ดึงข้อมูลสถานที่ที่น่า่สนใจ
-            map.addSource('interest', {
-                type: 'vector',
-                url: 'mapbox://pktonnam.1p9c1btr'
-            });
-
-            //เพิ่ม layer มหาวิทยาลัย + icon
-            map.addLayer({
-                id: 'college-layer',
-                type: 'symbol',
-                source: 'interest',
-                'source-layer': '22collegeanduniversity',
-                layout: {
-                    'icon-image': 'school-icon',
-                    'text-field': ['get', 'name'],
-                    'text-size': 12,
-                    'text-offset': [0, 1.2],
-                    'text-anchor': 'top'
-                },
-                paint: {
-                    'text-color': '#333',
-                }
-            });
         }
+
+        // const _loadInterestLocations = (geoJson) => {
+        //     const circleFeatures = [];
+        //     console.log(geoJson.features.properties);
+        //     geoJson.features.forEach((location) => {
+        //         const {
+        //             geometry,
+        //             properties
+        //         } = location;
+        //         const {
+        //             id,
+        //             name,
+        //             address,
+        //             scope,
+        //             image,
+        //             typeLocation,
+        //         } = properties;
+        //         const {
+        //             typeId,
+        //             typeName,
+        //             icon,
+        //             color,
+        //             isCompetitor
+        //         } = typeLocation;
+
+        //         const center = geometry.coordinates;
+
+        //         const displayScope = scope * 0.9;
+        //         const circle = turf.circle(turf.point(center), displayScope, {
+        //             steps: 64,
+        //             units: 'kilometers'
+        //         });
+
+        //         circle.properties = {
+        //             id,
+        //             name,
+        //             address,
+        //             scope,
+        //             image,
+        //             typeName,
+        //             icon,
+        //             color,
+        //             isCompetitor
+        //         };
+        //         console.log(`หมุด ${name} (${typeName}) → สี: ${color}, ไอคอน: ${icon}`);
+        //         circleFeatures.push(circle);
+        //     });
+
+        //     if (map.getSource('interest-markers')) {
+        //         map.getSource('interest-markers').setData(geoJson);
+        //     } else {
+        //         map.addSource('interest-markers', {
+        //             type: 'geojson',
+        //             data: geoJson
+        //         });
+        //     }
+        // }
 
         map.on('load', () => {
             _loadBranchs({!! $geoJsonBranch !!})
+            // _loadInterestLocations({!! $geoJsonInterest !!})
         });
 
         Livewire.on('updateBranchLocation', (geoJson) => {

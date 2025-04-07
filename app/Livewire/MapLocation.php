@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Branch;
+use App\Models\InterestLocation;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
@@ -35,6 +37,7 @@ class MapLocation extends Component
 
 
     public $geoJsonBranch;
+    public $geoJsonInterest;
 
     #[On('generateCodeBranch')]
     public function generateCodeBranch()
@@ -43,8 +46,54 @@ class MapLocation extends Component
         $this->codeBranch = $zipcode . '-' . str_pad(Branch::withTrashed()->count() + 1, 4, '0', STR_PAD_LEFT);
     }
 
+    public function loadInterestLocation()
+    {
+        $interest = InterestLocation::selectRaw('*, ST_X(il_longlat) as lng, ST_Y(il_longlat) as lat')
+            ->with(['typeLocation', 'image'])
+            ->get();
+
+        $arrayLocation = [];
+
+        foreach ($interest as $location) {
+            $addressI = $location->il_address . ' ' . $location->il_subdistrict . ' ' . $location->il_district . ' ' . $location->il_province . ' ' . $location->il_postalcode;
+            $images = $location->image->pluck('i_pathUrl');
+            $type = [
+                'typeId' => $location->typeLocation->tl_id,
+                'nameType' => $location->typeLocation->tl_name,
+                'icon' => $location->typeLocation->tl_emoji,
+                'color' => $location->typeLocation->tl_color,
+                'isCompetitor' => $location->typeLocation->tl_name === 'คู่แข่ง',
+            ];
+
+            $arrayLocation[] = [
+                'type' => 'Feature',
+                'geometry' => [
+                    'type' => 'Point',
+                    'coordinates' => [(float)$location->lng, (float)$location->lat],
+                ],
+                'properties' => [
+                    'id' => $location->il_id,
+                    'name' => $location->il_name,
+                    'address' => $addressI,
+                    'scope' => (float)$location->il_scope,
+                    'image' => $images->values()->toArray(),
+                    'typeLocation' => $type,
+                ],
+            ];
+        }
+        $geoLocation = [
+            'type' => 'FeatureCollection',
+            'features' => $arrayLocation,
+        ];
+
+        $geoJson = collect($geoLocation)->toJson();
+        $this->geoJsonInterest = $geoJson;
+    }
+
     public function loadBranchLocation()
     {
+        $years = Carbon::now()->year;
+
         $user = auth()->user();
         $locations = Branch::query()
             ->when($user && $user->us_role === 'Sales', function ($query) use ($user) {
@@ -58,7 +107,11 @@ class MapLocation extends Component
                         ->orWhere('us_id', $user->us_id);
                 });
             })
-            ->with(['image', 'manager'])
+            ->with([
+                'image',
+                'manager',
+                'order'
+            ])
             ->select(
                 'br_id',
                 'br_code',
@@ -77,10 +130,45 @@ class MapLocation extends Component
             ->get();
 
         $arrayLocation = [];
+        $thaiMonths = [
+            1 => 'มกราคม',
+            2 => 'กุมภาพันธ์',
+            3 => 'มีนาคม',
+            4 => 'เมษายน',
+            5 => 'พฤษภาคม',
+            6 => 'มิถุนายน',
+            7 => 'กรกฎาคม',
+            8 => 'สิงหาคม',
+            9 => 'กันยายน',
+            10 => 'ตุลาคม',
+            11 => 'พฤศจิกายน',
+            12 => 'ธันวาคม',
+        ];
         foreach ($locations as $location) {
             $address = $location->br_address . ' ' . $location->br_subdistrict . ' ' . $location->br_district . ' ' . $location->br_province . ' ' . $location->br_postalcode;
             $images = $location->image->pluck('i_pathUrl');
             $manager = $location->manager?->us_fname . ' ' . $location->manager?->us_lname;
+
+            $monthlySales = collect(range(1, 12))->map(function ($monthNum) use ($location, $thaiMonths, $years) {
+                $orders = $location->order->filter(function ($order) use ($monthNum, $years) {
+                    $isSameYear = Carbon::parse($order->created_at)->year === $years;
+                    $isSameMonth = (int)Carbon::parse($order->created_at)->format('n') === $monthNum;
+                    return $isSameYear && $isSameMonth;
+                });
+
+                $latestOrder = $orders->sortByDesc(function ($o) {
+                    return $o->updated_at !== null && $o->updated_at != $o->created_at
+                        ? $o->updated_at
+                        : $o->created_at;
+                })->first();
+
+                return [
+                    'month' => $thaiMonths[$monthNum],
+                    'amount' => $latestOrder->od_amount ?? 0,
+                    'order_count' => $orders->count(),
+                ];
+            });
+
             $arrayLocation[] = [
                 'type' => 'Feature',
                 'geometry' => [
@@ -100,6 +188,7 @@ class MapLocation extends Component
                     'manager_image' => $location->manager?->us_image,
                     'manager_role' => $location->manager?->us_role,
                     'manager_email' => $location->manager?->us_email,
+                    'orders' => $monthlySales->toArray(),
                 ],
             ];
         }
@@ -363,6 +452,7 @@ class MapLocation extends Component
     public function render()
     {
         $this->loadBranchLocation();
+        // $this->loadInterestLocation();
         return view('livewire.map-location');
     }
 }
