@@ -9,109 +9,381 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     function index()
     {
-        //@auther : guitar
-        $currentYear = Carbon::now()->year + 543;  // Convert to Thai year
-        $currentMonth = Carbon::now()->month;
+        $userRole = Auth::user()->us_role;
 
-        $months = [
-            1 => 'มกราคม',
-            2 => 'กุมภาพันธ์',
-            3 => 'มีนาคม',
-            4 => 'เมษายน',
-            5 => 'พฤษภาคม',
-            6 => 'มิถุนายน',
-            7 => 'กรกฎาคม',
-            8 => 'สิงหาคม',
-            9 => 'กันยายน',
-            10 => 'ตุลาคม',
-            11 => 'พฤศจิกายน',
-            12 => 'ธันวาคม',
-        ];
+        if (Auth::check() && Auth::user()->us_role === 'CEO') {
+            //@auther : guitar
+            $currentYear = Carbon::now()->year + 543;  // Convert to Thai year
+            $currentMonth = Carbon::now()->month;
 
-        $currentMonthName = $months[$currentMonth];
+            $months = [
+                1 => 'มกราคม',
+                2 => 'กุมภาพันธ์',
+                3 => 'มีนาคม',
+                4 => 'เมษายน',
+                5 => 'พฤษภาคม',
+                6 => 'มิถุนายน',
+                7 => 'กรกฎาคม',
+                8 => 'สิงหาคม',
+                9 => 'กันยายน',
+                10 => 'ตุลาคม',
+                11 => 'พฤศจิกายน',
+                12 => 'ธันวาคม',
+            ];
 
-        $topBranch = DB::table('users as u')
-            ->join('branch as b', 'u.us_id', '=', 'b.br_us_id')
-            ->join('order as o', 'b.br_id', '=', 'o.od_br_id')
-            ->where('o.od_year', '=', $currentYear)
-            ->where('o.od_month', '=', $currentMonthName)
-            ->select('b.br_id', 'b.br_code', 'u.us_image', 'u.us_fname', 'o.od_amount', 'o.created_at')
-            ->whereIn('o.od_id', function ($query) use ($currentYear, $currentMonthName) {
-                // Subquery เพื่อเลือกข้อมูลที่มียอดขายล่าสุดจากแต่ละสาขา
-                $query->selectRaw('MAX(o.od_id)')
-                    ->from('order as o')
-                    ->join('branch as b', 'o.od_br_id', '=', 'b.br_id')
-                    ->where('o.od_year', '=', $currentYear)
-                    ->where('o.od_month', '=', $currentMonthName)
-                    ->groupBy('o.od_br_id');
-            })
-            ->orderByDesc('o.od_amount')  // เรียงตามยอดขายจากมากไปน้อย
-            ->take(5)  // เลือกแค่ 5 อันดับแรก
-            ->get();
+            $currentMonthName = $months[$currentMonth];
 
-        //@auther : riw
-        // หาพนักงานที่เพิ่มสาขามากที่สุด
-        $topUsers = User::withCount('branch')  // ดึงจำนวนสาขา
-            ->orderByDesc('branch_count')  // เรียงลำดับตามจำนวนสาขา
-            ->take(5)  // ดึง 5 คน
-            ->get();
+            $topBranch = DB::table('users as u')
+                ->join('branch as b', 'u.us_id', '=', 'b.br_us_id')
+                ->join('order as o', 'b.br_id', '=', 'o.od_br_id')
+                ->where('o.od_year', '=', $currentYear)
+                ->where('o.od_month', '=', $currentMonthName)
+                ->select('b.br_id', 'b.br_code', 'u.us_image', 'u.us_fname', 'o.od_amount', 'o.created_at')
+                ->whereIn('o.od_id', function ($query) use ($currentYear, $currentMonthName) {
+                    // Subquery เพื่อเลือกข้อมูลที่มียอดขายล่าสุดจากแต่ละสาขา
+                    $query->selectRaw('MAX(o.od_id)')
+                        ->from('order as o')
+                        ->join('branch as b', 'o.od_br_id', '=', 'b.br_id')
+                        ->where('o.od_year', '=', $currentYear)
+                        ->where('o.od_month', '=', $currentMonthName)
+                        ->groupBy('o.od_br_id');
+                })
+                ->orderByDesc('o.od_amount')  // เรียงตามยอดขายจากมากไปน้อย
+                ->take(5)  // เลือกแค่ 5 อันดับแรก
+                ->get();
 
 
-        //@auther : boom
-        $monthMap = [
-            'มกราคม' => 1,
-            'กุมภาพันธ์' => 2,
-            'มีนาคม' => 3,
-            'เมษายน' => 4,
-            'พฤษภาคม' => 5,
-            'มิถุนายน' => 6,
-            'กรกฎาคม' => 7,
-            'สิงหาคม' => 8,
-            'กันยายน' => 9,
-            'ตุลาคม' => 10,
-            'พฤศจิกายน' => 11,
-            'ธันวาคม' => 12
-        ];
+            //@auther : ryu
+            // หาพนักงานที่เพิ่มสาขามากที่สุด
+            $topUsers = User::withCount('branch')  // ดึงจำนวนสาขา
+                ->orderByDesc('branch_count')  // เรียงลำดับตามจำนวนสาขา
+                ->take(5)  // ดึง 5 คน
+                ->get();
+
+
+            //@auther : boom
+            $monthMap = [
+                'มกราคม' => 1,
+                'กุมภาพันธ์' => 2,
+                'มีนาคม' => 3,
+                'เมษายน' => 4,
+                'พฤษภาคม' => 5,
+                'มิถุนายน' => 6,
+                'กรกฎาคม' => 7,
+                'สิงหาคม' => 8,
+                'กันยายน' => 9,
+                'ตุลาคม' => 10,
+                'พฤศจิกายน' => 11,
+                'ธันวาคม' => 12
+            ];
 
 
 
-        // ยอดขายทั้งหมด
-        $totalSales = Order::sum('od_amount');
+            // ยอดขายทั้งหมด
+            $totalSales = Order::sum('od_amount');
 
-        // ยอดขายเดือนก่อนหน้า
-        $previousMonthSales = Order::where('od_month', date('m') - 1)->sum('od_amount');
+            // ยอดขายเดือนก่อนหน้า
+            $previousMonthSales = Order::where('od_month', date('m') - 1)->sum('od_amount');
 
-        //หา % การเติบโต (ยอดขายเดือนปัจจุบัน - ยอดขายเดือนก่อน / ยอดขายเดือนก่อน )* 100
-        $growthPercentage = $previousMonthSales > 0 ? (($totalSales - $previousMonthSales) / $previousMonthSales) * 100 : 0;
+            //หา % การเติบโต (ยอดขายเดือนปัจจุบัน - ยอดขายเดือนก่อน / ยอดขายเดือนก่อน )* 100
+            $growthPercentage = $previousMonthSales > 0 ? (($totalSales - $previousMonthSales) / $previousMonthSales) * 100 : 0;
 
-        //ค่าเฉลี่ย
-        $averageSales = Order::avg('od_amount');
+            //ค่าเฉลี่ย
+            $averageSales = Order::avg('od_amount');
 
-        // ดึงข้อมูลยอดขายรายเดือน
-        $salesData = Order::where('od_year', 2568) // ปีล่าสุด
-            ->selectRaw('od_month, SUM(od_amount) as total_sales')
-            ->groupBy('od_month')
-            ->orderByRaw("FIELD(od_month, 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม')")
-            ->get();
+            // ดึงข้อมูลยอดขายรายเดือน
+            $salesData = Order::where('od_year', 2568) // ปีล่าสุด
+                ->selectRaw('od_month, SUM(od_amount) as total_sales')
+                ->groupBy('od_month')
+                ->orderByRaw("FIELD(od_month, 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม')")
+                ->get();
 
-        // เตรียมข้อมูลยอดขายรายเดือน
-        $monthlySales = [];
-        foreach ($salesData as $sale) {
-            $monthNumber = $monthMap[$sale->od_month]; // แปลงชื่อเดือนเป็นหมายเลขเดือน
-            $monthlySales[$monthNumber] = $sale->total_sales;
+            // เตรียมข้อมูลยอดขายรายเดือน
+            $monthlySales = [];
+            foreach ($salesData as $sale) {
+                $monthNumber = $monthMap[$sale->od_month]; // แปลงชื่อเดือนเป็นหมายเลขเดือน
+                $monthlySales[$monthNumber] = $sale->total_sales;
+            }
+
+            // กรณีที่บางเดือนไม่มีข้อมูล ยอดขายจะเป็น 0
+            $monthlySales = array_replace(array_flip(range(1, 12)), $monthlySales);
+
+            // ชื่อเดือน
+            $labels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+
+
+
+            // wave
+            $salesCount = User::where('us_role', 'Sales')->count();
+            $supervisorCount = User::where('us_role', 'Sales Supervisor')->count();
+            $ceoCount = User::where('us_role', 'CEO')->count();
+            $totalEmployees = User::count();
+            $monthGrowrate = User::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->whereYear('created_at', 2025)
+                ->whereNotNull('created_at')
+                ->groupBy(DB::raw('MONTH(created_at)'))
+                ->pluck('total', 'month');
+
+            $label = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+            $growthData = [];
+
+            for ($i = 1; $i <= 12; $i++) {
+                $growthData[] = $monthGrowrate[$i] ?? 0; // ถ้าเดือนไหนไม่มี ให้ใส่ 0
+            }
+
+
+
+            //Mork
+            $currentYear = Carbon::now()->year;
+
+            $totalBranches = Branch::whereNull('deleted_at')->count();
+
+            $branchGrowth = Branch::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->whereYear('created_at', $currentYear)
+                ->whereNull('deleted_at')
+                ->groupBy(DB::raw('MONTH(created_at)'))
+                ->pluck('total', 'month');
+
+            $labels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+            $growthRates = [];
+
+            for ($i = 1; $i <= 12; $i++) {
+                $growthRates[$labels[$i - 1]] = $branchGrowth[$i] ?? 0;
+            }
+
+            $growthPercentage = $totalBranches > 0
+                ? round(array_sum($growthRates) / $totalBranches * 100, 2)
+                : 0;
+
+            return view('homePage', compact(
+                'userRole',
+                'topBranch',
+                'topUsers',
+                'totalSales',
+                'averageSales',
+                'growthPercentage',
+                'labels',
+                'monthlySales',
+                'salesCount',
+                'supervisorCount',
+                'ceoCount',
+                'totalEmployees',
+                'growthData',
+                'totalBranches',
+                'growthRates',
+                'growthPercentage'
+            ));
+        } else if (Auth::check() && Auth::user()->us_role === 'Sales Supervisor') {
+
+            //Rank
+            $currentYear = Carbon::now()->year + 543;
+            $currentMonth = Carbon::now()->month;
+
+            $months = [
+                1 => 'มกราคม',
+                2 => 'กุมภาพันธ์',
+                3 => 'มีนาคม',
+                4 => 'เมษายน',
+                5 => 'พฤษภาคม',
+                6 => 'มิถุนายน',
+                7 => 'กรกฎาคม',
+                8 => 'สิงหาคม',
+                9 => 'กันยายน',
+                10 => 'ตุลาคม',
+                11 => 'พฤศจิกายน',
+                12 => 'ธันวาคม',
+            ];
+
+            $currentMonthName = $months[$currentMonth];
+
+            $topBranch = DB::table('users as u')
+                ->join('branch as b', 'u.us_id', '=', 'b.br_us_id')
+                ->join('order as o', 'b.br_id', '=', 'o.od_br_id')
+                ->where('u.us_head', '=', Auth::user()->us_id)
+                ->where('u.us_role', '!=', 'Sales Supervisor')
+                ->where('o.od_year', '=', $currentYear)
+                ->where('o.od_month', '=', $currentMonthName)
+                ->select('b.br_id', 'b.br_code', 'u.us_image', 'u.us_fname', 'o.od_amount', 'o.created_at')
+                ->whereIn('o.od_id', function ($query) use ($currentYear, $currentMonthName) {
+                    // Subquery เพื่อเลือกข้อมูลที่มียอดขายล่าสุดจากแต่ละสาขา
+                    $query->selectRaw('MAX(o.od_id)')
+                        ->from('order as o')
+                        ->join('branch as b', 'o.od_br_id', '=', 'b.br_id')
+                        ->where('o.od_year', '=', $currentYear)
+                        ->where('o.od_month', '=', $currentMonthName)
+                        ->groupBy('o.od_br_id');
+                })
+                ->orderByDesc('o.od_amount')  // เรียงตามยอดขายจากมากไปน้อย
+                ->take(5)  // เลือกแค่ 5 อันดับแรก
+                ->get();
+
+
+            //@auther : ryu
+            // หาพนักงานที่เพิ่มสาขามากที่สุด
+            // $topUsers = User::withCount('branch')  // ดึงจำนวนสาขา
+            //     ->where('us_head', '=', Auth::user()->us_id)
+            //     ->where('us_role', '!=', 'Sales Supervisor')
+            //     ->orderByDesc('branch_count')  // เรียงลำดับตามจำนวนสาขา
+            //     ->take(5)  // ดึง 5 คน
+            //     ->get();
+
+            $currentYear = Carbon::now()->year;
+
+            $topUsers = User::where('us_head', Auth::user()->us_id)
+                ->where('us_role', '!=', 'Sales Supervisor')
+                ->whereHas('branch', function ($query) use ($currentYear) {
+                    $query->whereYear('created_at', $currentYear);
+                })
+                ->withCount(['branch' => function ($query) use ($currentYear) {
+                    $query->whereYear('created_at', $currentYear);
+                }])
+                ->orderByDesc('branch_count')
+                ->take(5)
+                ->get();
+
+
+            //@auther : boom
+            $monthMap = [
+                'มกราคม' => 1,
+                'กุมภาพันธ์' => 2,
+                'มีนาคม' => 3,
+                'เมษายน' => 4,
+                'พฤษภาคม' => 5,
+                'มิถุนายน' => 6,
+                'กรกฎาคม' => 7,
+                'สิงหาคม' => 8,
+                'กันยายน' => 9,
+                'ตุลาคม' => 10,
+                'พฤศจิกายน' => 11,
+                'ธันวาคม' => 12
+            ];
+
+
+
+            // ยอดขายทั้งหมด
+            $totalSales = Order::sum('od_amount');
+
+            // ยอดขายเดือนก่อนหน้า
+            $previousMonthSales = Order::where('od_month', date('m') - 1)->sum('od_amount');
+
+            //หา % การเติบโต (ยอดขายเดือนปัจจุบัน - ยอดขายเดือนก่อน / ยอดขายเดือนก่อน )* 100
+            $growthPercentage = $previousMonthSales > 0 ? (($totalSales - $previousMonthSales) / $previousMonthSales) * 100 : 0;
+
+            //ค่าเฉลี่ย
+            $averageSales = Order::avg('od_amount');
+
+            // ดึงข้อมูลยอดขายรายเดือน
+            $salesData = Order::where('od_year', 2568) // ปีล่าสุด
+                ->selectRaw('od_month, SUM(od_amount) as total_sales')
+                ->groupBy('od_month')
+                ->orderByRaw("FIELD(od_month, 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม')")
+                ->get();
+
+            // เตรียมข้อมูลยอดขายรายเดือน
+            $monthlySales = [];
+            foreach ($salesData as $sale) {
+                $monthNumber = $monthMap[$sale->od_month]; // แปลงชื่อเดือนเป็นหมายเลขเดือน
+                $monthlySales[$monthNumber] = $sale->total_sales;
+            }
+
+            // กรณีที่บางเดือนไม่มีข้อมูล ยอดขายจะเป็น 0
+            $monthlySales = array_replace(array_flip(range(1, 12)), $monthlySales);
+
+            // ชื่อเดือน
+            $labels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+
+
+
+            //User Graph
+            $currentUserId = Auth::user()->us_id;
+            $currentYear = Carbon::now()->year;
+            // นับจำนวนพนักงานราย role เฉพาะที่ขึ้นตรงกับคน login
+            $salesCount = User::where('us_head', $currentUserId)
+                ->where('us_role', 'Sales')
+                ->count();
+
+            $totalEmployees = User::where('us_head', $currentUserId)
+                ->where('us_role', '!=', 'Sales Supervisor')
+                ->count();
+
+            // นับการเติบโตของพนักงานในแต่ละเดือน ปี 2025 (เฉพาะที่ขึ้นตรงกับคน login)
+            $monthGrowrate = User::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->where('us_head', $currentUserId)
+                ->whereYear('created_at', $currentYear)
+                ->whereNotNull('created_at')
+                ->groupBy(DB::raw('MONTH(created_at)'))
+                ->pluck('total', 'month');
+
+            // เตรียม label และข้อมูลกราฟแบบเต็ม 12 เดือน
+            $label = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+            $growthData = [];
+
+            for ($i = 1; $i <= 12; $i++) {
+                $growthData[] = $monthGrowrate[$i] ?? 0; // ถ้าเดือนไหนไม่มี ให้ใส่ 0
+            }
+
+
+
+
+            //Branch Graph
+            $currentYear = Carbon::now()->year;
+            $currentUserId = Auth::user()->us_id;
+
+            // ดึงรายชื่อ user ที่มี us_head = คนที่ login
+            $userIds = User::where('us_head', $currentUserId)
+                ->where('us_role', '!=', 'Sales Supervisor')
+                ->pluck('us_id');
+
+            // นับเฉพาะสาขาที่ br_us_id อยู่ใน user กลุ่มนี้ และยังไม่ถูกลบ
+            $totalBranches = Branch::whereIn('br_us_id', $userIds)
+                ->whereNull('deleted_at')
+                ->count();
+
+            // เติบโตรายเดือน (เฉพาะของสาขาในกลุ่มนั้น)
+            $branchGrowth = Branch::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->whereIn('br_us_id', $userIds)
+                ->whereYear('created_at', $currentYear)
+                ->whereNull('deleted_at')
+                ->groupBy(DB::raw('MONTH(created_at)'))
+                ->pluck('total', 'month');
+
+            // เตรียมข้อมูลแสดงผล
+            $labels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+            $growthRates = [];
+
+            for ($i = 1; $i <= 12; $i++) {
+                $growthRates[$labels[$i - 1]] = $branchGrowth[$i] ?? 0;
+            }
+
+
+            $growthPercentage = $totalBranches > 0
+                ? round(array_sum($growthRates) / $totalBranches * 100, 2)
+                : 0;
+
+            return view('homePage', compact(
+                'userRole',
+                'topBranch',
+                'topUsers',
+                'totalSales',
+                'averageSales',
+                'growthPercentage',
+                'labels',
+                'monthlySales',
+                'salesCount',
+                'totalEmployees',
+                'growthData',
+                'totalBranches',
+                'growthRates',
+                'growthPercentage'
+            ));
         }
-
-        // กรณีที่บางเดือนไม่มีข้อมูล ยอดขายจะเป็น 0
-        $monthlySales = array_replace(array_flip(range(1, 12)), $monthlySales);
-
-        // ชื่อเดือน
-        $labels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-
-        return view('homePage', compact('topBranch', 'topUsers', 'totalSales', 'averageSales', 'growthPercentage', 'labels', 'monthlySales'));
     }
 }

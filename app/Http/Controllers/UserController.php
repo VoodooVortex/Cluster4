@@ -77,6 +77,7 @@ class UserController extends Controller
         }
         return redirect()->route('manage.user');
     }
+    
     function Emp_GrowRate()
     {
         $salesCount = User::where('us_role', 'Sales')->count();
