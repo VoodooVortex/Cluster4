@@ -15,6 +15,9 @@ use App\Http\Controllers\SalesTeamController;
 use App\Http\Middleware\CheckGoogleLogin;
 use Doctrine\DBAL\Driver\Middleware;
 use PHPUnit\Runner\HookMethod;
+use App\Http\Controllers\SalesTeamController;
+
+
 
 // @author : Pakkapon Chomchoey 66160080
 
@@ -37,6 +40,10 @@ Route::middleware([CheckGoogleLogin::class])->group(
     function () {
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/cluster4/home', [HomeController::class, 'index'])->name('home');
+        
+        Route::get('/cluster4/report/sales-team', [SalesTeamController::class, 'index'])->name('team');
+
+        Route::get('/cluster4/report/sales-team{id}', [SalesTeamController::class, 'detail'])->name ('team.detail');
 
 
         Route::get('/cluster4/manage-user', [UserController::class, 'index'])->name('manage.user');
@@ -47,6 +54,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
 
         Route::delete('/cluster4/delete-user', [UserController::class, 'delete_user'])->name('delete.user');
+
 
         Route::get('/cluster4/edit-user/{id}', [UserController::class, 'edit_user']);
 
@@ -63,6 +71,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::get('/cluster4/order', [OrderController::class, 'index'])->name('order');
 
         Route::get('/cluster4/add-order', [OrderController::class, 'add_order']);
+
 
         Route::get('/cluster4/order-status', [OrderController::class, 'status'])->name('order.status');
 
