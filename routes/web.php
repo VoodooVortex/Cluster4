@@ -15,7 +15,6 @@ use App\Http\Controllers\SalesTeamController;
 use App\Http\Middleware\CheckGoogleLogin;
 use Doctrine\DBAL\Driver\Middleware;
 use PHPUnit\Runner\HookMethod;
-use App\Http\Controllers\SalesTeamController;
 
 
 
@@ -40,10 +39,10 @@ Route::middleware([CheckGoogleLogin::class])->group(
     function () {
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/cluster4/home', [HomeController::class, 'index'])->name('home');
-        
+
         Route::get('/cluster4/report/sales-team', [SalesTeamController::class, 'index'])->name('team');
 
-        Route::get('/cluster4/report/sales-team{id}', [SalesTeamController::class, 'detail'])->name ('team.detail');
+        Route::get('/cluster4/report/sales-team{id}', [SalesTeamController::class, 'detail'])->name('team.detail');
 
 
         Route::get('/cluster4/manage-user', [UserController::class, 'index'])->name('manage.user');
