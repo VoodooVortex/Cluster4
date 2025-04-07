@@ -54,7 +54,9 @@
 
         <!-- ชื่อผู้ใช้ -->
         <div class="ml-auto flex items-center space-x-2">
-            <span class="text-md font-sm text-gray-500">สวัสดี! {{ Auth::user()->us_fname ?? 'ผู้ใช้' }}</span>
+            <span class="text-md font-sm text-gray-500">
+                {{ Request::is('/', 'cluster4', 'cluster4/home') ? 'สวัสดี! ' . (Auth::user()->us_fname ?? 'ผู้ใช้') : '' }}
+            </span>
 
             <!-- ไอคอนโปรไฟล์ -->
             <button class="w-9 h-9 flex items-center justify-center border rounded-full">
