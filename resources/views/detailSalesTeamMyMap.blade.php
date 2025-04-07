@@ -1,26 +1,7 @@
     @extends('layouts.default')
 
     @section('content')
-        {{-- <div class="pt-16 bg-white-100 w-full">
-            <div class="mb-4 px-4">
-                <a href="{{ route('team') }}"
-                    class="text-white border-[#4D55A0] text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
-                    style="background-color: #4D55A0;">
-                    <i class="fa-solid fa-arrow-left mx-3 fa-l"></i>
-                    รายชื่อทีมงาน
-                </a>
-            </div>
-        </div>
-        <div class="mb-4 px-4">
-            <img src="{{ $user->us_image }}" class="w-12 h-12 rounded-full" alt="User Image">
-            <div>
-                <p class="font-semibold">{{ $user->us_fname }}   {{ $user->us_lname }}</p>
-                <p class="text-sm text-gray-500">{{ $user->us_email }}</p>
-            </div>
-        </div> --}}
-
-
-        <div class="pt-14 bg-white min-h-screen">
+       <div class="pt-14 bg-white min-h-screen">
             {{-- ปุ่มกลับ --}}
             <div class="mb-4 px-4">
                 <a href="{{ route('team') }}"

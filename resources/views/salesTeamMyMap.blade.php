@@ -1,11 +1,15 @@
 @extends('layouts.default')
 
 @section('content')
-    <div class="pt-16 bg-white w-full min-h-screen">
+    @php
+        $currentRole = request()->query('role', 'all');
+    @endphp
 
+    <div class="pt-16 bg-white w-full min-h-screen">
         {{-- ปุ่มย้อนกลับ + หัวข้อ --}}
         <div class="mb-4 px-4">
-            <div class="text-white text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full" style="background-color: #4D55A0;">
+            <div class="text-white text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
+                style="background-color: #4D55A0;">
                 <a href="#" class="mx-3">
                     <i class="fa-solid fa-arrow-left fa-l"></i>
                 </a>
@@ -17,18 +21,24 @@
         <div class="px-4 mb-4">
             <div class="flex flex-wrap gap-3">
                 <button
-                    class="filter-btn px-4 py-1.5 border rounded-full text-sm border-[#4D55A0] text-[#4D55A0] font-semibold"
+                    class="filter-btn px-4 py-1.5 border rounded-full text-sm {{ $currentRole == 'all' ? 'border-[#4D55A0] text-[#4D55A0] font-semibold' : 'text-gray-600' }}"
                     value="all">
-                    ทั้งหมด (<span id="count-all">0</span>)
+                    ทั้งหมด (<span id="count-all">{{ $countAll }}</span>)
                 </button>
-                <button class="filter-btn px-4 py-1.5 border rounded-full text-sm text-gray-600" value="Sales">
-                    Sales (<span id="count-sales">0</span>)
+                <button
+                    class="filter-btn px-4 py-1.5 border rounded-full text-sm {{ $currentRole == 'Sales' ? 'border-[#4D55A0] text-[#4D55A0] font-semibold' : 'text-gray-600' }}"
+                    value="Sales">
+                    Sales (<span id="count-sales">{{ $countSales }}</span>)
                 </button>
-                <button class="filter-btn px-4 py-1.5 border rounded-full text-sm text-gray-600" value="Sales Supervisor">
-                    Sales Supervisor (<span id="count-supervisor">0</span>)
+                <button
+                    class="filter-btn px-4 py-1.5 border rounded-full text-sm {{ $currentRole == 'Sales Supervisor' ? 'border-[#4D55A0] text-[#4D55A0] font-semibold' : 'text-gray-600' }}"
+                    value="Sales Supervisor">
+                    Sales Supervisor (<span id="count-supervisor">{{ $countSupervisor }}</span>)
                 </button>
-                <button class="filter-btn px-4 py-1.5 border rounded-full text-sm text-gray-600" value="CEO">
-                    CEO (<span id="count-ceo">0</span>)
+                <button
+                    class="filter-btn px-4 py-1.5 border rounded-full text-sm {{ $currentRole == 'CEO' ? 'border-[#4D55A0] text-[#4D55A0] font-semibold' : 'text-gray-600' }}"
+                    value="CEO">
+                    CEO (<span id="count-ceo">{{ $countCEO }}</span>)
                 </button>
             </div>
         </div>
@@ -36,8 +46,8 @@
         {{-- รายการผู้ใช้ --}}
         <div class="px-4 space-y-2">
             @foreach ($users as $user)
-                <div class="user-item flex items-center justify-between py-4 {{ $loop->last ? '' : 'border-b border-gray-200' }}"
-                    value="{{ $user->us_role }}">
+                <div
+                    class="user-item flex items-center justify-between py-4 {{ $loop->last ? '' : 'border-b border-gray-200' }}">
                     <div class="flex items-center gap-4">
                         <img src="{{ $user->us_image ?? 'https://via.placeholder.com/40' }}"
                             class="w-14 h-14 rounded-full object-cover border border-gray-300 shadow-sm" alt="avatar">
@@ -54,61 +64,72 @@
                             </span>
                         </div>
                     </div>
-                    <a href="{{ route('team.detail', $user->us_id) }}" class="text-[#4D55A0] text-sm font-medium hover:underline">
+                    <a href="{{ route('team.detail', $user->us_id) }}"
+                        class="text-[#4D55A0] text-sm font-medium hover:underline">
                         รายละเอียด
                     </a>
                 </div>
             @endforeach
+
+            {{-- Pagination --}}
+            @if ($users instanceof \Illuminate\Pagination\LengthAwarePaginator && $users->lastPage() > 1)
+                <div class="flex justify-center items-center gap-2 mt-4 py-5">
+                    {{-- Previous --}}
+                    @if ($users->onFirstPage())
+                        <span
+                            class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 text-gray-400">
+                            <i class="fa-solid fa-angle-left"></i>
+                        </span>
+                    @else
+                        <a href="{{ $users->previousPageUrl() }}"
+                            class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-200">
+                            <i class="fa-solid fa-angle-left"></i>
+                        </a>
+                    @endif
+
+                    {{-- Page Numbers --}}
+                    @for ($i = 1; $i <= $users->lastPage(); $i++)
+                        @if ($i == $users->currentPage())
+                            <span
+                                class="w-8 h-8 flex items-center justify-center rounded-full bg-[#4D55A0] text-white font-semibold">{{ $i }}</span>
+                        @else
+                            <a href="{{ $users->url($i) }}"
+                                class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-200">
+                                {{ $i }}
+                            </a>
+                        @endif
+                    @endfor
+
+                    {{-- Next --}}
+                    @if ($users->hasMorePages())
+                        <a href="{{ $users->nextPageUrl() }}"
+                            class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-200">
+                            <i class="fa-solid fa-angle-right"></i>
+                        </a>
+                    @else
+                        <span
+                            class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 text-gray-400">
+                            <i class="fa-solid fa-angle-right"></i>
+                        </span>
+                    @endif
+                </div>
+            @endif
         </div>
     </div>
 @endsection
 
 @section('scripts')
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const filterButtons = document.querySelectorAll(".filter-btn");
-            const userItems = document.querySelectorAll(".user-item");
-
-            function countUsers() {
-                let countAll = userItems.length;
-                let countSales = 0,
-                    countSupervisor = 0,
-                    countCEO = 0;
-
-                userItems.forEach(item => {
-                    const role = item.getAttribute("value");
-                    if (role === "Sales") countSales++;
-                    if (role === "Sales Supervisor") countSupervisor++;
-                    if (role === "CEO") countCEO++;
-                });
-
-                document.getElementById("count-all").textContent = countAll;
-                document.getElementById("count-sales").textContent = countSales;
-                document.getElementById("count-supervisor").textContent = countSupervisor;
-                document.getElementById("count-ceo").textContent = countCEO;
-            }
-
-            countUsers();
 
             filterButtons.forEach(button => {
-                button.addEventListener("click", function () {
+                button.addEventListener("click", function() {
                     const role = this.getAttribute("value");
-
-                    filterButtons.forEach(btn => {
-                        btn.classList.remove("border-[#4D55A0]", "text-[#4D55A0]", "font-semibold");
-                        btn.classList.add("text-gray-600");
-                    });
-
-                    this.classList.add("border-[#4D55A0]", "text-[#4D55A0]", "font-semibold");
-                    this.classList.remove("text-gray-600");
-
-                    userItems.forEach(item => {
-                        if (role === "all" || item.getAttribute("value") === role) {
-                            item.classList.remove("hidden");
-                        } else {
-                            item.classList.add("hidden");
-                        }
-                    });
+                    const baseUrl = window.location.origin + window.location.pathname;
+                    const url = role === 'all' ? baseUrl :
+                        `${baseUrl}?role=${encodeURIComponent(role)}`;
+                    window.location.href = url;
                 });
             });
         });
