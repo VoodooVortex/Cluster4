@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\CheckGoogleLogin;
 use PHPUnit\Runner\HookMethod;
+use App\Http\Controllers\SalesTeamController;
+
+
 
 // @author : Pakkapon Chomchoey 66160080
 Route::get('/cluster4/login', function () {
@@ -30,21 +33,21 @@ Route::get('auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->n
 
 Route::get('auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
 
-
 Route::get('/', [UserController::class, 'index']);
 
+Route::get('/cluster4/report/team', [SalesTeamController::class, 'index'])->name('team');
+
+Route::get('/cluster4/report/team/User{id}', [SalesTeamController::class, 'detail'])->name ('team.detail');
 //kuy mork
 Route::get('/cluster4/dashboard', [DashboardController::class, 'branchGrowthRate'])->name('dashboard.branch.growth');
 
 Route::get('/cluster4/home', [HomeController::class, 'index'])->name('home');
 
-
 Route::get('/cluster4/manage-user', [UserController::class, 'index'])->name('manage.user');
 
-
 Route::get('/cluster4/add-user', [UserController::class, 'add_user'])->name('add.user');
-Route::post('/cluster4/add-user', [UserController::class, 'create'])->name('create.user');
 
+Route::post('/cluster4/add-user', [UserController::class, 'create'])->name('create.user');
 
 Route::delete('/cluster4/delete-user', [UserController::class, 'delete_user'])->name('delete.user');
 
@@ -58,7 +61,6 @@ Route::get('/cluster4/map', MapLocation::class)->name('map');
 
 // Aninthita 66160381
 Route::get('/cluster4/order-detail/{br_id}', [OrderController::class, 'order_detail']);
-
 
 Route::get('/cluster4/order', [OrderController::class, 'index'])->name('order');
 
