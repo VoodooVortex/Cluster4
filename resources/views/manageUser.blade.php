@@ -94,7 +94,7 @@
                             </div>
                             {{-- <a href="{{ url('/user/' . $user->id) }}" class="text-indigo-600">Edit</a> --}}
                             <div class="flex items-center ml-auto">
-                                <a href="{{ url('/cluster4/edit-user/' . $user->us_id) }}">
+                                <a href="{{ route('edit.user.id', $user->us_id) }}">
                                     <button class="btn btn-warning text-[#4D55A0]">Edit</button>
                                 </a>
                             </div>
