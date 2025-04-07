@@ -15,7 +15,7 @@
 
         <!-- Sidebar Menu -->
         <ul class="pt-5 mt-4">
-            <li class="{{ Request::is('/', 'cluster4', 'cluster4/home') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
+            <li class="{{ Request::is('/', 'home') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
                 <a href="{{ route('home') }}" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                     <i class="fa-solid fa-house mr-3"
                         style="color: {{ Request::is('/', 'cluster4', 'cluster4/home') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
@@ -23,7 +23,7 @@
                 </a>
             </li>
 
-            <li class="{{ Request::is('cluster4/map') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
+            <li class="{{ Request::is('map') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
                 <a href="{{ route('map') }}" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                     <i class="fa-solid fa-globe mr-3"
                         style="color: {{ Request::is('cluster4/map') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
@@ -32,7 +32,7 @@
             </li>
             @if (auth()->user()->us_role === 'CEO')
                 <li
-                    class="{{ Request::is('cluster4/manage-user', 'cluster4/add-user', 'cluster4/edit-user/*') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
+                    class="{{ Request::is('manage-user', 'add-user', 'edit-user/*') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
                     <a href="{{ route('manage.user') }}"
                         class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                         <i class="fa-solid fa-circle-user mr-3"
@@ -42,7 +42,7 @@
                 </li>
             @endif
 
-            <li class="{{ Request::is('cluster4/order') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
+            <li class="{{ Request::is('order') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
                 <a href="{{ route('order') }}"
                     class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                     <i class="fa-solid fa-chart-column mr-3"

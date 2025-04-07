@@ -161,9 +161,9 @@
 
             selectHeadField();
 
-            const successAlert = '/public/alert-icon/SuccessAlert.png';
-            const userAlert = '/public/alert-icon/UserAlert.png';
-            const errorAlert = '/public/alert-icon/ErrorAlert.png';
+            const successAlert = 'public/alert-icon/SuccessAlert.png';
+            const userAlert = 'public/alert-icon/UserAlert.png';
+            const errorAlert = 'public/alert-icon/ErrorAlert.png';
 
             // เมื่อผู้ใช้งานคลิกปุ่ม "บันทึก" จะยับยั้งการส่งฟอร์มโดยใช้ e.preventDefault(); เพื่อให้สามารถแสดง sweetalert ได้
             form.addEventListener('submit', function(e) {
