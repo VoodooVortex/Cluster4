@@ -35,9 +35,9 @@ Route::get('auth/google/callback', [GoogleLoginController::class, 'googleCallbac
 
 Route::get('/', [UserController::class, 'index']);
 
-Route::get('/cluster4/report/team', [SalesTeamController::class, 'index'])->name('team');
+Route::get('/cluster4/report/sales-team', [SalesTeamController::class, 'index'])->name('team');
 
-Route::get('/cluster4/report/team/User{id}', [SalesTeamController::class, 'detail'])->name ('team.detail');
+Route::get('/cluster4/report/sales-team{id}', [SalesTeamController::class, 'detail'])->name ('team.detail');
 //kuy mork
 Route::get('/cluster4/dashboard', [DashboardController::class, 'branchGrowthRate'])->name('dashboard.branch.growth');
 

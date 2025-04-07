@@ -12,7 +12,7 @@ class SalesTeamController extends Controller
     public function index()
     {
         $users = User::all();
-        return view('salesTeam', compact('users'));
+        return view('salesTeamMyMap', compact('users'));
     }
 
     public function detail($id)
@@ -23,9 +23,9 @@ class SalesTeamController extends Controller
         // ดึงรายการสาขาที่ผู้ใช้นั้นดูแล จาก br_us_id
         $branches = DB::table('branch')
             ->where('br_us_id', $id)
-            ->paginate(1); // หรือจะใช้ ->get() ถ้ายังไม่ใช้ paginate
+            ->paginate(5); // หรือจะใช้ ->get() ถ้ายังไม่ใช้ paginate
 
-        return view('detailSalesTeam', compact('user', 'branches'));
+        return view('detailSalesTeamMyMap', compact('user', 'branches'));
     }
     public function boot(): void
     {
