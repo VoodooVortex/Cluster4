@@ -17,8 +17,7 @@ use Doctrine\DBAL\Driver\Middleware;
 use PHPUnit\Runner\HookMethod;
 
 // @author : Pakkapon Chomchoey 66160080
-// Route::prefix(config('app.cluster_path_prefix'))->group(
-//     function () {
+
 Route::get('/cluster4/login', function () {
     return view('login');
 })->name('login');
@@ -72,5 +71,3 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::get('/cluster4/report/team/{id}', [SalesTeamController::class, 'detail']);
     }
 );
-//     }
-// );
