@@ -31,9 +31,9 @@ Route::get('/logout', function () {
     return Redirect()->route('login');
 })->name('logout');
 
-Route::get('/auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('redirect.google');
+Route::get('/cluster4/auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('redirect.google');
 
-Route::get('/auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
+Route::get('/cluster4/auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
 
 Route::middleware([CheckGoogleLogin::class])->group(
     function () {
@@ -55,7 +55,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::delete('/delete-user', [UserController::class, 'delete_user'])->name('delete.user');
 
 
-        Route::get('/edit-user/{id}', [UserController::class, 'edit_user']);
+        Route::get('/edit-user/{id}', [UserController::class, 'edit_user'])->name('edit.user.id');
 
         Route::put('/edit-user', [UserController::class, 'edit_action'])->name('edit.user');
 

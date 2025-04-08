@@ -1277,6 +1277,7 @@
                             source: 'branch-markers',
                             layout: {
                                 'icon-image': 'branch-icon-marker',
+                                'icon-allow-overlap': true,
                             },
                         });
                     }
@@ -1289,6 +1290,7 @@
                         source: 'branch-markers',
                         layout: {
                             'icon-image': 'branch-icon-marker',
+                            'icon-allow-overlap': true,
                         },
                     });
                 }
