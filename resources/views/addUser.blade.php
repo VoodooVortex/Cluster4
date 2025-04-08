@@ -220,13 +220,13 @@
     <!-- โหลด SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const branchAlert = '/public/alert-icon/BranchAlert.png';
-        const deleteAlert = '/public/alert-icon/DeleteAlert.png';
-        const editAlert = '/public/alert-icon/EditAlert.png';
-        const errorAlert = '/public/alert-icon/ErrorAlert.png';
-        const orderAlert = '/public/alert-icon/OrderAlert.png';
-        const successAlert = '/public/alert-icon/SuccessAlert.png';
-        const userAlert = '/public/alert-icon/UserAlert.png';
+        const branchAlert = 'public/alert-icon/BranchAlert.png';
+        const deleteAlert = 'public/alert-icon/DeleteAlert.png';
+        const editAlert = 'public/alert-icon/EditAlert.png';
+        const errorAlert = 'public/alert-icon/ErrorAlert.png';
+        const orderAlert = 'public/alert-icon/OrderAlert.png';
+        const successAlert = 'public/alert-icon/SuccessAlert.png';
+        const userAlert = 'public/alert-icon/UserAlert.png';
 
         function confirmAddUser() {
             const form = document.getElementById('editForm');
@@ -238,7 +238,6 @@
             //     return; // ไม่ต้องเปิด Swal ถ้ายังไม่ได้กรอกชื่อ
             // }
             if (!validateForm()) return;
-
 
             Swal.fire({
                 title: 'ยืนยันการเพิ่มบัญชี',
@@ -274,6 +273,25 @@
             });
         }
     </script>
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                title: 'ข้อผิดพลาด',
+                text: 'อีเมลนี้ถูกใช้งานแล้ว',
+                confirmButtonText: 'ตกลง',
+                showConfirmButton: true,
+                imageUrl: errorAlert, // ใช้รูปภาพถ้าต้องการ
+                customClass: {
+                    confirmButton: 'swal2-cancel-custom',
+                    title: 'no-padding-title',
+                },
+                buttonsStyling: false
+            });
+        </script>
+    @endif
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const headContainer = document.getElementById("headContainer");
