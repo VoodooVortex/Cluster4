@@ -82,7 +82,7 @@
                                     <p class="font-semibold">{{ $user->us_fname }}</p>
                                     <p class="text-sm text-gray-500">{{ $user->us_email }}</p>
                                     <span
-                                        class="px-2 mt-1 border rounded-full text-xs bg-white
+        class="px-2 mt-1 border rounded-full text-xs bg-white
                                         @if ($user->us_role == 'CEO') border-yellow-700 text-yellow-700
                                         @elseif ($user->us_role == 'Sales Supervisor')
                                             border-purple-500 text-purple-500
@@ -224,8 +224,8 @@
 
         // Delete User
         function deleteUsers() {
-            const deleteAlert = '/public/alert-icon/DeleteAlert.png';
-            const successAlert = '/public/alert-icon/SuccessAlert.png';
+            const deleteAlert = './public/alert-icon/DeleteAlert.png';
+            const successAlert = './public/alert-icon/SuccessAlert.png';
             const checkboxes = document.querySelectorAll('.user-checkbox:checked'); // ดึง checkbox ที่ถูกเลือก
             const form = document.getElementById('deleteUserForm'); // ดึงฟอร์มลบผู้ใช้
 

@@ -89,7 +89,7 @@
                             @endforeach
                         </select>
 
-                        <p id="headError" class="text-red-500 text-sm mt-1 hidden">กรุณาเลือกหัวหน้างาน</p>
+
 
                     </div>
 
