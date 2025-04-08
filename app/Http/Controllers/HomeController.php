@@ -384,6 +384,7 @@ class HomeController extends Controller
             return view(
                 'homePage',
                 compact(
+                    'currentYear',
                     'userRole',
                     'topBranch',
                     'topUsers',
@@ -810,6 +811,7 @@ class HomeController extends Controller
             return view(
                 'homePage',
                 compact(
+                    'currentYear',
                     'userRole',
                     'topBranch',
                     'topUsers',
