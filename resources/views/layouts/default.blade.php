@@ -72,7 +72,7 @@
     @include('components.sitebar')
 
     <!-- Main Content Wrapper -->
-    <div class="min-h-screen overflow-y-auto">
+    <div class="overflow-y-auto">
         @yield('content')
     </div>
 
