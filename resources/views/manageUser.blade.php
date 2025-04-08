@@ -83,7 +83,7 @@
                                     <p class="font-semibold">{{ $user->us_fname }}</p>
                                     <p class="text-sm text-gray-500">{{ $user->us_email }}</p>
                                     <span
-                                        class="px-2 mt-1 border rounded-full text-xs bg-white
+        class="px-2 mt-1 border rounded-full text-xs bg-white
                                         @if ($user->us_role == 'CEO') border-yellow-700 text-yellow-700
                                         @elseif ($user->us_role == 'Sales Supervisor')
                                             border-purple-500 text-purple-500
