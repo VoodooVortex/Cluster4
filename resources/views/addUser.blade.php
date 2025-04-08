@@ -239,7 +239,6 @@
             // }
             if (!validateForm()) return;
 
-
             Swal.fire({
                 title: 'ยืนยันการเพิ่มบัญชี',
                 showCancelButton: true,
@@ -274,6 +273,25 @@
             });
         }
     </script>
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                title: 'ข้อผิดพลาด',
+                text: 'อีเมลนี้ถูกใช้งานแล้ว',
+                confirmButtonText: 'ตกลง',
+                showConfirmButton: true,
+                imageUrl: errorAlert, // ใช้รูปภาพถ้าต้องการ
+                customClass: {
+                    confirmButton: 'swal2-cancel-custom',
+                    title: 'no-padding-title',
+                },
+                buttonsStyling: false
+            });
+        </script>
+    @endif
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const headContainer = document.getElementById("headContainer");
