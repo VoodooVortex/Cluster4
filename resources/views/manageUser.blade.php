@@ -224,8 +224,8 @@
 
         // Delete User
         function deleteUsers() {
-            const deleteAlert = '/public/alert-icon/DeleteAlert.png';
-            const successAlert = '/public/alert-icon/SuccessAlert.png';
+            const deleteAlert = './public/alert-icon/DeleteAlert.png';
+            const successAlert = './public/alert-icon/SuccessAlert.png';
             const checkboxes = document.querySelectorAll('.user-checkbox:checked'); // ดึง checkbox ที่ถูกเลือก
             const form = document.getElementById('deleteUserForm'); // ดึงฟอร์มลบผู้ใช้
 

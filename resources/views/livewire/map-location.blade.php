@@ -754,13 +754,13 @@
 
 {{-- SweetAlert2 --}}
 <script>
-    const branchAlert = '/public/alert-icon/BranchAlert.png';
-    const deleteAlert = '/public/alert-icon/DeleteAlert.png';
-    const editAlert = '/public/alert-icon/EditAlert.png';
-    const errorAlert = '/public/alert-icon/ErrorAlert.png';
-    const orderAlert = '/public/alert-icon/OrderAlert.png';
-    const successAlert = '/public/alert-icon/SuccessAlert.png';
-    const userAlert = '/public/alert-icon/UserAlert.png';
+    const branchAlert = './public/alert-icon/BranchAlert.png';
+    const deleteAlert = './public/alert-icon/DeleteAlert.png';
+    const editAlert = './public/alert-icon/EditAlert.png';
+    const errorAlert = './public/alert-icon/ErrorAlert.png';
+    const orderAlert = './public/alert-icon/OrderAlert.png';
+    const successAlert = './public/alert-icon/SuccessAlert.png';
+    const userAlert = './public/alert-icon/UserAlert.png';
 
     // function _testAlert() {
     //     Livewire.dispatch('branch-added-alert');

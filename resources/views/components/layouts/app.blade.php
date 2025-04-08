@@ -51,8 +51,8 @@
     <script type="text/javascript"
         src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
 
-    {{-- Import CSS form --}}
-    <link rel="stylesheet" href="/resources/css/style.css">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <script src="{{ asset('js/livewire.js') }}" defer></script>
 
     <title>{{ $title ?? 'Page Title' }}</title>
 </head>
