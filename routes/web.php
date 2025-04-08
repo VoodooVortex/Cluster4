@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NearbyController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\OrderController;
@@ -71,6 +72,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/add-order', [OrderController::class, 'add_order']);
 
+        Route::get('/nearby/{branchId}', [NearbyController::class, 'index'])->name('nearby');
 
         Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
 
