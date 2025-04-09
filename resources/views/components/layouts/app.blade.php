@@ -11,12 +11,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>My Map</title>
-    <link rel="icon" type="image/png" href="/public/assets/image/logo-mymap.png">
+    <link rel="icon" type="image/png" href="./public/assets/image/logo-mymap.png">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Livewire Styles -->
     @livewireStyles
+
+    <!-- โหลดฟอนต์จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai+Looped:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans Thai Looped', sans-serif;
+            font-style: normal;
+        }
+    </style>
 
     <!-- Icon FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
@@ -51,8 +65,9 @@
     <script type="text/javascript"
         src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
 
-    {{-- Import CSS form --}}
-    <link rel="stylesheet" href="/resources/css/style.css">
+    <link rel="stylesheet" href="./public/css/style.css">
+
+    <script src="./js/livewire.js" defer></script>
 
     <title>{{ $title ?? 'Page Title' }}</title>
 </head>
@@ -63,7 +78,11 @@
     {{ $slot }}
 
     @livewireScripts
-
+    <script>
+        document.addEventListener('livewire:load', () => {
+            Livewire.onPageExpired((response, message) => {})
+        })
+    </script>
 
 
 </body>

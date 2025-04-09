@@ -1,22 +1,22 @@
 @extends('layouts.default')
 
 @section('content')
-
-{{--
+    {{--
     @title : ยอดขายทั้งหมด
     @author : Suthasinee Wongphatklang 66160379
     @create date : 04/04/2568
 --}}
 
-<!-- Tom Select CSS -->
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
-<!-- Tom Select JS -->
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <!-- Tom Select CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+    <!-- Tom Select JS -->
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
     <div class="pt-16 bg-white-100 min-h-screen w-full">
         {{-- หัวข้อ --}}
         <div class="mb-2 px-4">
-            <label class="bg-[#4D55A0] text-white border-[#4D55A0] text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full pl-4">
+            <label
+                class="bg-[#4D55A0] text-white border-[#4D55A0] text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full pl-4">
                 ยอดขายทั้งหมด
             </label>
         </div>
@@ -202,12 +202,12 @@
                     </ul>
                 </div>
             </div> --}}
-
         </div>
     </div>
 @endsection
 
 @section('scripts')
+
 <script>
     // เปลี่ยนหน้าตรงปุ่มลงแล้ว + ยังไม่ลง
     function toggleSalesList(status) {
@@ -222,7 +222,5 @@
             document.getElementById('notdone-list').classList.remove('hidden');
         }
     }
-
-</script>
-
+    </script>
 @endsection

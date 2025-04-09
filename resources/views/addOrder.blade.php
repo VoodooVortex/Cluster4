@@ -73,12 +73,12 @@
             document.getElementById('saveButton').addEventListener('click', function() {
                 event.preventDefault(); // ป้องกันการ submit ฟอร์มทันที
 
-                const orderAlert = '/public/alert-icon/OrderAlert.png';
-                const successAlert = '/public/alert-icon/SuccessAlert.png';
-
                 // ปิดการใช้งานปุ่ม "บันทึก" เพื่อป้องกันการคลิกซ้ำ
                 const saveButton = document.getElementById('saveButton');
                 saveButton.disabled = true;
+
+                const orderAlert = './public/alert-icon/OrderAlert.png';
+                const successAlert = './public/alert-icon/SuccessAlert.png';
 
                 Swal.fire({
                     title: 'ยืนยันการเพิ่มยอดขาย',
