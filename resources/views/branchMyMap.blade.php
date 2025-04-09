@@ -81,7 +81,7 @@
                         ({{ $branch->br_code }})
                     </p>
                     <div class="flex items-center mt-1">
-                        <img src="{{ $branch->us_image }}" alt="Photo User" class="w-12 h-12 rounded-full mr-3 ">
+                        <img src="{{ $branch->manager->us_image }}" alt="Photo User" class="w-12 h-12 rounded-full mr-3 ">
                         <div>
                             <p class="text-gray-700 font-medium">ผู้ดูแล {{ $branch->manager->us_fname ?? '-' }}
                                 {{ $branch->manager->us_lname ?? '-' }}</p>
@@ -109,7 +109,7 @@
                             <p class="font-medium  text-blue-800"> ยอดรวม {{ number_format($branch->total_sales) }} ชิ้น
                             </p>
                         </div>
-                        <a href="{{ route('branchMyMap', $branch->br_id) }}"
+                        <a href="{{ route('branchDetail', $branch->br_id) }}"
                             class="font-semibold text-sm text-blue-800">ดูเพิ่มเติม</a>
                     </div>
                 </div>

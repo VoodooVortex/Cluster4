@@ -46,7 +46,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/report/sales-team', [SalesTeamController::class, 'index'])->name('team');
 
-        Route::get('/report/sales-team{id}', [SalesTeamController::class, 'detail'])->name('team.detail');
+        Route::get('/report/sales-team/{id}', [SalesTeamController::class, 'detail'])->name('team.detail');
 
 
         Route::get('/manage-user', [UserController::class, 'index'])->name('manage.user');
@@ -64,6 +64,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::put('/edit-user', [UserController::class, 'edit_action'])->name('edit.user');
 
         Route::get('/branchMyMap', [BranchController::class, 'index'])->name('branchMyMap');
+        Route::get('/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
         Route::get('/reportSalesSupervisor', [reportSalesSupervisorController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
 
@@ -72,7 +73,6 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
 
-        Route::get('/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
         Route::get('/order', [OrderController::class, 'index'])->name('order');
 
