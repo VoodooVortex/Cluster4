@@ -8,15 +8,13 @@
             </label>
         </div>
         <!-- เมนูแท็บ -->
-        <div class="flex border-b mt-4">
-            <button id="tab-my" onclick="showTab('my')"
-                class="tab-button flex-1 border-b-2 border-indigo-700 text-indigo-700 font-medium py-2">
+        <div class="flex justify-between text-sm font-medium text-center text-gray-500 border-b border-gray-200">
+            <a class="w-1/2 py-2 border-b-2 border-[#4D55A0] text-[#4D55A0] font-semibold">
                 สาขาของฉัน
-            </button>
-            <button id="tab-staff" onclick="showTab('staff')"
-                class="tab-button flex-1 text-gray-600 hover:text-indigo-700 py-2">
+            </a>
+            <a class="w-1/2 py-2" href="{{ route('reportSale_sup2') }}">
                 สาขาพนักงาน
-            </button>
+            </a>
         </div>
         <div id="content-my" class="tab-content mt-4">
             <div class="flex justify-between items-center px-6">
@@ -114,14 +112,16 @@
                         <p class="text-gray-500">จากปีที่แล้ว</p>
                     </div>
                     <ul>
-                        @foreach($branchesRank as $index => $branch)
-                        <li class="flex justify-between items-center py-2">
-                            <span class="flex-1 text-left font-bold text-sm">สาขาที่ {{ $branch->br_id }}</span>
-                            <span class="flex-1 text-center font-bold text-sm">{{ number_format($branch->total_sales, 2) }} ชิ้น</span>
-                            <span class="flex-1 text-right font-bold text-sm">
-                                {{ number_format($branch->growth_percentage, 2) }}%
-                            </span>
-                        </li>
+                        @foreach ($branchesRank as $index => $branch)
+                            <li class="flex justify-between items-center py-2">
+                                <span class="flex-1 text-left font-bold text-sm">สาขาที่ {{ $branch->br_id }}</span>
+                                <span
+                                    class="flex-1 text-center font-bold text-sm">{{ number_format($branch->total_sales, 2) }}
+                                    ชิ้น</span>
+                                <span class="flex-1 text-right font-bold text-sm">
+                                    {{ number_format($branch->growth_percentage, 2) }}%
+                                </span>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
@@ -131,89 +131,90 @@
 @endsection
 
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0"></script>
-<script>
-    const monthlyTotal = @json($monthlyTotal);  // ส่งข้อมูลของยอดขาย
-    const monthlyMedian = @json($monthlyMedian);  // ส่งข้อมูลของ Median
-    const monthMap = @json($monthMap);
-    const ctxbar = document.getElementById('salesChart').getContext('2d');
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0"></script>
+    <script>
+        const monthlyTotal = @json($monthlyTotal); // ส่งข้อมูลของยอดขาย
+        const monthlyMedian = @json($monthlyMedian); // ส่งข้อมูลของ Median
+        const monthMap = @json($monthMap);
+        const ctxbar = document.getElementById('salesChart').getContext('2d');
 
-    const salesData = {
-        labels: monthMap,  // ใช้ $monthMap เพื่อแสดงชื่อเดือน
-        datasets: [{
-            label: 'ยอดขาย',
-            data: monthlyTotal,  // ยอดขายในแต่ละเดือน
-            backgroundColor: 'rgba(54,79,199,0.8)',
-            borderColor: 'rgba(0,0,255,1)',
-            borderWidth: 2,
-            pointRadius: 4,
-            fill: false,
-            tension: 0.3
-        },
-        {
-            label: 'ค่า Median ของยอดขาย',
-            data: monthlyMedian,  // ค่า median ของยอดขาย
-            borderColor: 'rgba(255,99,132,1)',
-            backgroundColor: 'rgba(255,99,132,0.2)',
-            borderWidth: 2,
-            fill: false,
-            pointRadius: 4,
-            tension: 0.3,
-            borderDash: [5, 5]  // เส้นประ
-        }]
-    };
-
-    const config = {
-        type: 'line',
-        data: salesData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
+        const salesData = {
+            labels: monthMap, // ใช้ $monthMap เพื่อแสดงชื่อเดือน
+            datasets: [{
+                    label: 'ยอดขาย',
+                    data: monthlyTotal, // ยอดขายในแต่ละเดือน
+                    backgroundColor: 'rgba(54,79,199,0.8)',
+                    borderColor: 'rgba(0,0,255,1)',
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    fill: false,
+                    tension: 0.3
                 },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.raw + ' ชิ้น';
+                {
+                    label: 'ค่า Median ของยอดขาย',
+                    data: monthlyMedian, // ค่า median ของยอดขาย
+                    borderColor: 'rgba(255,99,132,1)',
+                    backgroundColor: 'rgba(255,99,132,0.2)',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 4,
+                    tension: 0.3,
+                    borderDash: [5, 5] // เส้นประ
+                }
+            ]
+        };
+
+        const config = {
+            type: 'line',
+            data: salesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.raw + ' ชิ้น';
+                            }
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'center',
+                        align: 'center',
+                        formatter: function(value) {
+                            return value;
+                        },
+                        color: '#FFFFFF',
+                        font: {
+                            weight: 'bold',
+                            size: 12
                         }
                     }
                 },
-                datalabels: {
-                    anchor: 'center',
-                    align: 'center',
-                    formatter: function(value) {
-                        return value;
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                        }
                     },
-                    color: '#FFFFFF',
-                    font: {
-                        weight: 'bold',
-                        size: 12
+                    y: {
+                        title: {
+                            display: true,
+                        },
+                        beginAtZero: true
                     }
                 }
             },
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                    },
-                    beginAtZero: true
-                }
-            }
-        },
-        plugins: [ChartDataLabels]
-    };
+            plugins: [ChartDataLabels]
+        };
 
-    const salesChart = new Chart(ctxbar, config);
-</script>
+        const salesChart = new Chart(ctxbar, config);
+    </script>
 @endsection
 
 @section('styles')

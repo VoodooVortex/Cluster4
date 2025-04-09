@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\reportSalesSupervisorController;
+use App\Http\Controllers\ReportSalesSupervisorController;
 use App\Http\Controllers\SalesSupervisorController;
 use App\Http\Controllers\NearbyController;
 use App\Http\Controllers\UserController;
@@ -65,7 +65,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/branchMyMap', [BranchController::class, 'index'])->name('branchMyMap');
 
-        Route::get('/reportSalesSupervisor', [reportSalesSupervisorController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
+        Route::get('/reportSalesSupervisor', [ReportSalesSupervisorController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
 
         Route::get('/map', MapLocation::class)->name('map');
 
@@ -87,7 +87,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::get('/reportCEO', [ReportController::class, 'report_CEO'])->name('report_CEO');
         Route::get('/report/team/{id}', [SalesTeamController::class, 'detail']);
 
-        Route::get('/reportSalesSup', [reportSalesSupervisorController::class, 'reportSalesSupervisor1'])->name('report_SalesSupervisor');
-
+        Route::get('/report/SalesSup', [ReportSalesSupervisorController::class, 'reportSalesSupervisor1'])->name('report_SalesSupervisor');
+        Route::get('/report/SaleSup/Team', [ReportSalesSupervisorController::class, 'index'])->name('reportSale_sup2');
     }
 );
