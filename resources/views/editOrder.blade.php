@@ -23,11 +23,14 @@
                 เดือน{{ $order->od_month }} {{ $order->od_year }}
             </p>
 
-            {{-- ฟอร์มแก้ไขยอดขาย --}}
+
+            <!-- ฟอร์มแก้ไขในหน้า editOrder.blade.php -->
+
             <form id="updateForm" action="{{ route('update.order', ['od_id' => $order->od_id]) }}" method="POST"
                 class="space-y-4">
                 @csrf
                 @method('PUT')
+
 
                 {{-- ต้องมี input ซ่อน od_id เพื่อให้ controller รับค่าถูก --}}
                 <input type="hidden" name="od_id" value="{{ $order->od_id }}">
@@ -48,6 +51,7 @@
 
                 {{-- ปุ่มบันทึกและยกเลิก --}}
                 <div class="fixed bottom-0 left-0 w-full bg-white p-4">
+
                     {{-- ปุ่มยกเลิก --}}
                     <div class="flex justify-between">
                         <a href="{{ url()->previous() }}"
@@ -64,7 +68,6 @@
 
 
             </form>
-
         </div>
     </div>
 
