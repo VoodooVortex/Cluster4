@@ -6,20 +6,21 @@
     @create date : 04/04/2568
 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <div class="pt-16 h-screen bg-white-100 w-full">
+    <div class="pt-16 h-full bg-white-100 w-full">
         {{-- ปุ่มย้อนกลับและหัวข้อ --}}
         <div class="mb-4 px-4">
-            <a href="{{ route('manage.user') }}"
-                class="text-white border-[#4D55A0] text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
+            <div class="text-white border-[#4D55A0] text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
                 style="background-color: #4D55A0;">
-                <i class="fa-solid fa-arrow-left mx-3 fa-l"></i>
+                <a href="{{ route('manage.user') }}">
+                    <i class="fa-solid fa-arrow-left mx-3 fa-l"></i>
+                </a>
                 แก้ไขข้อมูล
-            </a>
+            </div>
         </div>
         {{-- ส่วนแสดงรุูปภาพ --}}
-        <div class="flex space-x-2 mb-4">
+        <div class="flex space-x-2">
             <form action="{{ route('edit.user') }}" method="post" id="editForm"
-                class="w-full bg-white p-6 rounded-lg shadow-lg">
+                class="w-full bg-white p-6 rounded-lg shadow-lg h-full">
                 @csrf
                 @method('put')
                 <div class="col-span-full">
@@ -31,7 +32,7 @@
                 <div class="space-y-12">
                     <div class="border- border-gray-900/10 pb-5">
                         {{-- <h1 class="text-lg font-semibold text-gray-900">สมศักดิ์ รักดี</h1> --}}
-                        <h1 class="text-gray-900">{{ $users->us_fname }} {{ $users->us_lname }}</h1>
+                        <h1 class="text-gray-900 mt-2">{{ $users->us_fname }} {{ $users->us_lname }}</h1>
                         <p class="mt-1 text-gray-600">{{ $users->us_email }}</p>
                         <hr class="my-4 border-gray-300">
                         <div class="mt- grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">

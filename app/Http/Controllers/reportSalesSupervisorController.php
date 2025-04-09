@@ -12,6 +12,7 @@ use App\Models\User;
 
 class ReportSalesSupervisorController extends Controller
 {
+
     //By ริว
     public function index(Request $request)
     {
@@ -211,6 +212,7 @@ class ReportSalesSupervisorController extends Controller
 
         return view('reportSalesSupervisor', compact('paginatedBranches', 'sort', 'province', 'totalPages', 'page', 'search'));
     }
+
 
     //By เวฟ
     public function reportSalesSupervisor1(Request $request)

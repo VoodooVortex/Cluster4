@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>My Map</title>
-    <link rel="icon" type="image/png" href="/public/assets/image/logo-mymap.png">
+    <link rel="icon" type="image/png" href="./public/assets/image/logo-mymap.png">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -65,8 +65,12 @@
     <script type="text/javascript"
         src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
 
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <script src="{{ asset('js/livewire.js') }}" defer></script>
+    <link rel="stylesheet" href="./public/css/style.css">
+
+
+    {{-- ถ้าไม่ได้อีกลองใช้แบบนี้แม้ง --}}
+    {{-- <script src="/livewire/livewire.js" data-turbo-eval="false" data-csrf="{{ csrf_token() }}"></script> --}}
+
 
     <title>{{ $title ?? 'Page Title' }}</title>
 </head>
@@ -77,7 +81,9 @@
     {{ $slot }}
 
     @livewireScripts
-
+    <script>
+        Livewire.onPageExpired((response, message) => {})
+    </script>
 
 
 </body>
