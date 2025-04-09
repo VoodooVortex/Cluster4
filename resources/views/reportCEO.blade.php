@@ -9,7 +9,7 @@
         </div>
         <div class="flex justify-between items-center px-6">
             <!-- ฝั่งซ้าย -->
-            <h1>ยอดรวมของปี {{ $selectedYear }}</h1>
+            <h1 class="text-3xl font-bold">ยอดรวมของปี {{ $selectedYear }}</h1>
 
             <!-- ฝั่งขวา: ปุ่ม dropdown -->
             <div class="relative inline-block text-left w-[120px]" x-data="{ open: false }">
@@ -69,7 +69,7 @@
         </div>
         <div class="flex justify-between items-center px-6">
             <!-- ฝั่งซ้าย -->
-            <h1>กราฟยอดขายปี {{ $selectedYear }}</h1>
+            <h1 class="text-3xl font-bold">กราฟยอดขายปี {{ $selectedYear }}</h1>
         </div>
         <!-- กราฟแท่ง -->
         <div class="mb-4 px-6">
@@ -80,14 +80,16 @@
                 </div>
             </div>
         </div>
-        {{-- <!-- กราฟวงกลม -->
+        <!-- กราฟวงกลม -->
         <div class="mb-4 px-6">
             <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow">
-                <div class="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
+                <p class="font-semibold text-lg mb-4">ภูมิภาค</p>
+                <div class="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] flex justify-center items-center">
                     <canvas id="cicleChart"></canvas>
                 </div>
             </div>
-        </div> --}}
+        </div>
+
         <!-- จำนวนสาขา -->
         <div class="mb-4 px-6">
             <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow">
@@ -97,12 +99,18 @@
                         <p class="text-3xl font-bold">{{ number_format($currentYearBranches) }} สาขา</p>
                         <p class="text-green-600 text-sm">จำนวนสาขาเพิ่มขึ้นเฉลี่ย {{ $growthPercentageBranches }}%</p>
                     </div>
-                    <div class="p-4 rounded-full">
+                    <div class="flex flex-col items-center"> <!-- flex column ที่นี่ -->
                         <i class="fa-solid fa-warehouse fa-2xl" style="color: #4D55A0;"></i>
+                        <a href="/path-to-details-page" class="text-blue-600 font-sm hover:text-blue-700 mt-4">
+                            ดูเพิ่มเติม
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
         <!-- กราฟอัตราการเติบโตสาขา -->
         <div class="mb-4 px-6">
             <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow">
@@ -114,11 +122,20 @@
         <!-- จำนวนพนักงาน -->
         <div class="mb-4 px-6">
             <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow">
-                <p class="font-semibold text-lg mb-3">จำนวนพนักงานทั้งหมด</p>
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-2xl font-bold text-gray-900">{{ $currentYearEmployeeCount }} คน</h2>
-                    <i class="fa-solid fa-users text-indigo-600 text-2xl"></i>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500">จำนวนพนักงานทั้งหมด</p>
+                        <p class="text-3xl font-bold">{{ number_format($currentYearEmployeeCount) }} คน</p>
+                        <p class="text-green-600 text-sm">จำนวนพนักงานเพิ่มขึ้นเฉลี่ย {{ $growthPercentagemployee }}%</p>
+                    </div>
+                    <div class="flex flex-col items-center"> <!-- flex column ที่นี่ -->
+                        <i class="fa-solid fa-users fa-2xl" style="color: #4D55A0;"></i>
+                        <a href="/path-to-details-page" class="text-blue-600 font-sm hover:text-blue-700 mt-4">
+                            ดูเพิ่มเติม
+                        </a>
+                    </div>
                 </div>
+
                 <hr class="my-3">
                 <p class="text-base text-gray-700"> Sales
                     <span class="float-right text-indigo-500 font-medium">{{ $currentYearRoleCounts['Sales'] }} คน</span>
@@ -134,6 +151,14 @@
                 </p>
             </div>
         </div>
+        <!-- กราฟอัตราการเติบโตพนักงาน -->
+        <div class="mb-4 px-6">
+            <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow">
+                <div class="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
+                    <canvas id="employeeChart" class="w-full h-full max-w-full max-h-full"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -141,24 +166,47 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0"></script>
     {{-- กราฟแท่ง --}}
     <script>
+        const monthlyMedian = @json(array_values($monthlyMedian));
+        const monthlyTotal = @json(array_values($monthlyTotal));
         const ctxbar = document.getElementById('salesChart').getContext('2d');
 
         // ข้อมูลกราฟ: ข้อมูลยอดขายที่ส่งมาจาก Controller
         const salesData = {
             labels: @json($sales->pluck('od_month')), // แสดงชื่อเดือนจากข้อมูลที่ดึงมา
-            datasets: [{
-                label: 'ยอดขาย',
-                data: @json($sales->pluck('total_sales')), // ยอดขายในแต่ละเดือน
-                backgroundColor: '#4D55A0', // สีของแท่ง
-                borderColor: '#4D55A0)', // สีของขอบแท่ง
-                borderWidth: 1
-            }]
+            datasets: [
+                {
+                    label: 'ยอดขาย',
+                    data: monthlyTotal, // ยอดขายในแต่ละเดือน
+                    backgroundColor: 'rgba(54,79,199,0.8)', // สีของแท่ง
+                    borderColor: 'rgba(0,0,255,1)', // สีของขอบแท่ง
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    fill: false, // ไม่เติมสีภายในกราฟ
+                    tension: 0.3 // กำหนดความโค้งของเส้นกราฟ
+
+
+                },
+                {
+                    label: 'ค่า Median ของยอดขาย',
+                    data: monthlyMedian, // ค่า median ที่ส่งมาจาก Controller
+                    borderColor: 'rgba(255,99,132,1)', // สีของเส้น Median
+                    backgroundColor: 'rgba(255,99,132,0.2)',
+                    borderWidth: 2, // ความหนาของเส้น
+                    fill: false, // ไม่เติมสีภายในกราฟ
+                    pointRadius: 4,
+                    tension: 0.3, // กำหนดความโค้งของเส้น
+                    borderDash: [5, 5], // ให้เส้นเป็นเส้นประ
+
+
+                }
+            ]
         };
 
         const config = {
-            type: 'bar', // ชนิดกราฟ
+            type: 'line', // ชนิดกราฟ
             data: salesData,
             options: {
                 responsive: true,
@@ -166,7 +214,6 @@
                 plugins: {
                     legend: {
                         position: 'top',
-                        display: false
                     },
                     tooltip: {
                         callbacks: {
@@ -176,12 +223,12 @@
                         }
                     },
                     datalabels: {
-                        anchor: 'end',
-                        align: 'top',
+                        anchor: 'center',
+                        align: 'center',
                         formatter: function(value) {
-                            return value + ' ชิ้น';
+                            return value;
                         },
-                        color: '#ff6347',
+                        color: '#FFFFFF',
                         font: {
                             weight: 'bold',
                             size: 12
@@ -204,22 +251,25 @@
             },
             plugins: [ChartDataLabels]
         };
+
         // สร้างกราฟ
         const salesChart = new Chart(ctxbar, config);
     </script>
-    {{-- กราฟวงกลม
+
+    {{-- // กราฟวงกลม --}}
     <script>
         const ctxcicle = document.getElementById('cicleChart').getContext('2d');
 
         const regionSalesData = {
-            labels: @json($regions),  // ภาค
+            labels: @json($regionLabels), // ชื่อภาค
             datasets: [{
                 label: 'ยอดขายตามภาค',
-                data: @json($salesData),  // ยอดขายในแต่ละภาค
+                data: @json($salesData), // ยอดขายในแต่ละภาค
                 backgroundColor: [
-                    '#4D55A0', '#FF6F61', '#6B8E23', '#F39C12', '#2980B9', '#E74C3C', '#8E44AD', '#1ABC9C', '#F1C40F'
-                ], // สีแต่ละภาค
-                borderColor: '#fff',  // สีขอบของโดนัท
+                    '#4D55A0', '#FF6F61', '#6B8E23', '#F39C12', '#2980B9', '#E74C3C', '#8E44AD', '#1ABC9C',
+                    '#F1C40F'
+                ],
+                borderColor: '#fff',
                 borderWidth: 2
             }]
         };
@@ -228,29 +278,41 @@
             type: 'doughnut',
             data: regionSalesData,
             options: {
-                responsive: true,
                 plugins: {
-                    legend: {
-                        position: 'top',
-                        display: true
-                    },
                     tooltip: {
                         callbacks: {
                             label: function(tooltipItem) {
-                                return tooltipItem.raw + ' ชิ้น'; // แสดงยอดขายใน tooltip
+                                return tooltipItem.label + ': ' + tooltipItem.raw +
+                                    ' ชิ้น'; // เปลี่ยนจาก บาท เป็น ชิ้น
                             }
                         }
                     },
-                    // เพิ่มช่องว่างในกราฟ
-                    doughnut: {
-                        cutoutPercentage: 50  // ช่องว่างตรงกลาง
+                    legend: {
+                        position: 'top',
+                    },
+                    datalabels: {
+                        anchor: 'center', // จัดข้อความให้อยู่กลางส่วนของกราฟ
+                        align: 'center', // จัดข้อความให้อยู่กลาง
+                        formatter: function(value, context) {
+                            const total = context.dataset.data.reduce((sum, val) => sum + val,
+                                0); // หาผลรวมของข้อมูลทั้งหมด
+                            const percentage = ((value / total) * 100).toFixed(2); // คำนวณเปอร์เซ็นต์
+                            return value + ' ชิ้น (' + percentage + '%)'; // แสดงยอดขายและเปอร์เซ็นต์ในกราฟ
+                        },
+                        color: '#ffffff', // สีของข้อความในกราฟ
+                        font: {
+                            weight: 'bold', // ทำให้ข้อความหนา
+                            size: 14 // ขนาดของข้อความ
+                        },
                     }
-                }
+                },
             }
         };
 
-        const regionSalesDoughnutChart = new Chart(ctxcicle, regionSalesConfig);
-    </script> --}}
+        new Chart(ctxcicle, regionSalesConfig);
+    </script>
+
+
     <script>
         const ctxbranch = document.getElementById('branchChart').getContext('2d');
 
@@ -311,7 +373,70 @@
             }
         });
     </script>
+
+    <script>
+        const ctxemployee = document.getElementById('employeeChart').getContext('2d');
+
+        const labelsemployee = {!! json_encode(collect($cumulativeemployee)->pluck('month')) !!};
+        const rawDataemployee = {!! json_encode(collect($cumulativeemployee)->pluck('total_employee')) !!};
+        const lastMonthWithNewemployee = {{ $lastMonthWithNewemployee ?? 0 }};
+
+        // แปลงข้อมูลให้หยุดเส้นกราฟหลังจากเดือนสุดท้ายที่มีการเพิ่มพนักงาน
+        const modifiedDataemployee = rawDataemployee.map((valemployee, indexemployee) => indexemployee <= (
+            lastMonthWithNewemployee - 1) ? valemployee : null);
+
+        const employeeChart = new Chart(ctxemployee, {
+            type: 'line',
+            data: {
+                labels: labelsemployee,
+                datasets: [{
+                    label: 'จำนวนพนักงานสะสม',
+                    data: modifiedDataemployee,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: '#007bff',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#007bff',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'การเติบโตของจำนวนพนักงานรายเดือน ปี {{ $selectedYear }}',
+                        font: {
+                            size: 18
+                        }
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 5
+                        },
+                        title: {
+                            display: true,
+                            text: 'จำนวนพนักงาน'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'เดือน'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 @endsection
 
 @section('styles')
+
 @endsection

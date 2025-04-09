@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ReportController extends Controller
 {
     public function report_CEO(Request $request)
     {
 
-        $selectedYear = (int) $request->input('year');
+
+        $selectedYear = (int) $request->input('year', Carbon::now()->year + 543);
         // เริ่มต้น query
         $query = DB::table('order')
             ->join('branch', 'order.od_br_id', '=', 'branch.br_id') // เชื่อมโยงตาราง order กับ branch
@@ -119,6 +121,80 @@ class ReportController extends Controller
         ];
 
 
+
+
+
+
+        $monthMap = [
+            'มกราคม',
+            'กุมภาพันธ์',
+            'มีนาคม',
+            'เมษายน',
+            'พฤษภาคม',
+            'มิถุนายน',
+            'กรกฎาคม',
+            'สิงหาคม',
+            'กันยายน',
+            'ตุลาคม',
+            'พฤศจิกายน',
+            'ธันวาคม',
+        ];
+
+        $months = $monthMap;
+
+        $orders = DB::table('order')
+            ->select('od_month', 'od_amount')
+            ->where('od_year', $selectedYear)
+            ->whereIn('od_month', $months)
+            ->orderByRaw("FIELD(od_month, '" . implode("','", $months) . "')")
+            ->get();
+
+        $monthlyData = [];
+
+        // จัดกลุ่มข้อมูลตามเดือน
+        foreach ($orders as $order) {
+            $month = $order->od_month;
+            if (!isset($monthlyData[$month])) {
+                $monthlyData[$month] = [];
+            }
+            $monthlyData[$month][] = $order->od_amount;
+        }
+
+        $monthlyTotal = [];
+
+        foreach ($months as $month) {
+            if (!empty($monthlyData[$month])) {
+                $amounts = $monthlyData[$month];
+                $total = array_sum($amounts);
+                $monthlyTotal[$month] = $total;
+            } else {
+                $monthlyTotal[$month] = 0;
+            }
+        }
+
+
+        $monthlyMedian = [];
+        foreach ($months as $month) {
+            if (!empty($monthlyData[$month])) {
+                $amounts = $monthlyData[$month];
+                sort($amounts);
+                $count = count($amounts);
+                $middle = floor($count / 2);
+
+                if ($count % 2) {
+                    $median = $amounts[$middle];
+                } else {
+                    $median = ($amounts[$middle - 1] + $amounts[$middle]) / 2;
+                }
+
+                $monthlyMedian[$month] = $median;
+            } else {
+                $monthlyMedian[$month] = 0;
+            }
+        }
+
+
+
         // ดึงข้อมูลยอดขาย
         $sales = DB::table('order')
             ->select('od_month', DB::raw('SUM(od_amount) as total_sales'))
@@ -130,6 +206,33 @@ class ReportController extends Controller
                 $sale->od_month = $thaiMonthMap[$sale->od_month] ?? $sale->od_month;
                 return $sale;
             });
+
+
+
+        // ดึงข้อมูลยอดขายตามภาค
+        $salesRegion = DB::table('order')
+            ->join('branch', 'order.od_br_id', '=', 'branch.br_id')
+            ->select('branch.br_province', DB::raw('SUM(order.od_amount) as total_sales'))
+            ->where('order.od_year', $selectedYear)
+            ->groupBy('branch.br_province')
+            ->get()
+            ->groupBy(function ($item) use ($provinceToRegionMap) {
+                // ตรวจสอบชื่อคอลัมน์ br_province จากตาราง branch
+                return $provinceToRegionMap[$item->br_province] ?? 'ไม่ทราบภาค';
+            })
+            ->map(function ($items, $region) {
+                return [
+                    'region' => $region,
+                    'total_sales' => $items->sum('total_sales')
+                ];
+            })
+            ->values();
+
+
+
+        $regionLabels = $salesRegion->pluck('region'); // ['ภาคเหนือ', 'ภาคกลาง', ...]
+        $salesData = $salesRegion->pluck('total_sales'); // [5000, 7000, ...]
+
 
 
         // ดึงปีทั้งหมด
@@ -149,6 +252,7 @@ class ReportController extends Controller
 
         // คำนวณยอดขายรวม
         $totalAmount = $sales->sum('total_sales');
+
 
         // คำนวณเปอร์เซ็นต์การเติบโต
         $previousYearTotal = $previousYearSales->sum('total_sales');
@@ -190,6 +294,7 @@ class ReportController extends Controller
                 'total_sales' => $matched ? $matched->total_sales : 0
             ];
         });
+
 
 
         // ดึงจำนวนสาขาที่เพิ่มในแต่ละเดือน
@@ -247,17 +352,52 @@ class ReportController extends Controller
             ->count();
 
         // คำนวณเปอร์เซ็นต์การเติบโตของพนักงานทั้งหมด
-        $growthPercentage = 0;
+        $growthPercentagemployee = 0;
         if ($previousYearEmployeeCount > 0) {
-            $growthPercentage = (($currentYearEmployeeCount - $previousYearEmployeeCount) / $previousYearEmployeeCount) * 100;
+            $growthPercentageemployee = (($currentYearEmployeeCount - $previousYearEmployeeCount) / $previousYearEmployeeCount) * 100;
         }
 
         $currentYearRoleCounts = [
-            'Sales' => DB::table('users')->where('us_role', 'Sales')->whereYear('created_at', $selectedYear)->count(),
-            'Sales Supervisor' => DB::table('users')->where('us_role', 'Sales Supervisor')->whereYear('created_at', $selectedYear)->count(),
-            'CEO' => DB::table('users')->where('us_role', 'CEO')->whereYear('created_at', $selectedYear)->count(),
+            'Sales' => DB::table('users')
+                ->where('us_role', 'Sales')
+                ->whereYear('created_at', $selectedYear - 543)
+                ->count(),
+
+            'Sales Supervisor' => DB::table('users')
+                ->where('us_role', 'Sales Supervisor')
+                ->whereYear('created_at', $selectedYear - 543)
+                ->count(),
+
+            'CEO' => DB::table('users')
+                ->where('us_role', 'CEO')
+                ->whereYear('created_at', $selectedYear - 543)
+                ->count(),
         ];
 
+        $employeeByMonth = DB::table('users')
+            ->select(
+                DB::raw("MONTH(created_at) as month"),
+                DB::raw("COUNT(*) as count")
+            )
+            ->whereYear('created_at', $selectedYear - 543)
+            ->groupBy(DB::raw("MONTH(created_at)"))
+            ->pluck('count', 'month');
+
+        $cumulativeemployee = [];
+        $totalemployee = 0;
+        $lastMonthWithNewemployee = 0;
+
+        for ($i = 1; $i <= 12; $i++) {
+            $count = $employeeByMonth[$i] ?? 0;
+            $totalemployee += $count;
+            $cumulativeemployee[] = [
+                'month' => $thaiMonths[$i],
+                'total_employee' => $totalemployee
+            ];
+            if ($count > 0) {
+                $lastMonthWithNewemployee = $i;
+            }
+        }
 
         // ส่งข้อมูลไปยัง View
         return view('reportCEO', [
@@ -273,8 +413,15 @@ class ReportController extends Controller
             'lastMonthWithNewBranch' => $lastMonthWithNewBranch,
             'currentYearEmployeeCount' => $currentYearEmployeeCount,
             'previousYearEmployeeCount' => $previousYearEmployeeCount,
-            'growthPercentage' => round($growthPercentage, 2),
             'currentYearRoleCounts' => $currentYearRoleCounts,
+            'lastMonthWithNewemployee' => $lastMonthWithNewemployee,
+            'cumulativeemployee' => $cumulativeemployee,
+            'regionLabels' => $regionLabels,
+            'salesData' =>  $salesData,
+            'growthPercentagemployee' => $growthPercentagemployee,
+            'monthlyMedian' => $monthlyMedian,
+            'monthlyTotal' => $monthlyTotal,
+
         ]);
     }
 }
