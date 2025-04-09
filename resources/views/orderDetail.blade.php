@@ -54,7 +54,7 @@
         {{-- กราฟยอดขาย --}}
         <div class="bg-white p-4 border rounded-2xl shadow mt-4" style="height: auto">
             <div class="flex justify-between items-center mb-4">
-                <p class="text-lg font-bold">ยอดขายในปีนี้</p>
+                <p class="text font-bold">ยอดขายในปีนี้</p>
                 <div id="custom-legend" class="flex gap-4 items-center text-sm"></div>
             </div>
             <div class="w-full" style="max-height: 400px; overflow: hidden;">
@@ -82,7 +82,7 @@
 
             <!-- ฟอร์มแก้ไขในหน้า orderDetail.blade.php -->
             @foreach ($monthMap as $monthName => $monthNumber)
-                <div class="bg-white border shadow-md rounded-xl px-4 py-3 mt-4 flex justify-between items-center">
+                <div class="bg-white border shadow-md rounded-2xl px-4 py-3 mt-4 flex justify-between items-center">
                     <div>
                         <h3 class="text-base font-semibold text-gray-800">
                             ยอดขายเดือน{{ $monthName }} {{ $thisyear }}
@@ -94,40 +94,43 @@
                     </div>
 
                     {{-- Kebab Menu --}}
-                    <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open" class="text-gray-500 hover:text-gray-700 p-2">
-                            <i class="fa fa-ellipsis-v"></i>
-                        </button>
-                        <div x-show="open" @click.outside="open = false" x-cloak
-                            class="absolute right-0 mt-2 bg-white shadow-md rounded-lg w-28 z-10 border border-gray-200">
-                            <ul class="divide-y text-sm text-gray-700">
-                                {{-- แก้ไข --}}
-                                <form action="{{ route('edit.order', ['od_id' => $orderIdMap[$monthNumber] ?? 0]) }}"
-                                    method="GET">
-                                    @csrf
-                                    <li>
-                                        <button type="submit" class="block px-4 py-2 w-full hover:bg-gray-100">
-                                            แก้ไข
-                                        </button>
-                                    </li>
-                                </form>
+                    @if (auth()->user()->us_role !== 'Sales')
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open" class="text-gray-500 hover:text-gray-700 p-2">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </button>
+                            <div x-show="open" @click.outside="open = false" x-cloak
+                                class="absolute right-0 mt-2 bg-white shadow-md rounded-lg w-28 z-10 border border-gray-200">
+                                <ul class="divide-y text-sm text-gray-700">
+                                    {{-- แก้ไข --}}
+                                    <form action="{{ route('edit.order', ['od_id' => $orderIdMap[$monthNumber] ?? 0]) }}"
+                                        method="GET">
+                                        @csrf
+                                        @method('PUT')
+                                        <li>
+                                            <button type="submit" class="block px-4 w-full py-2 hover:bg-gray-100">
+                                                แก้ไข
+                                            </button>
+                                        </li>
+                                    </form>
 
-                                {{-- ลบ --}}
-                                <form id="deleteOrder-{{ $monthNumber }}"
-                                    action="{{ route('delete.order', ['id' => $orderIdMap[$monthNumber] ?? 0]) }}"
-                                    method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <li>
-                                        <button type="submit" class="block px-4 py-2 text-red-600 w-full hover:bg-red-50"
-                                            onclick="deleteOrder(event, {{ $monthNumber }})">
-                                            ลบ
-                                        </button>
-                                    </li>
-                                </form>
-                            </ul>
+                                    {{-- ลบ --}}
+                                    <form id="deleteOrder-{{ $monthNumber }}"
+                                        action="{{ route('delete.order', ['id' => $orderIdMap[$monthNumber] ?? 0]) }}"
+                                        method="POST">
+                                        @csrf
+                                        <li>
+                                            <button type="submit"
+                                                class="block px-4 py-2 w-full text-red-600 hover:bg-red-50"
+                                                onclick="deleteOrder(event, {{ $monthNumber }})">
+                                                ลบ
+                                            </button>
+                                        </li>
+                                    </form>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             @endforeach
 
@@ -259,12 +262,12 @@
 
         // Delete Order
         function deleteOrder(event, monthNumber) {
-            const deleteAlert = '/public/alert-icon/DeleteAlert.png';
-            const successAlert = '/public/alert-icon/SuccessAlert.png';
+            const deleteAlert = './public/alert-icon/DeleteAlert.png';
+            const successAlert = './public/alert-icon/SuccessAlert.png';
 
             event.preventDefault(); // หยุดการส่งฟอร์ม
 
-            const form = document.getElementById('deleteOrder'); // ดึงฟอร์มลบผู้ใช้
+            const form = document.getElementById(`deleteOrder-${monthNumber}`); // ดึงฟอร์มลบผู้ใช้
 
             Swal.fire({
                 title: 'ยืนยันการลบยอดขาย', // ข้อความยืนยันการลบ

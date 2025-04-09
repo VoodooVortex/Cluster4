@@ -13,7 +13,7 @@
                             : '') }}">
                     <i class="fa-solid fa-arrow-left mx-3"></i>
                 </a>
-                สาขาของฉัน (ปี {{ now()->year + 543 }})
+                ข้อมูลสาขา (ปี {{ now()->year + 543 }})
             </div>
 
         </div>
