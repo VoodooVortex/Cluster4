@@ -93,7 +93,19 @@ class HomeController extends Controller
 
             $thisYear = Carbon::now()->year + 543;
             // ยอดขายทั้งหมดปีนี้
-            $totalSales = Order::where('od_year', $thisYear)->sum('od_amount');
+            // $totalSales = Order::where('od_year', $thisYear)->sum('od_amount');
+            $totalSales = DB::table(DB::raw("
+            (
+                SELECT *, ROW_NUMBER() OVER (
+                    PARTITION BY od_month, od_br_id
+                    ORDER BY od_id DESC
+                ) as rn
+                FROM `order`
+                WHERE od_year = $thisYear
+            ) as ranked
+        "))
+                ->where('rn', 1)
+                ->sum('od_amount');
 
             // ยอดขายปีก่อนหน้า
             $previousYearSales = Order::where('od_year', $thisYear - 1)->sum('od_amount');
@@ -121,11 +133,22 @@ class HomeController extends Controller
 
             $months = $monthMap;
 
-            $orders = DB::table('order')
+
+            $monthsStr = implode("','", $months);
+
+            $orders = DB::table(DB::raw("
+            (
+                SELECT *, ROW_NUMBER() OVER (
+                    PARTITION BY od_month, od_br_id
+                    ORDER BY od_id DESC
+                ) as rn
+                FROM `order`
+                WHERE od_year = $thisYear AND od_month IN ('$monthsStr')
+            ) as ranked
+            "))
+                ->where('rn', 1)
                 ->select('od_month', 'od_amount')
-                ->where('od_year', $thisYear)
-                ->whereIn('od_month', $months)
-                ->orderByRaw("FIELD(od_month, '" . implode("','", $months) . "')")
+                ->orderByRaw("FIELD(od_month, '" . $monthsStr . "')")
                 ->get();
 
             $monthlyData = [];
@@ -138,6 +161,8 @@ class HomeController extends Controller
                 }
                 $monthlyData[$month][] = $order->od_amount;
             }
+
+
 
             // คำนวณค่ามัธยฐานของแต่ละเดือน
             $monthlyMedian = [];
@@ -161,17 +186,20 @@ class HomeController extends Controller
                 }
             }
 
-            $salesData = Order::where('od_year', $thisYear)
-                ->selectRaw('od_month, SUM(od_amount) as total_sales')
-                ->groupBy('od_month')
-                ->orderByRaw("FIELD(od_month, '" . implode("','", $months) . "')")
-                ->get()
-                ->keyBy('od_month'); // แปลงให้เข้าถึงตามชื่อเดือน
+
 
             $monthlySales = [];
             foreach ($months as $month) {
-                $monthlySales[$month] = isset($salesData[$month]) ? $salesData[$month]->total_sales : 0;
+                $monthlySales[$month] = 0;
             }
+
+
+
+            // รวมยอดขายแต่ละเดือน
+            foreach ($orders as $order) {
+                $monthlySales[$order->od_month] += $order->od_amount;
+            }
+
 
             // คำนวณ median + 2SD สำหรับแต่ละเดือน
             $monthlyPlus2SD = [];
@@ -205,6 +233,7 @@ class HomeController extends Controller
                     $monthlyPlus2SD[$month] = 0; // ไม่มีข้อมูลในเดือนนั้น
                 }
             }
+
 
             // คำนวณ median - 2SD สำหรับแต่ละเดือน
             $monthlyMinus2SD = [];
@@ -246,7 +275,6 @@ class HomeController extends Controller
             $maxY = max(array_merge($monthlySalesOnly, array_values($monthlyMedian), array_values($monthlyPlus2SD)));
             // ปัดขึ้นไปใกล้ค่าที่ต้องการ
             $maxY = ceil($maxY / 10000) * 10000; // ปัดขึ้นไปเป็น 10000, 100000 หรือใกล้เคียง
-
             $maxSales = max($monthlySales);
             $minSales = min($monthlySales);
 
@@ -384,6 +412,7 @@ class HomeController extends Controller
             return view(
                 'homePage',
                 compact(
+                    'currentYear',
                     'userRole',
                     'topBranch',
                     'topUsers',
@@ -420,6 +449,15 @@ class HomeController extends Controller
         } else if (Auth::check() && Auth::user()->us_role === 'Sales Supervisor') {
 
             $currentUserId = Auth::user()->us_id;
+
+            // ดึงรายชื่อ user ที่มี us_head = คนที่ login
+            $userIdsOrder = User::where('us_head', $currentUserId)
+                ->pluck('us_id');
+
+            $branchIds = Branch::whereIn('br_us_id', $userIdsOrder)
+                ->pluck('br_id');
+
+
 
             //Show top 5 branch
             $currentYear = Carbon::now()->year + 543;
@@ -497,7 +535,9 @@ class HomeController extends Controller
 
             $thisYear = Carbon::now()->year + 543;
             // ยอดขายทั้งหมดปีนี้
-            $totalSales = Order::where('od_year', $thisYear)->sum('od_amount');
+            // $totalSales = Order::where('od_year', $thisYear)
+            // ->whereIn('od_br_id',$branchIds)->sum('od_amount');
+            $totalSales = Order::whereIn('od_br_id', $branchIds)->sum('od_amount');
 
             // ยอดขายปีก่อนหน้า
             $previousYearSales = Order::where('od_year', $thisYear - 1)->sum('od_amount');
@@ -810,6 +850,7 @@ class HomeController extends Controller
             return view(
                 'homePage',
                 compact(
+                    'currentYear',
                     'userRole',
                     'topBranch',
                     'topUsers',

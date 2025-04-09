@@ -6,13 +6,50 @@
     @author : นนทพัทธ์ ศิลธรรม 66160104
     @create date : 05/04/2568
 --}}
-    @php
+    {{-- @php
         use Illuminate\Support\Facades\Auth;
-    @endphp
+    @endphp --}}
 
     @if ($userRole === 'CEO')
-        {{-- จัดอันดับ --}}
         <div class="pt-16 bg-white-100 w-full">
+
+            {{-- Icon --}}
+            <div class="mb-4 px-4">
+                <div class="text-white border-[#4D55A0] text-2xl font-semibold px-4 py-3 rounded-2xl flex items-center w-full"
+                    style="background-color: #4D55A0;">
+                    ปี {{ $currentYear }} (ปัจจุบัน)
+                </div>
+                <div class="flex justify-center gap-12 mt-5">
+                    <div class="text-center">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-box fa-2xl text-white"></i>
+                        </div>
+                        <p class="mt-2 text-sm">จำนวนยอดขาย</p>
+                        <p class="font-bold text-sm">{{ number_format($totalSales) }}</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-warehouse fa-2xl text-white"></i>
+                        </div>
+                        <p class="mt-2 text-sm">จำนวนสาขา</p>
+                        <p class="font-bold text-sm">{{ number_format($totalBranches) }}</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-user-tie fa-2xl text-white"></i>
+                        </div>
+                        <p class="mt-2 text-sm">จำนวนสมาชิก</p>
+                        <p class="font-bold text-sm">{{ number_format($totalEmployees) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Ranking --}}
             <div class="bg-white rounded-2xl shadow border m-3 pb-4">
                 <div class="flex flex-row">
                     <h3 id="rankTitle" class="font-semibold text-lg mt-1 p-4">สาขาที่ทำยอดขายดีที่สุด</h3>
@@ -248,6 +285,44 @@
         </div>
     @elseif ($userRole === 'Sales Supervisor')
         <div class="pt-16 bg-white-100 w-full">
+
+            {{-- Icon --}}
+            <div class="mb-4 px-4">
+                <div class="text-white border-[#4D55A0] text-2xl font-semibold px-4 py-3 rounded-2xl flex items-center w-full"
+                    style="background-color: #4D55A0;">
+                    ปี {{ $currentYear }} (ปัจจุบัน)
+                </div>
+                <div class="flex justify-center gap-12 mt-5">
+                    <div class="text-center">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-box fa-2xl text-white"></i>
+                        </div>
+                        <p class="mt-2 text-sm">จำนวนยอดขาย</p>
+                        <p class="font-bold text-sm">{{ number_format($totalSales) }}</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-warehouse fa-2xl text-white"></i>
+                        </div>
+                        <p class="mt-2 text-sm">จำนวนสาขา</p>
+                        <p class="font-bold text-sm">{{ number_format($totalBranches) }}</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-user-tie fa-2xl text-white"></i>
+                        </div>
+                        <p class="mt-2 text-sm">จำนวนสมาชิก</p>
+                        <p class="font-bold text-sm">{{ number_format($salesCount) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Ranking--}}
             <div class="bg-white rounded-2xl shadow border m-3 pb-4">
                 <div class="flex flex-row">
                     <h3 id="rankTitle" class="font-semibold text-lg mt-1 p-4">สาขาที่ทำยอดขายดีที่สุด</h3>
