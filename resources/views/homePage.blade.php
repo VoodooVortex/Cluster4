@@ -16,32 +16,31 @@
             <div class="mb-4 px-4">
                 <div class="text-white border-[#4D55A0] text-2xl font-semibold px-4 py-3 rounded-2xl flex items-center w-full"
                     style="background-color: #4D55A0;">
-                    ปี {{ ($currentYear) }} (ปัจจุบัน)
+                    ปี {{ $currentYear }} (ปัจจุบัน)
                 </div>
-                <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                    <div>
-                        <div
-                            style="background-color: #4D55A0; border-radius: 50%; width: 60px; height: 60px; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-                            <i class="fa-solid fa-box fa-2xl" style="color: white;"></i>
+                <div class="flex justify-center gap-12 mt-5">
+                    <div class="text-center">
+                        <div class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-box fa-2xl text-white"></i>
                         </div>
-                        <p style="margin-top: 5px; text-align: center;">จำนวนยอดขาย</p>
-                        <p style="margin-top; text-align: center; font-weight: bold;">{{ number_format($totalSales) }}</p>
+                        <p class="mt-2">จำนวนยอดขาย</p>
+                        <p class="font-bold">{{ number_format($totalSales) }}</p>
                     </div>
-                    <div>
-                        <div
-                            style="background-color: #4D55A0; border-radius: 50%; width: 60px; height: 60px; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-                            <i class="fa-solid fa-warehouse fa-2xl" style="color: white;"></i>
+
+                    <div class="text-center">
+                        <div class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-warehouse fa-2xl text-white"></i>
                         </div>
-                        <p style="margin-top: 5px; text-align: center;">จำนวนสาขา</p>
-                        <p style="margin-top; text-align: center; font-weight: bold;">{{ number_format($totalBranches) }}</p>
+                        <p class="mt-2">จำนวนสาขา</p>
+                        <p class="font-bold">{{ number_format($totalBranches) }}</p>
                     </div>
-                    <div>
-                        <div
-                            style="background-color: #4D55A0; border-radius: 50%; width: 60px; height: 60px; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-                            <i class="fa-solid fa-user-tie fa-2xl" style="color: white;"></i>
+
+                    <div class="text-center">
+                        <div class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-user-tie fa-2xl text-white"></i>
                         </div>
-                        <p style="margin-top: 5px; text-align: center;">จำนวนสมาชิก</p>
-                        <p style="margin-top; text-align: center; font-weight: bold;">{{ number_format($totalEmployees) }}</p>
+                        <p class="mt-2">จำนวนสมาชิก</p>
+                        <p class="font-bold">{{ number_format($totalEmployees) }}</p>
                     </div>
                 </div>
             </div>
