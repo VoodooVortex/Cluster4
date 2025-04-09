@@ -673,7 +673,7 @@
                             drawOnChartArea: true,
                             color: function(context) {
                                 const tickValue = context.tick.value;
-                                const allowedTicks = [1, 1000, 10000, 100000, 1000000, maxY];
+                                const allowedTicks = [maxY];
                                 if (allowedTicks.includes(tickValue)) {
                                     return 'rgba(0, 0, 0, 0.1)';
                                 }
