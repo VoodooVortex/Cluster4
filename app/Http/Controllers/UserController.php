@@ -17,17 +17,58 @@ class UserController extends Controller
     // Aninthita Prasoetsang 66160381
     public function create(Request $request)
     {
+        // $hasUser = null;
+        // $้hasUser = User::withTrashed()->where('us_email', $request->email);
 
-        $muser = new User();
-        $muser->us_fname = $request->username;
-        $muser->us_lname = $request->lastname;
-        $muser->us_email = $request->email;
-        $muser->us_role = $request->role;
-        $muser->us_head = $request->head;
+        // ค้นหาผู้ใช้ที่อีเมลนี้ในระบบที่ไม่ถูกลบ
+        $hasUser = User::where('us_email', $request->email)
+            ->whereNull('deleted_at') // ตรวจสอบว่าไม่ได้ถูกลบ
+            ->first();
 
-        $muser->save();
+        if ($hasUser) {
+            // ถ้ามีผู้ใช้ในระบบที่ไม่ถูกลบ
+            return redirect()->back()->with('error', 'Email is already registered.');
+        }
 
-        return redirect()->route('manage.user')->with('success', 'เพิ่มผู้ใช้งานสำเร็จ');
+        // ค้นหาผู้ใช้ที่อีเมลนี้ในระบบที่ถูกลบ (ถ้ามี)
+        $trashedUser = User::withTrashed()->where('us_email', $request->email)->first();
+
+
+        if ($trashedUser) {
+            // ถ้าพบผู้ใช้ที่ถูกลบไปแล้ว
+            $trashedUser->us_fname = $request->username;
+            $trashedUser->us_lname = $request->lastname;
+            $trashedUser->us_role = $request->role;
+            $trashedUser->us_head = $request->head;
+            $trashedUser->deleted_at = null; // คืนสถานะให้เป็นผู้ใช้ที่ไม่ได้ถูกลบ
+            $trashedUser->save();
+
+            return redirect()->route('manage.user')->with('success', 'เพิ่มผู้ใช้งานสำเร็จ');
+        } else {
+            // ถ้าไม่มีผู้ใช้ในระบบเลย (ไม่ถูกลบและไม่อยู่ในระบบ)
+            $muser = new User();
+            $muser->us_fname = $request->username;
+            $muser->us_lname = $request->lastname;
+            $muser->us_email = $request->email;
+            $muser->us_role = $request->role;
+
+            // ถ้าเป็น Sales ใส่ us_head จากฟอร์มเลย
+            if ($request->role === 'Sales') {
+                $muser->us_head = $request->head;
+            }
+
+            $muser->save();
+
+            // ถ้าไม่ใช่ Sales ให้ update us_head หลังจากมี us_id แล้ว
+            if ($request->role !== 'Sales') {
+                $muser->us_head = $muser->us_id;
+                $muser->save();
+            }
+
+            return redirect()->route('manage.user')->with('success', 'เพิ่มผู้ใช้งานสำเร็จ');
+        }
+
+
     }
 
 
@@ -71,7 +112,7 @@ class UserController extends Controller
         }
         return redirect()->route('manage.user');
     }
-    
+
     function Emp_GrowRate()
     {
         $salesCount = User::where('us_role', 'Sales')->count();

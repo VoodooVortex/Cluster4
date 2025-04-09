@@ -82,7 +82,7 @@
                                     <p class="font-semibold">{{ $user->us_fname }}</p>
                                     <p class="text-sm text-gray-500">{{ $user->us_email }}</p>
                                     <span
-                                        class="px-2 mt-1 border rounded-full text-xs bg-white
+        class="px-2 mt-1 border rounded-full text-xs bg-white
                                         @if ($user->us_role == 'CEO') border-yellow-700 text-yellow-700
                                         @elseif ($user->us_role == 'Sales Supervisor')
                                             border-purple-500 text-purple-500
@@ -92,9 +92,8 @@
                                     </span>
                                 </div>
                             </div>
-                            {{-- <a href="{{ url('/user/' . $user->id) }}" class="text-indigo-600">Edit</a> --}}
                             <div class="flex items-center ml-auto">
-                                <a href="{{ url('/cluster4/edit-user/' . $user->us_id) }}">
+                                <a href="{{ route('edit.user.id', $user->us_id) }}">
                                     <button class="btn btn-warning text-[#4D55A0]">Edit</button>
                                 </a>
                             </div>
@@ -117,10 +116,87 @@
 
 @section('scripts')
     <script>
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     const filterButtons = document.querySelectorAll(".filter-btn");
+        //     const userItems = document.querySelectorAll(".user-item");
+        //     const searchInput = document.getElementById('searchInput');
+
+        //     // นับจำนวนผู้ใช้แต่ละประเภท
+        //     function countUsers() {
+        //         let countAll = userItems.length;
+        //         let countSales = 0,
+        //             countSupervisor = 0,
+        //             countCEO = 0;
+
+        //         userItems.forEach(item => {
+        //             const role = item.getAttribute("value");
+        //             if (role === "Sales") countSales++;
+        //             if (role === "Sales Supervisor") countSupervisor++;
+        //             if (role === "CEO") countCEO++;
+        //         });
+
+        //         // อัปเดตจำนวนในปุ่มตัวกรอง
+        //         document.getElementById("count-all").textContent = countAll;
+        //         document.getElementById("count-sales").textContent = countSales;
+        //         document.getElementById("count-supervisor").textContent = countSupervisor;
+        //         document.getElementById("count-ceo").textContent = countCEO;
+        //     }
+
+        //     countUsers(); // เรียกใช้งานเมื่อโหลดหน้าเว็บ
+
+        //     // ฟังก์ชันกรองผู้ใช้ตามประเภท
+
+        //     filterButtons.forEach(button => {
+        //         button.addEventListener("click", function() {
+        //             const role = this.getAttribute("value");
+
+        //             // ลบ active ออกจากทุกปุ่ม
+        //             filterButtons.forEach(btn => btn.classList.remove("border-[#4D55A0]",
+        //                 "text-[#4D55A0]"));
+        //             this.classList.add("border-[#4D55A0]", "text-[#4D55A0]");
+
+        //             // แสดงหรือซ่อนบัญชี
+        //             userItems.forEach(item => {
+        //                 if (role === "all" || item.getAttribute("value") === role) {
+        //                     item.classList.remove("hidden");
+        //                 } else {
+        //                     item.classList.add("hidden");
+        //                 }
+        //             });
+        //         });
+        //     });
+
+        //     searchInput.addEventListener('input', function() {
+        //         const searchTerm = this.value.toLowerCase();
+
+        //         userItems.forEach(item => {
+        //             const role = item.getAttribute("value");
+        //             // ข้ามถ้าเป็น hidden จาก filter
+        //             if (item.classList.contains("hidden")) return;
+
+        //             const matchesRole = selectedRole === "all" || role === selectedRole;
+        //             const matchesSearch = userName.startsWith(searchTerm) || userEmail.startsWith(
+        //                 searchTerm);
+
+        //             const shouldShow = matchesRole && matchesSearch;
+
+        //             item.classList.toggle('hidden', !shouldShow);
+        //         });
+
+        //         updateSelectAllCheckbox();
+        //         updateDeleteButtonVisibility();
+        //         updateAccountCount();
+        //     });
+
+
+        // });
+
         document.addEventListener("DOMContentLoaded", function() {
             const filterButtons = document.querySelectorAll(".filter-btn");
             const userItems = document.querySelectorAll(".user-item");
             const searchInput = document.getElementById('searchInput');
+
+            let selectedRole = "all"; // เพิ่มตัวแปรนี้ไว้ด้านนอก เพื่อให้ใช้ในทั้ง filter และ search
 
             // นับจำนวนผู้ใช้แต่ละประเภท
             function countUsers() {
@@ -136,60 +212,54 @@
                     if (role === "CEO") countCEO++;
                 });
 
-                // อัปเดตจำนวนในปุ่มตัวกรอง
                 document.getElementById("count-all").textContent = countAll;
                 document.getElementById("count-sales").textContent = countSales;
                 document.getElementById("count-supervisor").textContent = countSupervisor;
                 document.getElementById("count-ceo").textContent = countCEO;
             }
 
-            countUsers(); // เรียกใช้งานเมื่อโหลดหน้าเว็บ
+            countUsers();
 
-            // ฟังก์ชันกรองผู้ใช้ตามประเภท
+            // ฟังก์ชันกรองตาม role
             filterButtons.forEach(button => {
                 button.addEventListener("click", function() {
-                    const role = this.getAttribute("value");
+                    selectedRole = this.getAttribute("value");
 
-                    // ลบ active ออกจากทุกปุ่ม
                     filterButtons.forEach(btn => btn.classList.remove("border-[#4D55A0]",
                         "text-[#4D55A0]"));
                     this.classList.add("border-[#4D55A0]", "text-[#4D55A0]");
 
-                    // แสดงหรือซ่อนบัญชี
-                    userItems.forEach(item => {
-                        if (role === "all" || item.getAttribute("value") === role) {
-                            item.classList.remove("hidden");
-                        } else {
-                            item.classList.add("hidden");
-                        }
-                    });
+                    applyFilters();
                 });
             });
 
-            // Search User
+            // ฟังก์ชันค้นหา
             searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase(); // คำค้นหาที่ผู้ใช้ป้อน
-
-                let found = false; // ตัวแปรเพื่อตรวจสอบว่าพบผู้ใช้ที่ตรงตามเงื่อนไขหรือไม่
-
-                userItems.forEach(item => { // ค้นหาชื่อและอีเมล
-                    const userName = item.querySelector('.font-semibold').innerText
-                        .toLowerCase(); // ชื่อผู้ใช้
-                    const userEmail = item.querySelector('.text-sm').innerText
-                        .toLowerCase(); // อีเมลผู้ใช้
-                    const shouldShow = userName.includes(searchTerm) || userEmail.includes(
-                        searchTerm); // ตรวจสอบว่าชื่อหรืออีเมลตรงกับคำค้นหาหรือไม่
-
-                    item.classList.toggle('hidden', !shouldShow); // ซ่อนรายการที่ไม่ตรงกับคำค้นหา
-                    if (shouldShow) found = true; // ถ้าพบผู้ใช้ที่ตรงตามเงื่อนไข
-                });
-
-                updateSelectAllCheckbox(); // อัปเดต checkbox "เลือกทั้งหมด"
-                updateDeleteButtonVisibility(); // อัปเดตปุ่มลบ
-                updateAccountCount(); // อัปเตตจำนวนบัญชีที่แสดง
+                applyFilters(); // ใช้ร่วมกันกับ filter
             });
 
+            // ฟังก์ชันกรองร่วม: ทั้ง role และ search
+            function applyFilters() {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                userItems.forEach(item => {
+                    const role = item.getAttribute("value");
+                    const userName = item.querySelector('.font-semibold').innerText.toLowerCase();
+                    const userEmail = item.querySelector('.text-sm').innerText.toLowerCase();
+
+                    const matchesRole = selectedRole === "all" || role === selectedRole;
+                    const matchesSearch = userName.startsWith(searchTerm) || userEmail.startsWith(searchTerm);
+
+                    const shouldShow = matchesRole && matchesSearch;
+                    item.classList.toggle("hidden", !shouldShow);
+                });
+
+                updateSelectAllCheckbox?.();
+                updateDeleteButtonVisibility?.();
+                updateAccountCount?.();
+            }
         });
+
 
         function toggleAllCheckboxes() {
             const selectAll = document.getElementById('selectAll');
@@ -225,8 +295,8 @@
 
         // Delete User
         function deleteUsers() {
-            const deleteAlert = '/public/alert-icon/DeleteAlert.png';
-            const successAlert = '/public/alert-icon/SuccessAlert.png';
+            const deleteAlert = './public/alert-icon/DeleteAlert.png';
+            const successAlert = './public/alert-icon/SuccessAlert.png';
             const checkboxes = document.querySelectorAll('.user-checkbox:checked'); // ดึง checkbox ที่ถูกเลือก
             const form = document.getElementById('deleteUserForm'); // ดึงฟอร์มลบผู้ใช้
 

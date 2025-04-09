@@ -7,6 +7,19 @@
     <title>My Map</title>
     <link rel="icon" type="image/png" href="/public/assets/image/logo-mymap.png">
 
+    <!-- โหลดฟอนต์จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai+Looped:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans Thai Looped', sans-serif;
+            font-style: normal;
+        }
+    </style>
     <!-- Icon FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
 
@@ -38,8 +51,7 @@
         src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
 
 
-    {{-- Import CSS form --}}
-    <link rel="stylesheet" href="/resources/css/style.css">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     @yield('styles')
 </head>
@@ -55,7 +67,7 @@
         <!-- ชื่อผู้ใช้ -->
         <div class="ml-auto flex items-center space-x-2">
             <span class="text-md font-sm text-gray-500">
-                {{ Request::is('/', 'cluster4', 'cluster4/home') ? 'สวัสดี! ' . (Auth::user()->us_fname ?? 'ผู้ใช้') : '' }}
+                {{ Request::is('/', 'home') ? 'สวัสดี! ' . (Auth::user()->us_fname ?? 'ผู้ใช้') : '' }}
             </span>
 
             <!-- ไอคอนโปรไฟล์ -->
@@ -73,7 +85,7 @@
     @include('components.sitebar')
 
     <!-- Main Content Wrapper -->
-    <div class="min-h-screen overflow-y-auto">
+    <div class="overflow-y-auto">
         @yield('content')
     </div>
 

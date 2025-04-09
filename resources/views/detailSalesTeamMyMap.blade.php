@@ -1,16 +1,18 @@
     @extends('layouts.default')
 
     @section('content')
-       <div class="pt-14 bg-white min-h-screen">
+        <div class="pt-14 bg-white min-h-screen">
             {{-- ปุ่มกลับ --}}
             <div class="mb-4 px-4">
-                <a href="{{ route('team') }}"
-                    class="text-white text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
+                <div class="text-white text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
                     style="background-color: #4D55A0;">
-                    <i class="fa-solid fa-arrow-left mx-3"></i>
+                    <a href="{{ route('team') }}">
+                        <i class="fa-solid fa-arrow-left mx-3"></i>
+                    </a>
                     รายชื่อทีมงาน
-                </a>
+                </div>
             </div>
+
 
             {{-- ข้อมูลผู้ใช้ --}}
             <div class="bg-white px-6">
