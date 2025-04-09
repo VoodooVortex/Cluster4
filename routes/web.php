@@ -13,10 +13,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SalesTeamController;
 use App\Http\Middleware\CheckGoogleLogin;
 use Doctrine\DBAL\Driver\Middleware;
 use PHPUnit\Runner\HookMethod;
+use SebastianBergmann\CodeCoverage\Report\Xml\Report;
 
 
 
@@ -82,6 +84,8 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
 
+        Route::get('/reportCEO', [ReportController::class, 'report_CEO'])->name('report_CEO');
         Route::get('/report/team/{id}', [SalesTeamController::class, 'detail']);
     }
 );
+
