@@ -151,18 +151,8 @@ class HomeController extends Controller
                 ->orderByRaw("FIELD(od_month, '" . $monthsStr . "')")
                 ->get();
 
-
-
-            // $orders = DB::table('order')
-            //     ->select('od_month', 'od_amount')
-            //     ->where('od_year', $thisYear)
-            //     ->whereIn('od_month', $months)
-            //     ->orderByRaw("FIELD(od_month, '" . implode("','", $months) . "')")
-            //     ->get();
-
             $monthlyData = [];
 
-            // จัดกลุ่มข้อมูลตามเดือน
             // จัดกลุ่มข้อมูลตามเดือน
             foreach ($orders as $order) {
                 $month = $order->od_month;
@@ -196,16 +186,6 @@ class HomeController extends Controller
                 }
             }
 
-
-            // $thisYear = Carbon::now()->year + 543;
-
-
-            // $salesData = Order::where('od_year', $thisYear)
-            //     ->selectRaw('od_month, SUM(od_amount) as total_sales')
-            //     ->groupBy('od_month')
-            //     ->orderByRaw("FIELD(od_month, '" . implode("','", $months) . "')")
-            //     ->get()
-            //     ->keyBy('od_month'); // แปลงให้เข้าถึงตามชื่อเดือน
 
 
             $monthlySales = [];
@@ -280,42 +260,8 @@ class HomeController extends Controller
                 }
             }
 
-
-            // dd($salesData);
-
-            // $salesData = DB::table('order')
-            // ->select('od_month', 'od_amount')
-            // ->where('od_year', $thisYear)
-            // ->orderByRaw("FIELD(od_month, 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
-            //               'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม')")
-
-
-            // ->get();
-            // dd($salesData);
-
-
-            // เตรียมข้อมูลยอดขายรายเดือน
-            // $monthlySales = [];
-            // foreach ($salesData as $sale) {
-            //     $monthNumber = $monthMap[$sale->od_month]; // แปลงชื่อเดือนเป็นหมายเลขเดือน
-            //     $monthlySales[$monthNumber] = $sale->total_sales;
-            // }
-
-            // กรณีที่บางเดือนไม่มีข้อมูล ยอดขายจะเป็น 0
-            // $monthlySales = array_replace(array_flip(range(1, 12)), $monthlySales);
-
             // ชื่อเดือน
             $labels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-
-            // $monthlySales = array_fill(1, 12, 0);
-
-            // foreach ($salesData as $sale) {
-            //     // ตรวจสอบชื่อเดือนก่อนว่าอยู่ใน map หรือไม่
-            //     if (isset($monthMap[$sale->od_month])) {
-            //         $monthNumber = $monthMap[$sale->od_month];
-            //         $monthlySales[$monthNumber] = $sale->total_sales;
-            //     }
-            // }
 
             foreach ($months as $month) {
                 if (!isset($monthlyMedian[$month])) {
@@ -592,12 +538,6 @@ class HomeController extends Controller
             // $totalSales = Order::where('od_year', $thisYear)
             // ->whereIn('od_br_id',$branchIds)->sum('od_amount');
             $totalSales = Order::whereIn('od_br_id', $branchIds)->sum('od_amount');
-
-            dd($totalSales);
-
-
-
-
 
             // ยอดขายปีก่อนหน้า
             $previousYearSales = Order::where('od_year', $thisYear - 1)->sum('od_amount');
