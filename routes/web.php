@@ -46,7 +46,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-        Route::get('/report/sales-team', [SalesTeamController::class, 'index'])->name('team');
+        Route::get('/report/sales-team', [SalesTeamController::class, 'index'])->name('salesTeamMyMap');
 
         Route::get('/report/sales-team/{id}', [SalesTeamController::class, 'detail'])->name('team.detail');
 
@@ -74,7 +74,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::get('/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
         //Sales Supervisor ดูสาขาลูกทีม
-        Route::get('/report/sales-team', [ReportController::class, 'reportSaleTeam'])->name('reportSalesTeam');
+        Route::get('/report/sales-supervisor/team', [ReportController::class, 'reportSaleTeam'])->name('reportSalesTeam');
 
         // ดูสาขาฉัน role Sales
         Route::get('/branch-Sales', [branchSalesController::class, 'branchSales'])->name('branch-Sales');
