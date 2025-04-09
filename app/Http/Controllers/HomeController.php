@@ -118,17 +118,26 @@ class HomeController extends Controller
             //ค่าเฉลี่ย
             $averageSales = Order::avg('od_amount');
 
+            // if ($previousYearSales != 0) {
+            //     $change = $totalSales - $previousYearSales;
+            //     $absPercent = number_format((abs($change) / abs($previousYearSales)) * 100, 2);
+
+            //     if ($change > 0) {
+            //         $percent = $absPercent;
+            //     } elseif ($change < 0) {
+            //         $percent = $absPercent;
+            //     } else {
+            //         $percent = 0;
+            //     }
+            // } else {
+            //     $percent = 100;
+            // }
+
             if ($previousYearSales != 0) {
                 $change = $totalSales - $previousYearSales;
-                $absPercent = number_format((abs($change) / abs($previousYearSales)) * 100, 2);
+                $absPercent = (abs($change) / abs($previousYearSales)) * 100; // <== ไม่ format ตรงนี้
 
-                if ($change > 0) {
-                    $percent = $absPercent;
-                } elseif ($change < 0) {
-                    $percent = $absPercent;
-                } else {
-                    $percent = 0;
-                }
+                $percent = $absPercent * ($change >= 0 ? 1 : -1); // ติดลบถ้ายอดลด
             } else {
                 $percent = 100;
             }
@@ -573,10 +582,26 @@ class HomeController extends Controller
                 ->whereNull('deleted_at')
                 ->avg('od_amount');
 
+            // if ($previousYearSales != 0) {
+            //     $change = $totalSales - $previousYearSales;
+            //     $absPercent = number_format((abs($change) / abs($previousYearSales)) * 100, 2);
+
+            //     if ($change > 0) {
+            //         $percent = $absPercent;
+            //     } elseif ($change < 0) {
+            //         $percent = $absPercent;
+            //     } else {
+            //         $percent = 0;
+            //     }
+            // } else {
+            //     $percent = 100;
+            // }
+
             if ($previousYearSales != 0) {
                 $change = $totalSales - $previousYearSales;
-                $absPercent = number_format((abs($change) / abs($previousYearSales)) * 100, 2);
+                $absPercent = (abs($change) / abs($previousYearSales)) * 100; // <== ไม่ format ตรงนี้
 
+                // $percent = $absPercent * ($change >= 0 ? 1 : -1); // ติดลบถ้ายอดลด
                 if ($change > 0) {
                     $percent = $absPercent;
                 } elseif ($change < 0) {
