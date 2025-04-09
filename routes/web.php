@@ -80,11 +80,24 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::get('/branch-Sales', [branchSalesController::class, 'branchSales'])->name('branch-Sales');
 
         Route::get('/map', MapLocation::class)->name('map');
+        
 
+        // อันนี้คือไรไม่รู้มั้นมีอยู่ไม่กล้าลบทิ้ง
+        // Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
 
-        Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
+        // @author 66160381 Aninthita
+        Route::get('/cluster4/branch-detail/{br_id}', [branchController::class, 'branch_detail'])->name('branchDetail');
 
-        Route::get('/cluster4/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
+        //order-detail
+        Route::get('/cluster4/order-detail/{br_id}', [OrderController::class, 'order_detail']);
+        //@author ryu
+        Route::get('/editOrder/{od_id}', [OrderController::class, 'editOrder'])->name('edit.order');
+        Route::put('/edit-order/{od_id}', [OrderController::class, 'update'])->name('update.order');
+        Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail'])->name('order.detail');
+        Route::post('/delete-order/{id}', [OrderController::class, 'delete_order_detail'])->name('delete.order');
+        Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
+
+        
 
 
         Route::get('/order', [OrderController::class, 'index'])->name('order');
