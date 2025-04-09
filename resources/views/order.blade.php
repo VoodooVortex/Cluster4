@@ -108,7 +108,7 @@
 
         {{-- รายการที่ลงยอดขายแล้ว --}}
         <div id="done-list">
-            <div class="border border-gray-300 rounded-lg shadow-sm max-h-[325px] mx-4 overflow-y-auto">
+            <div class="border border-gray-300 rounded-lg shadow-sm max-h-[600px] mx-4 overflow-y-auto">
                 <ul>
                     @forelse ($branchesWithSales as $branch)
                         <a href="{{ route('order.detail', ['br_id' => $branch->br_id]) }}">
@@ -145,7 +145,7 @@
 
         {{-- รายการที่ยังไม่ได้ลงยอดขาย --}}
         <div id="notdone-list" class="hidden">
-            <div class="border border-gray-300 rounded-lg shadow-sm max-h-[325px] mx-4 overflow-y-auto">
+            <div class="border border-gray-300 rounded-lg shadow-sm max-h-[600px] mx-4 overflow-y-auto">
                 <ul>
                     @forelse ($branchesWithoutSales as $branch)
                         <a
