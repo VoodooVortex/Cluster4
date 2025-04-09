@@ -19,6 +19,8 @@ class MapLocation extends Component
     public $mapBoxToken;
     public $scope = 5;
 
+    public $nearbyPreview = [];
+
     protected function getListeners(): array
     {
         return [
@@ -44,50 +46,6 @@ class MapLocation extends Component
     {
         $zipcode = substr($this->zipcodeBranch ?? '', 0, 2);
         $this->codeBranch = $zipcode . '-' . str_pad(Branch::withTrashed()->count() + 1, 4, '0', STR_PAD_LEFT);
-    }
-
-    public function loadInterestLocation()
-    {
-        $interest = InterestLocation::selectRaw('*, ST_X(il_longlat) as lng, ST_Y(il_longlat) as lat')
-            ->with(['typeLocation', 'image'])
-            ->get();
-
-        $arrayLocation = [];
-
-        foreach ($interest as $location) {
-            $addressI = $location->il_address . ' ' . $location->il_subdistrict . ' ' . $location->il_district . ' ' . $location->il_province . ' ' . $location->il_postalcode;
-            $images = $location->image->pluck('i_pathUrl');
-            $type = [
-                'typeId' => $location->typeLocation->tl_id,
-                'nameType' => $location->typeLocation->tl_name,
-                'icon' => $location->typeLocation->tl_emoji,
-                'color' => $location->typeLocation->tl_color,
-                'isCompetitor' => $location->typeLocation->tl_name === 'คู่แข่ง',
-            ];
-
-            $arrayLocation[] = [
-                'type' => 'Feature',
-                'geometry' => [
-                    'type' => 'Point',
-                    'coordinates' => [(float)$location->lng, (float)$location->lat],
-                ],
-                'properties' => [
-                    'id' => $location->il_id,
-                    'name' => $location->il_name,
-                    'address' => $addressI,
-                    'scope' => (float)$location->il_scope,
-                    'image' => $images->values()->toArray(),
-                    'typeLocation' => $type,
-                ],
-            ];
-        }
-        $geoLocation = [
-            'type' => 'FeatureCollection',
-            'features' => $arrayLocation,
-        ];
-
-        $geoJson = collect($geoLocation)->toJson();
-        $this->geoJsonInterest = $geoJson;
     }
 
     public function loadBranchLocation()
@@ -401,6 +359,49 @@ class MapLocation extends Component
         }
     }
 
+    public function loadNearbyPreview()
+    {
+        if (!$this->long || !$this->lat) return;
+
+        $radius = $this->scope ?? 5; // กิโลเมตร
+        $radiusMeters = $radius * 1000;
+
+        $branches = Branch::selectRaw('*, ST_Distance_Sphere(POINT(?, ?), br_longlat) as distance', [$this->long, $this->lat])
+            ->whereRaw("ST_Distance_Sphere(POINT(?, ?), br_longlat) <= ?", [$this->long, $this->lat, $radiusMeters])
+            ->whereNull('deleted_at')
+            ->limit(5)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'type' => 'branch',
+                    'name' => $item->br_name,
+                    'address' => $item->br_address,
+                    'distance' => round($item->distance / 1000, 2),
+                ];
+            });
+
+        $interests = InterestLocation::selectRaw('*, ST_Distance_Sphere(POINT(?, ?), il_longlat) as distance', [$this->long, $this->lat])
+            ->whereRaw("ST_Distance_Sphere(POINT(?, ?), il_longlat) <= ?", [$this->long, $this->lat, $radiusMeters])
+            ->limit(5)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'type' => 'interest',
+                    'name' => $item->il_name,
+                    'address' => $item->il_address,
+                    'distance' => round($item->distance / 1000, 2),
+                ];
+            });
+
+        $this->nearbyPreview = collect($branches)
+            ->merge($interests)
+            ->sortBy('distance')
+            ->take(5)
+            ->values()
+            ->toArray();
+    }
+
+
     #[On('clearEditBranchForm')]
     public function clearEditBranch()
     {
@@ -441,18 +442,19 @@ class MapLocation extends Component
     public function updateScope($scope)
     {
         $this->scope = $scope;
+        $this->loadNearbyPreview();
     }
 
     public function setLongLat($long, $lat)
     {
         $this->long = $long;
         $this->lat = $lat;
+        $this->loadNearbyPreview();
     }
 
     public function render()
     {
         $this->loadBranchLocation();
-        // $this->loadInterestLocation();
         return view('livewire.map-location');
     }
 }

@@ -93,7 +93,8 @@
                 <div id="position-fields">
                     {{-- ส่วนแสดงเลือกหัวหน้างาน --}}
                     <div id="head-container" class="mt-0">
-                        <label for="head" class="block font-medium text-gray-900">หัวหน้างาน<span style="color: red"> *</span></label>
+                        <label for="head" class="block font-medium text-gray-900">หัวหน้างาน<span style="color: red">
+                                *</span></label>
                         {{-- Select dropdown --}}
                         <select id="head" name="head"
                             class="mt-2 block w-full rounded-md border-2 border-gray-300 p-2 text-gray-900 outline-indigo-600"
@@ -252,9 +253,9 @@
             validateRole();
             validateHead();
 
-            const successAlert = 'public/alert-icon/SuccessAlert.png';
-            const userAlert = 'public/alert-icon/UserAlert.png';
-            const errorAlert = 'public/alert-icon/ErrorAlert.png';
+            const successAlert = './public/alert-icon/SuccessAlert.png';
+            const userAlert = './public/alert-icon/UserAlert.png';
+            const errorAlert = './public/alert-icon/ErrorAlert.png';
 
             // เมื่อผู้ใช้งานคลิกปุ่ม "บันทึก" จะยับยั้งการส่งฟอร์มโดยใช้ e.preventDefault(); เพื่อให้สามารถแสดง sweetalert ได้
             form.addEventListener('submit', function(e) {

@@ -2,12 +2,12 @@
 
 use App\Http\Controllers\reportSalesSupervisorController;
 use App\Http\Controllers\SalesSupervisorController;
+use App\Http\Controllers\NearbyController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\branchController;
 use App\Http\Controllers\HomeController;
-
 use App\Livewire\MapLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -75,6 +75,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/add-order', [OrderController::class, 'add_order']);
 
+        Route::get('/nearby/{branchId}', [NearbyController::class, 'index'])->name('nearby');
 
         Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
 
