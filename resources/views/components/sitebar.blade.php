@@ -52,10 +52,11 @@
             </li>
 
             @if (auth()->user()->us_role === 'CEO' || auth()->user()->us_role === 'Sales Supervisor')
-                <li class="{{ Request::is('#') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
-                    <a href="#" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
+                <li class="{{ Request::is('reportCEO') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
+                    <a href="{{ auth()->user()->us_role === 'CEO' ? route('report_CEO') : '' }}"
+                        class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                         <i class="fa-regular fa-calendar-days mr-3"
-                            style="color: {{ Request::is('#') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
+                            style="color: {{ Request::is('reportCEO') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
                         รายงาน
                     </a>
                 </li>

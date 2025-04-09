@@ -10,7 +10,7 @@
         <div class="mb-4 px-4">
             <div class="text-white border-[#4D55A0] text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
                 style="background-color: #4D55A0;">
-                <a href="/your-link" class="mx-3 text-white">
+                <a href="{{ route('report_CEO') }}" class="mx-3 text-white">
                     <i class="fa-solid fa-arrow-left fa-l"></i>
                 </a>
                 <span>สาขาของทั้งหมด (ปี {{ now()->year + 543 }})</span>
@@ -81,7 +81,7 @@
                         ({{ $branch->br_code }})
                     </p>
                     <div class="flex items-center mt-1">
-                        <img src="{{$branch->us_image}}" alt="Photo User" class="w-12 h-12 rounded-full mr-3 ">
+                        <img src="{{ $branch->us_image }}" alt="Photo User" class="w-12 h-12 rounded-full mr-3 ">
                         <div>
                             <p class="text-gray-700 font-medium">ผู้ดูแล {{ $branch->manager->us_fname ?? '-' }}
                                 {{ $branch->manager->us_lname ?? '-' }}</p>
