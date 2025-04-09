@@ -11,15 +11,34 @@ use Carbon\Carbon;
 
 class OrderController extends Controller
 {
-    private array $thaiMonths = [
-        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
-        'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม',
+    private array $thaiMonthsChar = [
+        'มกราคม',
+        'กุมภาพันธ์',
+        'มีนาคม',
+        'เมษายน',
+        'พฤษภาคม',
+        'มิถุนายน',
+        'กรกฎาคม',
+        'สิงหาคม',
+        'กันยายน',
+        'ตุลาคม',
+        'พฤศจิกายน',
+        'ธันวาคม',
     ];
 
     private array $monthMap = [
-        'มกราคม' => 1, 'กุมภาพันธ์' => 2, 'มีนาคม' => 3, 'เมษายน' => 4,
-        'พฤษภาคม' => 5, 'มิถุนายน' => 6, 'กรกฎาคม' => 7, 'สิงหาคม' => 8,
-        'กันยายน' => 9, 'ตุลาคม' => 10, 'พฤศจิกายน' => 11, 'ธันวาคม' => 12,
+        'มกราคม' => 1,
+        'กุมภาพันธ์' => 2,
+        'มีนาคม' => 3,
+        'เมษายน' => 4,
+        'พฤษภาคม' => 5,
+        'มิถุนายน' => 6,
+        'กรกฎาคม' => 7,
+        'สิงหาคม' => 8,
+        'กันยายน' => 9,
+        'ตุลาคม' => 10,
+        'พฤศจิกายน' => 11,
+        'ธันวาคม' => 12,
     ];
 
     public function index()
@@ -87,7 +106,7 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
-    //ส่งค่าคืนไป view 
+    //ส่งค่าคืนไป view
     public function order_detail($br_id)
     {
         $thaiYear = Carbon::now()->year + 543;
@@ -112,7 +131,7 @@ class OrderController extends Controller
             'branch'     => $branch,
             'user'       => $user,
             'orderData'  => $orderData,
-            'month'      => $this->thaiMonths,
+            'month'      => $this->thaiMonthsChar,
             'monthMap'   => $this->monthMap,
             'thisyear'   => $thaiYear,
             'medain'     => $medain,
@@ -128,19 +147,23 @@ class OrderController extends Controller
             ->join('users as u', 'b.br_us_id', '=', 'u.us_id')
             ->where('o.od_year', $year)
             ->where('o.od_br_id', $branchId)
-            ->whereIn('o.od_month', $this->thaiMonths)
+            ->whereIn('o.od_month', $this->thaiMonthsChar)
             ->whereIn('o.od_id', function ($query) use ($year, $branchId) {
                 $query->selectRaw('MAX(od_id)')
                     ->from('order')
                     ->where('od_year', $year)
                     ->where('od_br_id', $branchId)
-                    ->whereIn('od_month', $this->thaiMonths)
+                    ->whereIn('od_month', $this->thaiMonthsChar)
                     ->groupBy('od_month');
             })
             ->select(
-                'o.od_month', 'o.od_id', 'o.od_amount',
-                'b.br_id', 'b.br_code',
-                'u.us_fname', 'u.us_image'
+                'o.od_month',
+                'o.od_id',
+                'o.od_amount',
+                'b.br_id',
+                'b.br_code',
+                'u.us_fname',
+                'u.us_image'
             )
             ->get();
     }
@@ -162,7 +185,7 @@ class OrderController extends Controller
 
     private function monthlyMedianOrder(int $year)
     {
-        $months = $this->thaiMonths;
+        $months = $this->thaiMonthsChar;
 
         $orders = DB::table('order')
             ->select('od_month', 'od_amount')
@@ -197,10 +220,69 @@ class OrderController extends Controller
         return $monthlyMedian;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private function growthRateCalculate($branchId, $year)
     {
         $currentMonthIndex = Carbon::now()->month - 1;
-        $months = array_values($this->thaiMonths);
+        $months = array_values($this->thaiMonthsChar);
 
         if ($currentMonthIndex === 0) {
             return '0.00 %';
