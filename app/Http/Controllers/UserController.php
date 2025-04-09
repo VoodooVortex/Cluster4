@@ -39,8 +39,17 @@ class UserController extends Controller
             $trashedUser->us_fname = $request->username;
             $trashedUser->us_lname = $request->lastname;
             $trashedUser->us_role = $request->role;
-            $trashedUser->us_head = $request->head;
             $trashedUser->deleted_at = null; // คืนสถานะให้เป็นผู้ใช้ที่ไม่ได้ถูกลบ
+
+            // ถ้าเป็น Sales ใส่ us_head จากฟอร์มเลย
+            if ($request->role === 'Sales') {
+                $trashedUser->us_head = $request->head;
+                $trashedUser->save();
+            } else {
+                $trashedUser->save(); // ต้อง save ก่อนเพื่อให้ได้ us_id กลับมา
+                $trashedUser->us_head = $trashedUser->us_id;
+                $trashedUser->save();
+            }
             $trashedUser->save();
 
             return redirect()->route('manage.user')->with('success', 'เพิ่มผู้ใช้งานสำเร็จ');
