@@ -81,7 +81,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::get('/branch-Sales', [branchSalesController::class, 'branchSales'])->name('branch-Sales');
 
         Route::get('/map', MapLocation::class)->name('map');
-        
+
 
         // อันนี้คือไรไม่รู้มั้นมีอยู่ไม่กล้าลบทิ้ง
         // Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
@@ -98,7 +98,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::post('/delete-order/{id}', [OrderController::class, 'delete_order_detail'])->name('delete.order');
         Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
 
-        
+
 
 
         Route::get('/order', [OrderController::class, 'index'])->name('order');

@@ -31,7 +31,7 @@ class UserController extends Controller
         }
 
         // ค้นหาผู้ใช้ที่อีเมลนี้ในระบบที่ถูกลบ (ถ้ามี)
-        $trashedUser = User::withTrashed()->where('us_email', $request->email)->first();
+        $trashedUser = User::withoutTrashed()->where('us_email', $request->email)->first();
 
 
         if ($trashedUser) {
@@ -67,8 +67,6 @@ class UserController extends Controller
 
             return redirect()->route('manage.user')->with('success', 'เพิ่มผู้ใช้งานสำเร็จ');
         }
-
-
     }
 
 

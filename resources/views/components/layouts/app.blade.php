@@ -81,9 +81,9 @@
     {{ $slot }}
 
     @livewireScripts
-    <script>
+    {{-- <script>
         Livewire.onPageExpired((response, message) => {})
-    </script>
+    </script> --}}
 
 
 </body>

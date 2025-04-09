@@ -37,7 +37,7 @@ class branchSalesController extends Controller
         }
 
         // ดึงข้อมูลสาขา
-        $branchesQuery = Branch::withTrashed() //withTrashed() โหลดข้อมูลแม้แต่สาขาที่ถูก soft delete
+        $branchesQuery = Branch::withoutTrashed() //withTrashed() โหลดข้อมูลแม้แต่สาขาที่ถูก soft delete
             ->with([
                 'manager',
                 'order',
@@ -98,8 +98,3 @@ class branchSalesController extends Controller
         return view('viewBranchSales', compact('paginatedBranches', 'sort', 'province', 'totalPages', 'page', 'search'));
     }
 }
-
-
-
-
-

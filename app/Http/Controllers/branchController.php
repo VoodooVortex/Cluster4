@@ -32,7 +32,7 @@ class BranchController extends Controller
         }
 
         // ดึงข้อมูลสาขา
-        $branchesQuery = Branch::withTrashed() //withTrashed() โหลดข้อมูลแม้แต่สาขาที่ถูก soft delete
+        $branchesQuery = Branch::withoutTrashed() //withTrashed() โหลดข้อมูลแม้แต่สาขาที่ถูก soft delete
             ->with([
                 'manager',
                 'order',
@@ -152,7 +152,7 @@ class BranchController extends Controller
             'monthMap'   => $this->monthMap,
             'thisyear'   => $thaiYear,
             'median'     => $median,
-           'totalSales' => $totalSales,
+            'totalSales' => $totalSales,
         ]);
     }
 
@@ -221,9 +221,9 @@ class BranchController extends Controller
             AND od_month IN ('$monthsStr')
         ) as ranked
         "))
-        ->where('rn', 1)
-        ->select('od_month', 'od_amount', 'od_br_id', 'od_id')
-        ->get();
+            ->where('rn', 1)
+            ->select('od_month', 'od_amount', 'od_br_id', 'od_id')
+            ->get();
 
         // จัดกลุ่มยอดขายตามเดือน
         $monthlyData = [];
@@ -266,20 +266,20 @@ class BranchController extends Controller
     private function totalSales($br_id, $thaiYear)
     {
         $totalSales = DB::table('order')
-        ->where('od_br_id', $br_id)
-        ->where('od_year', $thaiYear)
-        ->whereNull('deleted_at')
-        ->select('od_month', DB::raw('MAX(od_id) as max_od_id'))
-        ->groupBy('od_month')
-        ->get();
+            ->where('od_br_id', $br_id)
+            ->where('od_year', $thaiYear)
+            ->whereNull('deleted_at')
+            ->select('od_month', DB::raw('MAX(od_id) as max_od_id'))
+            ->groupBy('od_month')
+            ->get();
 
-    $totalSalesAmount = DB::table('order')
-        ->where('od_br_id', $br_id)
-        ->where('od_year', $thaiYear)
-        ->whereNull('deleted_at')
-        ->whereIn('od_id', $totalSales->pluck('max_od_id'))
-        ->sum('od_amount');
+        $totalSalesAmount = DB::table('order')
+            ->where('od_br_id', $br_id)
+            ->where('od_year', $thaiYear)
+            ->whereNull('deleted_at')
+            ->whereIn('od_id', $totalSales->pluck('max_od_id'))
+            ->sum('od_amount');
 
-    return $totalSalesAmount;
+        return $totalSalesAmount;
     }
 }

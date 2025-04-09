@@ -43,21 +43,6 @@ class OrderController extends Controller
         'ธันวาคม' => 12,
     ];
 
-    public function index()
-    {
-        $orders = User::join('branch as b', 'users.us_id', '=', 'b.br_us_id')
-            ->join('order as o', 'b.br_id', '=', 'o.od_br_id')
-            ->select('b.br_id', 'b.br_code', 'users.us_image', 'users.us_email', 'o.od_amount')
-            ->get();
-
-        return view('order', compact('orders'));
-    }
-
-    public function add_order()
-    {
-        return view('addOrder');
-    }
-
     public function editOrder($od_id)
     {
         $order = Order::with('branch')->find($od_id);
@@ -290,7 +275,7 @@ class OrderController extends Controller
             $province = $request->get('province');
             $role = $request->get('role');
 
-            $branchesQuery = Branch::withTrashed()
+            $branchesQuery = Branch::withoutTrashed()
                 ->with([
                     'manager:us_id,us_fname,us_lname,us_email,us_role',
                     'order' => function ($query) use ($currentYear) {
@@ -408,7 +393,7 @@ class OrderController extends Controller
             $province = $request->get('province');
             $role = $request->get('role');
 
-            $branchesQuery = Branch::withTrashed()
+            $branchesQuery = Branch::withoutTrashed()
                 ->with([
                     'manager:us_id,us_fname,us_lname,us_email,us_role',
                     'order' => function ($query) use ($currentYear) {
@@ -521,7 +506,7 @@ class OrderController extends Controller
             $province = $request->get('province');
             $role = $request->get('role');
 
-            $branchesQuery = Branch::withTrashed()
+            $branchesQuery = Branch::withoutTrashed()
                 ->with([
                     'manager:us_id,us_fname,us_lname,us_email,us_role',
                     'order' => function ($query) use ($currentYear) {
