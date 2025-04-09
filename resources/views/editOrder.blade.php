@@ -23,12 +23,16 @@
                 เดือน{{ $order->od_month }} {{ $order->od_year }}
             </p>
 
-            {{-- ฟอร์มแก้ไขยอดขาย --}}
+
             <!-- ฟอร์มแก้ไขในหน้า editOrder.blade.php -->
+
             <form id="updateForm" action="{{ route('update.order', ['od_id' => $order->od_id]) }}" method="POST"
                 class="space-y-4">
                 @csrf
                 @method('PUT')
+
+
+                {{-- ต้องมี input ซ่อน od_id เพื่อให้ controller รับค่าถูก --}}
                 <input type="hidden" name="od_id" value="{{ $order->od_id }}">
 
                 {{-- ยอดขาย --}}
@@ -47,22 +51,23 @@
 
                 {{-- ปุ่มบันทึกและยกเลิก --}}
                 <div class="fixed bottom-0 left-0 w-full bg-white p-4">
+
+                    {{-- ปุ่มยกเลิก --}}
                     <div class="flex justify-between">
-                        {{-- ปุ่มยกเลิก --}}
                         <a href="{{ url()->previous() }}"
-                            class="w-[120px] text-center bg-white text-black border border-black px-6 py-2 rounded-lg font-bold text-base">
-                            ยกเลิก
-                        </a>
-                        {{-- ปุ่มบันทึก --}}
-                        <button type="submit"
-                            class="w-[120px] bg-[#4D55A0] text-white border border-transparent px-6 py-2 rounded-lg font-bold text-base">
-                            บันทึก
-                        </button>
+                        class="w-[120px] text-center bg-white text-black border border-black px-6 py-2 rounded-lg font-bold text-base">
+                         ยกเลิก
+                     </a>
+                     {{-- ปุ่มบันทึก --}}
+                     <button type="submit"
+                         class="w-[120px] bg-[#4D55A0] text-white border border-transparent px-6 py-2 rounded-lg font-bold text-base">
+                         บันทึก
+                     </button>
                     </div>
                 </div>
+
+
             </form>
-
-
         </div>
     </div>
 
@@ -102,8 +107,8 @@
                 Swal.fire({
                     title: 'ยืนยันการแก้ไขยอดขาย',
                     showCancelButton: true,
-                    confirmButtonText: 'ใช่',
-                    cancelButtonText: 'ไม่',
+                    confirmButtonText: 'ยืนยัน',
+                    cancelButtonText: 'ยกเลิก',
                     reverseButtons: true,
                     imageUrl: EditAlert,
                     customClass: {
