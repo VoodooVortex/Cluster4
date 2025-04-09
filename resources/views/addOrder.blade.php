@@ -9,31 +9,35 @@
 
     <div class="pt-16 bg-white-100 min-h-screen w-full">
         {{-- ปุ่มย้อนกลับและหัวข้อ --}}
-        <div class="mb-4 px-4">
+        <div class="mb-4">
             <div class="mb-4 px-4">
-                <a href="{{ route('order') }}"
+                <div
                     class="text-white bg-[#4D55A0] border-[#4D55A0] text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full">
-                    <i class="fa-solid fa-arrow-left mx-3 fa-l"></i>
+                    <a href="{{ route('order') }}">
+                        <i class="fa-solid fa-arrow-left mx-3 fa-l"></i>
+                    </a>
                     ลงยอดขาย
-                </a>
+                </div>
             </div>
 
             {{-- รหัสสาขา + เดือน --}}
             <div class="mb-4 px-4 space-y-1">
                 <div class="flex items-baseline space-x-1 whitespace-nowrap">
-                    <label for="branchID" class="block text-lg font-bold text-gray-900">รหัสสาขา : {{ $branch->br_code }}</label>
+                    <label for="branchID" class="block text-lg font-bold text-gray-900">รหัสสาขา :
+                        {{ $branch->br_code }}</label>
                     <span class="text-sm text-gray-500">(จ.{{ $branch->br_province }})</span>
                 </div>
 
                 {{-- แสดงเดือนที่ยังไม่ได้ลงยอด --}}
-                <label for="month" class="block text-sm font-medium text-gray-900">เดือน{{ $thaiMonthName }} {{ $thaiYearName }}</label>
+                <label for="month" class="block text-sm font-medium text-gray-900">เดือน{{ $thaiMonthName }}
+                    {{ $thaiYearName }}</label>
 
             </div>
 
             {{-- ยอดขาย + ช่องกรอกข้อมูล --}}
             <form action="{{ route('storeOrder') }}" method="post" id="addAmount">
                 @csrf
-                
+
                 {{-- ข้อมูลที่ต้องส่งแต่ไม่ให้ผู้ใช้กรอก --}}
                 <input type="hidden" name="br_id" value="{{ $branch->br_id }}">
                 <input type="hidden" name="month" value="{{ $thaiMonthName }}">
@@ -42,7 +46,8 @@
 
                 <div class="mb-4 px-4 space-y-1">
                     <label for="order" class="block text-sm font-medium text-gray-900">ยอดขาย</label>
-                    <input type="text" name="amount" id="addOrder" value="{{ $addAmount ? $addAmount->od_amount : '' }}" placeholder="กรุณากรอกจำนวนสินค้า"
+                    <input type="text" name="amount" id="addOrder"
+                        value="{{ $addAmount ? $addAmount->od_amount : '' }}" placeholder="กรุณากรอกจำนวนสินค้า"
                         class="w-full px-3 py-2 border rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-indigo-400">
                 </div>
 
@@ -114,7 +119,8 @@
                                 },
                             }).then(() => {
                                 // ไปยังหน้า order หลังจากที่ยืนยันเสร็จสิ้น
-                                window.location.href = '{{ route('order') }}'; // หรือใช้ URL ของหน้า order
+                                window.location.href =
+                                    '{{ route('order') }}'; // หรือใช้ URL ของหน้า order
                             });
                         });
                     }

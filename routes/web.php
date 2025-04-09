@@ -94,9 +94,9 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::get('/nearby/{branchId}', [NearbyController::class, 'index'])->name('nearby');
 
 
-Route::get('/add-order/{br_id}/{month}', [OrderController::class, 'add_order'])->name('add.order');
+        Route::get('/add-order/{br_id}/{month}', [OrderController::class, 'add_order'])->name('add.order');
 
-Route::post('/store-order', [OrderController::class, 'storeOrder'])->name('storeOrder');
+        Route::post('/store-order', [OrderController::class, 'storeOrder'])->name('storeOrder');
 
         Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
 

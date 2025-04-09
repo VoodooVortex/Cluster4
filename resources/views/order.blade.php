@@ -24,17 +24,18 @@
         {{-- ช่องค้นหา --}}
         <form method="GET" action="{{ route('order') }}">
             <div id="search" class="flex space-x-2 mb-2 px-4">
-                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="พิมพ์รหัสสาขา ชื่อสาขา หรือชื่อผู้ดูแลสาขา"
+                <input type="text" name="search" id="search" value="{{ request('search') }}"
+                    placeholder="พิมพ์รหัสสาขา ชื่อสาขา หรือชื่อผู้ดูแลสาขา"
                     class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
             </div>
 
             {{-- ผู้ใช้สามารถเลือก role และ จังหวัดพร้อมกันได้ --}}
             @if (request('role'))
-            {{-- role --}}
+                {{-- role --}}
                 <input type="hidden" name="role" value="{{ request('role') }}">
             @endif
             @if (request('province'))
-            {{-- จังหวัด --}}
+                {{-- จังหวัด --}}
                 <input type="hidden" name="province" value="{{ request('province') }}">
             @endif
         </form>
@@ -45,10 +46,11 @@
             <!-- ฟอร์มสำหรับเลือกบทบาท -->
             <div class="relative w-full">
                 <select name="role" id="roleSelect" onchange="this.form.submit()"
-                    class="block w-full rounded-md border-2 border-gray-300 p-2 text-gray-500 focus:outline-indigo-600">
+                    class="block w-full rounded-md border p-1 text-gray-500 focus:outline-indigo-600">
                     <option value="">ทั้งหมด</option>
                     <option value="CEO" {{ request('role') == 'CEO' ? 'selected' : '' }}>CEO</option>
-                    <option value="Sales Supervisor" {{ request('role') == 'Sales Supervisor' ? 'selected' : '' }}>Sales Supervisor</option>
+                    <option value="Sales Supervisor" {{ request('role') == 'Sales Supervisor' ? 'selected' : '' }}>Sales
+                        Supervisor</option>
                     <option value="Sales" {{ request('role') == 'Sales' ? 'selected' : '' }}>Sales</option>
                 </select>
             </div>
@@ -56,7 +58,7 @@
             <!-- Dropdown จังหวัด -->
             <div class="relative w-full">
                 <select name="province" id="provinceSelect" onchange="this.form.submit()"
-                    class="block w-full rounded-md border-2 border-gray-300 p-2 text-gray-500 focus:outline-indigo-600">
+                    class="block w-full rounded-md border p-1 text-gray-500 focus:outline-indigo-600">
                     <option value="">เลือกจังหวัด</option>
                     <option value="กรุงเทพมหานคร" {{ request('province') == 'กรุงเทพมหานคร' ? 'selected' : '' }}>
                         กรุงเทพมหานคร</option>
@@ -113,18 +115,22 @@
                                 <img src="{{ $branch->us_image }}" class="w-12 h-12 rounded-full ml-2" alt="User Image">
                                 <div class="flex flex-col justify-center">
                                     <div class="flex items-baseline space-x-1 whitespace-nowrap">
-                                        <span class="text-sm font-semibold block truncate max-w-[70px] overflow-hidden whitespace-nowrap">สาขา {{ $branch->br_name }}</span>
+                                        <span
+                                            class="text-sm font-semibold block truncate max-w-[70px] md:max-w-[200px] overflow-hidden whitespace-nowrap">สาขา
+                                            {{ $branch->br_name }}</span>
                                         <span class="text-xs text-gray-500">({{ $branch->br_code }})</span>
                                     </div>
-                                    <span class="text-xs text-gray-500 block truncate max-w-[160px] overflow-hidden whitespace-nowrap">{{ $branch->us_email }}</span>
+                                    <span
+                                        class="text-xs text-gray-500 block truncate max-w-[160px] overflow-hidden whitespace-nowrap">{{ $branch->us_email }}</span>
                                 </div>
                             </div>
                             <div class="flex flex-col items-end w-1/2 justify-center">
                                 <span class="text-xs">ยอดขาย : {{ number_format($branch->total_sales, 2) }} ชิ้น</span>
-                                <span class="text-xs text-gray-500">อัพเดต : {{ \Carbon\Carbon::parse($branch->latest_updated_at)->format('d/m/Y') }}</span>
+                                <span class="text-xs text-gray-500">อัพเดต :
+                                    {{ \Carbon\Carbon::parse($branch->latest_updated_at)->format('d/m/Y') }}</span>
                             </div>
                         </li>
-                        @empty
+                    @empty
                         <li class="px-4 py-4 flex items-center">
                             <span class="text-sm">ไม่มีข้อมูลยอดขายในขณะนี้</span>
                         </li>
@@ -138,29 +144,39 @@
             <div class="border border-gray-300 rounded-lg shadow-sm max-h-[325px] mx-4 overflow-y-auto">
                 <ul>
                     @forelse ($branchesWithoutSales as $branch)
-                        <li class="px-4 py-4 flex items-center border-b border-gray-300">
-                            <div class="flex items-center w-1/2 space-x-4">
-                                <img src="{{ $branch->us_image }}" class="w-12 h-12 rounded-full ml-2" alt="User Image">
-                                <div class="flex flex-col justify-center">
-                                    <div class="flex items-baseline space-x-1 whitespace-nowrap">
-                                        <span class="text-sm font-semibold block truncate max-w-[70px] overflow-hidden whitespace-nowrap">สาขา {{ $branch->br_name }}</span>
-                                        <span class="text-xs text-gray-500">({{ $branch->br_code }})</span>
-                                    </div>
-                                    <div class="text-xs text-gray-500 block truncate max-w-[160px] overflow-hidden whitespace-nowrap">{{ $branch->us_email }}</div>
-                                </div>
-                            </div>
+                        <a
+                            href="{{ route('add.order', ['br_id' => $branch->br_id, 'month' => $branch->missing_month_number]) }}">
+                            <li class="px-4 py-4 flex items-center border-b border-gray-300">
 
-                            <div class="flex flex-col items-end w-1/2 justify-center">
-                                <a href="{{ route('add.order', [ 'br_id' => $branch->br_id, 'month' => $branch->missing_month_number ]) }}">
+                                <div class="flex items-center w-1/2 space-x-4">
+                                    <img src="{{ $branch->us_image }}" class="w-12 h-12 rounded-full ml-2"
+                                        alt="User Image">
+                                    <div class="flex flex-col justify-center">
+                                        <div class="flex items-baseline space-x-1 whitespace-nowrap">
+                                            <span
+                                                class="text-sm font-semibold block truncate  max-w-[70px] md:max-w-[200px] overflow-hidden whitespace-nowrap">สาขา
+                                                {{ $branch->br_name }}</span>
+                                            <span class="text-xs text-gray-500">({{ $branch->br_code }})</span>
+                                        </div>
+                                        <div
+                                            class="text-xs text-gray-500 block truncate max-w-[160px] overflow-hidden whitespace-nowrap">
+                                            {{ $branch->us_email }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col items-end w-1/2 justify-center">
+
                                     <div class="flex items-baseline space-x-1">
                                         <span class="text-xs">ยอดขาย :</span>
                                         <span class="text-xs text-red-500">ยังไม่มีข้อมูล</span>
                                     </div>
-                                </a>
-                                <span class="text-xs text-gray-500">เดือน : {{ $branch->od_month }}</span>
-                            </div>
-                        </li>
-                        @empty
+
+                                    <span class="text-xs text-gray-500">เดือน : {{ $branch->od_month }}</span>
+                                </div>
+
+                            </li>
+                        </a>
+                    @empty
                         <li class="px-4 py-4 flex items-center">
                             <span class="text-sm">ไม่มีข้อมูลยอดขายในขณะนี้</span>
                         </li>
@@ -207,20 +223,19 @@
 @endsection
 
 @section('scripts')
+    <script>
+        // เปลี่ยนหน้าตรงปุ่มลงแล้ว + ยังไม่ลง
+        function toggleSalesList(status) {
+            // ซ่อนทั้งสอง div
+            document.getElementById('done-list').classList.add('hidden');
+            document.getElementById('notdone-list').classList.add('hidden');
 
-<script>
-    // เปลี่ยนหน้าตรงปุ่มลงแล้ว + ยังไม่ลง
-    function toggleSalesList(status) {
-         // ซ่อนทั้งสอง div
-        document.getElementById('done-list').classList.add('hidden');
-        document.getElementById('notdone-list').classList.add('hidden');
-
-        // แสดงตามที่เลือกปุ่มลงยอดขายแล้วหรือยังไม่ลง
-        if (status === 'done') {
-            document.getElementById('done-list').classList.remove('hidden');
-        } else if (status === 'notdone') {
-            document.getElementById('notdone-list').classList.remove('hidden');
+            // แสดงตามที่เลือกปุ่มลงยอดขายแล้วหรือยังไม่ลง
+            if (status === 'done') {
+                document.getElementById('done-list').classList.remove('hidden');
+            } else if (status === 'notdone') {
+                document.getElementById('notdone-list').classList.remove('hidden');
+            }
         }
-    }
     </script>
 @endsection
