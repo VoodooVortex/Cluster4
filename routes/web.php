@@ -86,5 +86,8 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/reportCEO', [ReportController::class, 'report_CEO'])->name('report_CEO');
         Route::get('/report/team/{id}', [SalesTeamController::class, 'detail']);
+
+        Route::get('/reportSalesSup', [reportSalesSupervisorController::class, 'reportSalesSupervisor1'])->name('report_SalesSupervisor');
+
     }
 );
