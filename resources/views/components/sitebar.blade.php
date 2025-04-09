@@ -15,10 +15,11 @@
 
         <!-- Sidebar Menu -->
         <ul class="pt-5 mt-4">
-            <li class="{{ Request::is('/', 'home') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
+            <li
+                class="{{ Request::is('/', 'home', 'branch-Sales', 'branch-detail/*') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
                 <a href="{{ route('home') }}" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                     <i class="fa-solid fa-house mr-3"
-                        style="color: {{ Request::is('/', 'home') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
+                        style="color: {{ Request::is('/', 'home', 'branch-Sales', 'branch-detail/*') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
                     หน้าแรก
                 </a>
             </li>
@@ -42,22 +43,27 @@
                 </li>
             @endif
 
-            <li class="{{ Request::is('order') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
+            <li
+                class="{{ Request::is('order', 'order-detail/*', 'add-order/*') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
                 <a href="{{ route('order') }}"
                     class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                     <i class="fa-solid fa-chart-column mr-3"
-                        style="color: {{ Request::is('order') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
+                        style="color: {{ Request::is('order', 'order-detail/*', 'add-order/*') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
                     ยอดขาย
                 </a>
             </li>
 
             @if (auth()->user()->us_role === 'CEO' || auth()->user()->us_role === 'Sales Supervisor')
                 <li
-                    class="{{ Request::is('reportCEO', 'branchMyMap', 'branch-detail/*', 'report/sales-team', 'report/sales-team/*') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
-                    <a href="{{ (auth()->user()->us_role === 'CEO' ? route('report_CEO') : auth()->user()->us_role === 'Sales Supervisor') ? route('report_SalesSupervisor') : '' }} }}"
+                    class="{{ Request::is('reportCEO', 'branchMyMap', 'branch-detail/*', 'report/sales-team', 'report/sales-team/*', 'report/SalesSup', 'report/SaleSup/Team', 'branch-detail/*') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
+                    <a href="{{ auth()->user()->us_role === 'CEO'
+                        ? route('report_CEO')
+                        : (auth()->user()->us_role === 'Sales Supervisor'
+                            ? route('report_SalesSupervisor')
+                            : '') }}"
                         class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                         <i class="fa-regular fa-calendar-days mr-3"
-                            style="color: {{ Request::is('reportCEO', 'branchMyMap', 'branch-detail/*', 'report/sales-team', 'report/sales-team/*') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
+                            style="color: {{ Request::is('reportCEO', 'branchMyMap', 'branch-detail/*', 'report/sales-team', 'report/sales-team/*', 'report/SalesSup', 'report/SaleSup/Team', 'branch-detail/*') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
                         รายงาน
                     </a>
                 </li>

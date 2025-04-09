@@ -72,7 +72,6 @@ Route::middleware([CheckGoogleLogin::class])->group(
         //Sales Supervisor
         Route::get('/report/sales-supervisor', [ReportController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
 
-        Route::get('/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
         //Sales Supervisor ดูสาขาลูกทีม
         Route::get('/report/sales-supervisor/team', [ReportController::class, 'reportSaleTeam'])->name('reportSalesTeam');
@@ -87,18 +86,14 @@ Route::middleware([CheckGoogleLogin::class])->group(
         // Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
 
         // @author 66160381 Aninthita
-        Route::get('/cluster4/branch-detail/{br_id}', [branchController::class, 'branch_detail'])->name('branchDetail');
+        Route::get('/branch-detail/{br_id}', [branchController::class, 'branch_detail'])->name('branchDetail');
 
-        //order-detail
-        Route::get('/cluster4/order-detail/{br_id}', [OrderController::class, 'order_detail']);
         //@author ryu
         Route::get('/editOrder/{od_id}', [OrderController::class, 'editOrder'])->name('edit.order');
         Route::put('/edit-order/{od_id}', [OrderController::class, 'update'])->name('update.order');
         Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail'])->name('order.detail');
         Route::post('/delete-order/{id}', [OrderController::class, 'delete_order_detail'])->name('delete.order');
         Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
-
-
 
 
         Route::get('/order', [OrderController::class, 'index'])->name('order');
