@@ -92,14 +92,33 @@ class BranchController extends Controller
     }
 
     private array $thaiMonths = [
-        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
-        'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม',
+        'มกราคม',
+        'กุมภาพันธ์',
+        'มีนาคม',
+        'เมษายน',
+        'พฤษภาคม',
+        'มิถุนายน',
+        'กรกฎาคม',
+        'สิงหาคม',
+        'กันยายน',
+        'ตุลาคม',
+        'พฤศจิกายน',
+        'ธันวาคม',
     ];
 
     private array $monthMap = [
-        'มกราคม' => 1, 'กุมภาพันธ์' => 2, 'มีนาคม' => 3, 'เมษายน' => 4,
-        'พฤษภาคม' => 5, 'มิถุนายน' => 6, 'กรกฎาคม' => 7, 'สิงหาคม' => 8,
-        'กันยายน' => 9, 'ตุลาคม' => 10, 'พฤศจิกายน' => 11, 'ธันวาคม' => 12,
+        'มกราคม' => 1,
+        'กุมภาพันธ์' => 2,
+        'มีนาคม' => 3,
+        'เมษายน' => 4,
+        'พฤษภาคม' => 5,
+        'มิถุนายน' => 6,
+        'กรกฎาคม' => 7,
+        'สิงหาคม' => 8,
+        'กันยายน' => 9,
+        'ตุลาคม' => 10,
+        'พฤศจิกายน' => 11,
+        'ธันวาคม' => 12,
     ];
 
 
@@ -116,7 +135,7 @@ class BranchController extends Controller
         $thaiYear = Carbon::now()->year + 543;
         $branch = Branch::findOrFail($br_id);
         $user = User::findOrFail($branch->br_us_id);
-        
+
 
         $monthlyOrders = $this->getMonthlyOrder($br_id, $thaiYear);
         $orderData = $this->formatOrderData($monthlyOrders);
@@ -132,11 +151,11 @@ class BranchController extends Controller
             'monthMap'   => $this->monthMap,
             'thisyear'   => $thaiYear,
             'median'     => $median,
-           'totalSales' => $totalSales, 
+            'totalSales' => $totalSales,
         ]);
     }
 
-   
+
     private function getMonthlyOrder($br_id, $thisYear)
     {
         return DB::table('order as o')
@@ -170,12 +189,12 @@ class BranchController extends Controller
     {
         $data = [];
 
-        
+
         foreach (range(1, 12) as $month) {
             $data[$month] = 0;
         }
 
-       
+
         foreach ($monthlyOrders as $order) {
             $month = $this->monthMap[$order->od_month] ?? null;
             if ($month) {
@@ -188,22 +207,22 @@ class BranchController extends Controller
 
 
     private function monthlyMedianOrder($thaiYear)
-{
-    $monthsStr = implode("','", $this->thaiMonths);
-    $orders = DB::table(DB::raw("
+    {
+        $monthsStr = implode("','", $this->thaiMonths);
+        $orders = DB::table(DB::raw("
         (
             SELECT *, ROW_NUMBER() OVER (
                 PARTITION BY od_month, od_br_id
                 ORDER BY od_id DESC
             ) as rn
             FROM `order`
-            WHERE od_year = $thaiYear 
+            WHERE od_year = $thaiYear
             AND od_month IN ('$monthsStr')
         ) as ranked
         "))
-        ->where('rn', 1) 
-        ->select('od_month', 'od_amount', 'od_br_id', 'od_id')
-        ->get();
+            ->where('rn', 1)
+            ->select('od_month', 'od_amount', 'od_br_id', 'od_id')
+            ->get();
 
         // จัดกลุ่มยอดขายตามเดือน
         $monthlyData = [];
@@ -221,7 +240,7 @@ class BranchController extends Controller
         foreach ($this->thaiMonths as $month) {
             if (isset($monthlyData[$month])) {
                 $amounts = $monthlyData[$month];
-                sort($amounts);  
+                sort($amounts);
 
                 $count = count($amounts);
                 $middle = floor($count / 2);
@@ -242,28 +261,24 @@ class BranchController extends Controller
         return $monthlyMedian;
     }
 
-    
+
     private function totalSales($br_id, $thaiYear)
     {
         $totalSales = DB::table('order')
-        ->where('od_br_id', $br_id)
-        ->where('od_year', $thaiYear)
-        ->whereNull('deleted_at')
-        ->select('od_month', DB::raw('MAX(od_id) as max_od_id'))  
-        ->groupBy('od_month')  
-        ->get();
+            ->where('od_br_id', $br_id)
+            ->where('od_year', $thaiYear)
+            ->whereNull('deleted_at')
+            ->select('od_month', DB::raw('MAX(od_id) as max_od_id'))
+            ->groupBy('od_month')
+            ->get();
 
-    $totalSalesAmount = DB::table('order')
-        ->where('od_br_id', $br_id)
-        ->where('od_year', $thaiYear)
-        ->whereNull('deleted_at')
-        ->whereIn('od_id', $totalSales->pluck('max_od_id'))  
-        ->sum('od_amount');  
+        $totalSalesAmount = DB::table('order')
+            ->where('od_br_id', $br_id)
+            ->where('od_year', $thaiYear)
+            ->whereNull('deleted_at')
+            ->whereIn('od_id', $totalSales->pluck('max_od_id'))
+            ->sum('od_amount');
 
-    return $totalSalesAmount;
-
-
-
+        return $totalSalesAmount;
     }
-
-}    
+}

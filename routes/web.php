@@ -67,9 +67,9 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/map', MapLocation::class)->name('map');
 
-       
+
         Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
-        
+
         Route::get('/cluster4/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
         Route::get('/order', [OrderController::class, 'index'])->name('order');
