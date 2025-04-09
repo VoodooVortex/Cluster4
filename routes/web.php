@@ -1,5 +1,7 @@
 <?php
 
+
+use App\Http\Controllers\branchSalesController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\reportSalesSupervisorController;
 use App\Http\Controllers\SalesSupervisorController;
@@ -73,6 +75,9 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         //Sales Supervisor ดูสาขาลูกทีม
         Route::get('/report/sales-team', [ReportController::class, 'reportSaleTeam'])->name('reportSalesTeam');
+
+        // ดูสาขาฉัน role Sales
+        Route::get('/branch-Sales', [branchSalesController::class, 'branchSales'])->name('branch-Sales');
 
         Route::get('/map', MapLocation::class)->name('map');
 
