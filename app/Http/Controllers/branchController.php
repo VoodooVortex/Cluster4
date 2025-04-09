@@ -93,14 +93,33 @@ class BranchController extends Controller
     }
 
     private array $thaiMonths = [
-        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
-        'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม',
+        'มกราคม',
+        'กุมภาพันธ์',
+        'มีนาคม',
+        'เมษายน',
+        'พฤษภาคม',
+        'มิถุนายน',
+        'กรกฎาคม',
+        'สิงหาคม',
+        'กันยายน',
+        'ตุลาคม',
+        'พฤศจิกายน',
+        'ธันวาคม',
     ];
 
     private array $monthMap = [
-        'มกราคม' => 1, 'กุมภาพันธ์' => 2, 'มีนาคม' => 3, 'เมษายน' => 4,
-        'พฤษภาคม' => 5, 'มิถุนายน' => 6, 'กรกฎาคม' => 7, 'สิงหาคม' => 8,
-        'กันยายน' => 9, 'ตุลาคม' => 10, 'พฤศจิกายน' => 11, 'ธันวาคม' => 12,
+        'มกราคม' => 1,
+        'กุมภาพันธ์' => 2,
+        'มีนาคม' => 3,
+        'เมษายน' => 4,
+        'พฤษภาคม' => 5,
+        'มิถุนายน' => 6,
+        'กรกฎาคม' => 7,
+        'สิงหาคม' => 8,
+        'กันยายน' => 9,
+        'ตุลาคม' => 10,
+        'พฤศจิกายน' => 11,
+        'ธันวาคม' => 12,
     ];
 
 
@@ -189,9 +208,9 @@ class BranchController extends Controller
 
 
     private function monthlyMedianOrder($thaiYear)
-{
-    $monthsStr = implode("','", $this->thaiMonths);
-    $orders = DB::table(DB::raw("
+    {
+        $monthsStr = implode("','", $this->thaiMonths);
+        $orders = DB::table(DB::raw("
         (
             SELECT *, ROW_NUMBER() OVER (
                 PARTITION BY od_month, od_br_id
@@ -262,9 +281,5 @@ class BranchController extends Controller
         ->sum('od_amount');
 
     return $totalSalesAmount;
-
-
-
     }
-
 }

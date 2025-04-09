@@ -275,20 +275,22 @@
                     </div>
                     <div id="latlong-branch" class="text-sm text-blue-600 mt-2"></div>
                 </div>
-                <div class="grid grid-cols-2 gap-10 mt-5 mb-5">
-                    <div class="text-right">
-                        <button id="deleteBranchBtn"
-                            class="w-[120px] bg-white text-gray-600 border border-gray-600 px-6 py-2 rounded-lg font-bold text-base">
-                            ลบ
-                        </button>
+                @if (auth()->user()->us_role == 'CEO' || auth()->user()->us_role == 'Sales Supervisor')
+                    <div class="grid grid-cols-2 gap-10 mt-5 mb-5">
+                        <div class="text-right">
+                            <button id="deleteBranchBtn"
+                                class="w-[120px] bg-white text-gray-600 border border-gray-600 px-6 py-2 rounded-lg font-bold text-base">
+                                ลบ
+                            </button>
+                        </div>
+                        <div class="text-left">
+                            <button id="editBranchBtn"
+                                class="w-[120px] bg-white text-gray-600 border border-gray-600 px-6 py-2 rounded-lg font-bold text-base">
+                                แก้ไข
+                            </button>
+                        </div>
                     </div>
-                    <div class="text-left">
-                        <button id="editBranchBtn"
-                            class="w-[120px] bg-white text-gray-600 border border-gray-600 px-6 py-2 rounded-lg font-bold text-base">
-                            แก้ไข
-                        </button>
-                    </div>
-                </div>
+                @endif
                 {{-- Nearby Places --}}
                 {{-- <div class="border-t mt-2 px-4 pb-6">
                     <div class="space-y-3">

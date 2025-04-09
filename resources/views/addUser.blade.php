@@ -78,7 +78,7 @@
                         <label for="head" class="block text-sm font-medium text-gray-900">หัวหน้างาน<span
                                 style="color: red"> *</span></label>
                         <select id="head" name="head"
-                            class="mt-2 block w-full rounded-md border-2 border-gray-300 p-2 text-gray-900 outline-indigo-600"
+                            class="mt-2 block w-full rounded-md border p-2 text-gray-900 outline-indigo-600"
                             onchange="validateHead()">
                             <option value="" class="text-gray-900">-- กรุณาเลือกหัวหน้างาน --</option>
                             @foreach ($allUser as $muser)
@@ -89,7 +89,7 @@
                             @endforeach
                         </select>
 
-
+                        <p id="headError" class="text-red-500 text-sm mt-1 hidden">กรุณาเลือกหัวหน้างาน</p>
 
                     </div>
 
@@ -220,13 +220,13 @@
     <!-- โหลด SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const branchAlert = './public/alert-icon/BranchAlert.png';
-        const deleteAlert = './public/alert-icon/DeleteAlert.png';
-        const editAlert = './public/alert-icon/EditAlert.png';
-        const errorAlert = './public/alert-icon/ErrorAlert.png';
-        const orderAlert = './public/alert-icon/OrderAlert.png';
-        const successAlert = './public/alert-icon/SuccessAlert.png';
-        const userAlert = './public/alert-icon/UserAlert.png';
+        const branchAlert = 'public/alert-icon/BranchAlert.png';
+        const deleteAlert = 'public/alert-icon/DeleteAlert.png';
+        const editAlert = 'public/alert-icon/EditAlert.png';
+        const errorAlert = 'public/alert-icon/ErrorAlert.png';
+        const orderAlert = 'public/alert-icon/OrderAlert.png';
+        const successAlert = 'public/alert-icon/SuccessAlert.png';
+        const userAlert = 'public/alert-icon/UserAlert.png';
 
         function confirmAddUser() {
             const form = document.getElementById('editForm');

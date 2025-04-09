@@ -14,10 +14,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SalesTeamController;
 use App\Http\Middleware\CheckGoogleLogin;
 use Doctrine\DBAL\Driver\Middleware;
 use PHPUnit\Runner\HookMethod;
+use SebastianBergmann\CodeCoverage\Report\Xml\Report;
 
 
 
@@ -45,7 +47,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/report/sales-team', [SalesTeamController::class, 'index'])->name('team');
 
-        Route::get('/report/sales-team{id}', [SalesTeamController::class, 'detail'])->name('team.detail');
+        Route::get('/report/sales-team/{id}', [SalesTeamController::class, 'detail'])->name('team.detail');
 
 
         Route::get('/manage-user', [UserController::class, 'index'])->name('manage.user');
@@ -64,8 +66,11 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         //CEO
         Route::get('/branchMyMap', [BranchController::class, 'index'])->name('branchMyMap');
+      
         //Sales Supervisor
         Route::get('/report/sales-supervisor', [ReportController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
+
+        Route::get('/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
         //Sales Supervisor ดูสาขาลูกทีม
         Route::get('/report/sales-team', [ReportController::class, 'reportSaleTeam'])->name('reportSalesTeam');
@@ -77,6 +82,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/cluster4/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
+
         Route::get('/order', [OrderController::class, 'index'])->name('order');
 
         Route::get('/add-order', [OrderController::class, 'add_order']);
@@ -87,6 +93,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
 
+        Route::get('/reportCEO', [ReportController::class, 'report_CEO'])->name('report_CEO');
         Route::get('/report/team/{id}', [SalesTeamController::class, 'detail']);
     }
 );
