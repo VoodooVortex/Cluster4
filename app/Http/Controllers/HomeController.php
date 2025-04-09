@@ -93,7 +93,19 @@ class HomeController extends Controller
 
             $thisYear = Carbon::now()->year + 543;
             // ยอดขายทั้งหมดปีนี้
-            $totalSales = Order::where('od_year', $thisYear)->sum('od_amount');
+            // $totalSales = Order::where('od_year', $thisYear)->sum('od_amount');
+            $totalSales = DB::table(DB::raw("
+            (
+                SELECT *, ROW_NUMBER() OVER (
+                    PARTITION BY od_month, od_br_id
+                    ORDER BY od_id DESC
+                ) as rn
+                FROM `order`
+                WHERE od_year = $thisYear
+            ) as ranked
+        "))
+                ->where('rn', 1)
+                ->sum('od_amount');
 
             // ยอดขายปีก่อนหน้า
             $previousYearSales = Order::where('od_year', $thisYear - 1)->sum('od_amount');
@@ -121,15 +133,36 @@ class HomeController extends Controller
 
             $months = $monthMap;
 
-            $orders = DB::table('order')
+
+            $monthsStr = implode("','", $months);
+
+            $orders = DB::table(DB::raw("
+            (
+                SELECT *, ROW_NUMBER() OVER (
+                    PARTITION BY od_month, od_br_id
+                    ORDER BY od_id DESC
+                ) as rn
+                FROM `order`
+                WHERE od_year = $thisYear AND od_month IN ('$monthsStr')
+            ) as ranked
+            "))
+                ->where('rn', 1)
                 ->select('od_month', 'od_amount')
-                ->where('od_year', $thisYear)
-                ->whereIn('od_month', $months)
-                ->orderByRaw("FIELD(od_month, '" . implode("','", $months) . "')")
+                ->orderByRaw("FIELD(od_month, '" . $monthsStr . "')")
                 ->get();
+
+
+
+            // $orders = DB::table('order')
+            //     ->select('od_month', 'od_amount')
+            //     ->where('od_year', $thisYear)
+            //     ->whereIn('od_month', $months)
+            //     ->orderByRaw("FIELD(od_month, '" . implode("','", $months) . "')")
+            //     ->get();
 
             $monthlyData = [];
 
+            // จัดกลุ่มข้อมูลตามเดือน
             // จัดกลุ่มข้อมูลตามเดือน
             foreach ($orders as $order) {
                 $month = $order->od_month;
@@ -138,6 +171,8 @@ class HomeController extends Controller
                 }
                 $monthlyData[$month][] = $order->od_amount;
             }
+
+
 
             // คำนวณค่ามัธยฐานของแต่ละเดือน
             $monthlyMedian = [];
@@ -161,17 +196,30 @@ class HomeController extends Controller
                 }
             }
 
-            $salesData = Order::where('od_year', $thisYear)
-                ->selectRaw('od_month, SUM(od_amount) as total_sales')
-                ->groupBy('od_month')
-                ->orderByRaw("FIELD(od_month, '" . implode("','", $months) . "')")
-                ->get()
-                ->keyBy('od_month'); // แปลงให้เข้าถึงตามชื่อเดือน
+
+            // $thisYear = Carbon::now()->year + 543;
+
+
+            // $salesData = Order::where('od_year', $thisYear)
+            //     ->selectRaw('od_month, SUM(od_amount) as total_sales')
+            //     ->groupBy('od_month')
+            //     ->orderByRaw("FIELD(od_month, '" . implode("','", $months) . "')")
+            //     ->get()
+            //     ->keyBy('od_month'); // แปลงให้เข้าถึงตามชื่อเดือน
+
 
             $monthlySales = [];
             foreach ($months as $month) {
-                $monthlySales[$month] = isset($salesData[$month]) ? $salesData[$month]->total_sales : 0;
+                $monthlySales[$month] = 0;
             }
+
+
+
+            // รวมยอดขายแต่ละเดือน
+            foreach ($orders as $order) {
+                $monthlySales[$order->od_month] += $order->od_amount;
+            }
+
 
             // คำนวณ median + 2SD สำหรับแต่ละเดือน
             $monthlyPlus2SD = [];
@@ -206,6 +254,7 @@ class HomeController extends Controller
                 }
             }
 
+
             // คำนวณ median - 2SD สำหรับแต่ละเดือน
             $monthlyMinus2SD = [];
 
@@ -231,8 +280,42 @@ class HomeController extends Controller
                 }
             }
 
+
+            // dd($salesData);
+
+            // $salesData = DB::table('order')
+            // ->select('od_month', 'od_amount')
+            // ->where('od_year', $thisYear)
+            // ->orderByRaw("FIELD(od_month, 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+            //               'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม')")
+
+
+            // ->get();
+            // dd($salesData);
+
+
+            // เตรียมข้อมูลยอดขายรายเดือน
+            // $monthlySales = [];
+            // foreach ($salesData as $sale) {
+            //     $monthNumber = $monthMap[$sale->od_month]; // แปลงชื่อเดือนเป็นหมายเลขเดือน
+            //     $monthlySales[$monthNumber] = $sale->total_sales;
+            // }
+
+            // กรณีที่บางเดือนไม่มีข้อมูล ยอดขายจะเป็น 0
+            // $monthlySales = array_replace(array_flip(range(1, 12)), $monthlySales);
+
             // ชื่อเดือน
             $labels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+            // $monthlySales = array_fill(1, 12, 0);
+
+            // foreach ($salesData as $sale) {
+            //     // ตรวจสอบชื่อเดือนก่อนว่าอยู่ใน map หรือไม่
+            //     if (isset($monthMap[$sale->od_month])) {
+            //         $monthNumber = $monthMap[$sale->od_month];
+            //         $monthlySales[$monthNumber] = $sale->total_sales;
+            //     }
+            // }
 
             foreach ($months as $month) {
                 if (!isset($monthlyMedian[$month])) {
@@ -246,7 +329,6 @@ class HomeController extends Controller
             $maxY = max(array_merge($monthlySalesOnly, array_values($monthlyMedian), array_values($monthlyPlus2SD)));
             // ปัดขึ้นไปใกล้ค่าที่ต้องการ
             $maxY = ceil($maxY / 10000) * 10000; // ปัดขึ้นไปเป็น 10000, 100000 หรือใกล้เคียง
-
             $maxSales = max($monthlySales);
             $minSales = min($monthlySales);
 
