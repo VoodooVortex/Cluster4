@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\branchSalesController;
 use App\Http\Controllers\reportSalesSupervisorController;
 use App\Http\Controllers\SalesSupervisorController;
 use App\Http\Controllers\NearbyController;
@@ -67,6 +68,9 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::get('/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
         Route::get('/reportSalesSupervisor', [reportSalesSupervisorController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
+
+        // ดูสาขาฉัน role Sales
+        Route::get('/branch-Sales', [branchSalesController::class, 'branchSales'])->name('branch-Sales');
 
         Route::get('/map', MapLocation::class)->name('map');
 
