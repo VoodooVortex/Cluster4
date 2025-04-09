@@ -30,10 +30,10 @@
                 </a>
             </li>
 
-            <li class="{{ Request::is('map') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
+            <li class="{{ Request::is('map/*') ? 'bg-indigo-100 text-[#4D55A0]' : '' }}">
                 <a href="{{ route('map') }}" class="px-4 py-3 hover:bg-gray-200 flex items-center text-lg font-medium">
                     <i class="fa-solid fa-globe mr-3"
-                        style="color: {{ Request::is('map') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
+                        style="color: {{ Request::is('map/*') ? '#4D55A0' : '#595959' }}; vertical-align: middle;"></i>
                     แผนที่
                 </a>
             </li>
