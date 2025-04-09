@@ -10,7 +10,7 @@
             ข้อมูลสาขา
         </div>
 
-        <div class="w-full bg-white">
+        <div class="w-full bg-white pb-5">
 
             {{-- ข้อมูลสาขา --}}
             <div class="bg-white p-4 rounded-lg border shadow mt-4">

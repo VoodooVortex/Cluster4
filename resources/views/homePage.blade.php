@@ -321,7 +321,7 @@
                 </div>
             </div>
 
-            {{-- Ranking--}}
+            {{-- Ranking --}}
             <div class="bg-white rounded-2xl shadow border m-3 pb-4">
                 <div class="flex flex-row">
                     <h3 id="rankTitle" class="font-semibold text-lg mt-1 p-4">สาขาที่ทำยอดขายดีที่สุด</h3>
@@ -546,6 +546,112 @@
                 </div>
             </div>
         </div>
+    @else
+        <div class="pt-16 bg-white-100 w-full">
+
+            {{-- Icon --}}
+            <div class="mb-4 px-4">
+                <div class="text-white border-[#4D55A0] text-2xl font-semibold px-4 py-3 rounded-2xl flex items-center w-full"
+                    style="background-color: #4D55A0;">
+                    ปี {{ $currentYear }} (ปัจจุบัน)
+                </div>
+                <div class="flex justify-center gap-12 mt-5">
+                    <div class="text-center">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-box fa-2xl text-white"></i>
+                        </div>
+                        <p class="mt-2 text-sm">จำนวนยอดขาย</p>
+                        <p class="font-bold text-sm">{{ number_format($totalSales) }}</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-warehouse fa-2xl text-white"></i>
+                        </div>
+                        <p class="mt-2 text-sm">จำนวนสาขา</p>
+                        <p class="font-bold text-sm">{{ number_format($totalBranches) }}</p>
+                    </div>
+                </div>
+            </div>
+
+
+            {{-- //@auther : boom --}}
+            {{-- all Order Graph --}}
+            <div class="bg-white rounded-2xl shadow border m-3 p-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">ยอดขายทั้งหมดในปีนี้</p>
+                        <h2 class="text-3xl font-bold">{{ number_format($totalSales) }} <span class="text-lg">ชิ้น</span>
+                            <span
+                                class="text-{{ $percent < 0 ? 'red' : ($percent > 0 ? 'green' : 'gray') }}-500 text-sm font-semibold">
+                                @if ($percent < 0)
+                                    - {{ number_format($percent) }}%
+                                @elseif ($percent > 0)
+                                    + {{ number_format($percent) }}%
+                                @else
+                                    {{ number_format($percent) }}%
+                                @endif
+                            </span>
+                        </h2>
+                        <p class="text-gray-400 text-xs">ค่าเฉลี่ยยอดขายอยู่ที่ <span
+                                class="font-semibold">{{ number_format($averageSales) }}</span> ชิ้น</p>
+                    </div>
+                    <div class="pr-4">
+                        <i class="fa-solid fa-box fa-2xl scale-150" style="color: #4d55a0;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow border m-3 p-4">
+                <p class="text-lg font-bold text-gray-800 mb-2">ยอดขายในปีนี้</p>
+
+                <div class="w-full h-[400px] sm:h-[500px] relative">
+                    <canvas id="salesChart" class="w-full h-full"></canvas>
+                </div>
+
+                <div class="mt-8 grid grid-cols-2 gap-4 w-full">
+                    <div class="bg-white p-4 rounded-lg shadow w-full text-left border border-gray-200">
+                        <p class="text-sm font-semibold">Min :</p>
+                        <p class="text-lg font-bold" id="minValue"> {{ number_format($minSales) }} ชิ้น</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow w-full text-left border border-gray-200">
+                        <p class="text-sm font-semibold">Max :</p>
+                        <p class="text-lg font-bold" id="maxValue"> {{ number_format($maxSales) }} ชิ้น</p>
+                    </div>
+                </div>
+            </div>
+
+
+            {{-- Mork --}}
+            {{-- กล่องข้อมูลสรุป --}}
+            <div class="bg-white border border-gray-200 rounded-2xl m-3 p-5 mb-2 shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-semibold text-gray-500 text-lg">จำนวนสาขาทั้งหมด</p>
+                        <p class="text-3xl font-bold py-1">{{ number_format($totalBranches) }} สาขา</p>
+                        <p class="text-green-600 text-sm">จำนวนสาขาเพิ่มขึ้นเฉลี่ย {{ $growthPercentage }}%</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-4 rounded-full">
+                            <i class="fa-solid fa-warehouse fa-2xl" style="color: #4D55A0;"></i>
+                        </div>
+                        <a href="#" class="col">
+                            <button class="btn btn-warning text-[#4D55A0] text-sm">ดูเพิ่มเติม</button>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            {{-- กล่องกราฟ --}}
+            <div class="bg-white border border-gray-200 rounded-2xl m-3 mb-2 p-5 shadow">
+                <p class="font-semibold text-lg mb-4">อัตราการเติบโตของสาขาภายในปีนี้</p>
+                <div class="w-full">
+                    <canvas id="branchChart"></canvas>
+                </div>
+            </div>
     @endif
 
 @endsection
@@ -753,7 +859,6 @@
                 }
             }
         });
-
 
         //อัตราการเติบโตของพนักงาน
         const labels2 = {!! json_encode(collect($cumulativeEmployees)->pluck('month')) !!}; // ดึงชื่อเดือนจากข้อมูลพนักงานสะสม
