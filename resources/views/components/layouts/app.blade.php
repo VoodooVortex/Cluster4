@@ -79,9 +79,7 @@
 
     @livewireScripts
     <script>
-        document.addEventListener('livewire:load', () => {
-            Livewire.onPageExpired((response, message) => {})
-        })
+        Livewire.onPageExpired((response, message) => {})
     </script>
 
 
