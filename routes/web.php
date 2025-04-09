@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\reportSalesSupervisorController;
+use App\Http\Controllers\SalesSupervisorController;
+use App\Http\Controllers\NearbyController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\branchController;
 use App\Http\Controllers\HomeController;
-
 use App\Livewire\MapLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -59,18 +61,22 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::put('/edit-user', [UserController::class, 'edit_action'])->name('edit.user');
 
-        Route::get('/branchMyMap', [branchController::class, 'index'])->name('branchMyMap');
+        Route::get('/branchMyMap', [BranchController::class, 'index'])->name('branchMyMap');
+
+        Route::get('/reportSalesSupervisor', [reportSalesSupervisorController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
 
         Route::get('/map', MapLocation::class)->name('map');
 
-        // Aninthita 66160381
+       
         Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
-
+        
+        Route::get('/cluster4/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
         Route::get('/order', [OrderController::class, 'index'])->name('order');
 
         Route::get('/add-order', [OrderController::class, 'add_order']);
 
+        Route::get('/nearby/{branchId}', [NearbyController::class, 'index'])->name('nearby');
 
         Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
 

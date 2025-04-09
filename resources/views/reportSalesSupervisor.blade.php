@@ -1,5 +1,5 @@
 {{--
-    @title : ดูข้อมูลสาขาทั้งหมด Role CEO
+    @title : ดูข้อมูลสาขาทั้งหมด Role Sales Supervisor
     @author : Samitanan Taenil 66160376
     @create date : 05/04/2568
 --}}
@@ -13,12 +13,13 @@
                 <a href="/your-link" class="mx-3 text-white">
                     <i class="fa-solid fa-arrow-left fa-l"></i>
                 </a>
-                <span>สาขาของทั้งหมด (ปี {{ now()->year + 543 }})</span>
+                <span>สาขาของฉัน (ปี {{ now()->year + 543 }})</span>
             </div>
         </div>
 
+
         {{-- ช่องค้นหา --}}
-        <form method="GET" action="{{ route('branchMyMap') }}">
+        <form method="GET" action="{{ route('reportSalesSupervisor') }}">
             <div id="search" class="flex space-x-2 mb-2 px-4 ">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="พิมพ์รหัสสาขา"
                     class="block w-full rounded-md border-2 border-gray-300 px-3 py-2 focus:outline-indigo-400">
@@ -37,7 +38,7 @@
 
 
         {{-- ผู้ใช้งานสามารถเลือกจังหวัดที่ต้องการจะดูได้ --}}
-        <form method="GET" action="{{ route('branchMyMap') }}" class="mb-4 flex gap-2 justify-start px-4">
+        <form method="GET" action="{{ route('reportSalesSupervisor') }}" class="mb-4 flex gap-2 justify-start px-4">
             <div class="relative w-full">
                 <select name="province" id="provinceSelect" onchange="this.form.submit()"
                     class="block w-full rounded-md border-2 border-gray-300 p-2 text-gray-400 focus:outline-indigo-400">
@@ -78,10 +79,11 @@
             @foreach ($paginatedBranches as $branch)
                 <div class="bg-white rounded-md p-4 mb-4 border-2 border-gray-300 mx-4 ">
                     <p class="text-lg font-semibold text-gray-800">{{ $branch->br_name }}
+
                         ({{ $branch->br_code }})
                     </p>
                     <div class="flex items-center mt-1">
-                        <img src="{{$branch->us_image}}" alt="Photo User" class="w-12 h-12 rounded-full mr-3 ">
+                        <img src="{{ $branch->us_image }}" alt="Photo User" class="w-12 h-12 rounded-full mr-3 ">
                         <div>
                             <p class="text-gray-700 font-medium">ผู้ดูแล {{ $branch->manager->us_fname ?? '-' }}
                                 {{ $branch->manager->us_lname ?? '-' }}</p>
@@ -90,13 +92,10 @@
                                 @php
                                     $role = $branch->manager->us_role ?? '-';
                                     $roleColor = match ($role) {
-                                        'CEO' => 'text-yellow-700 border-yellow-700',
                                         'Sales Supervisor' => 'text-purple-600 border-purple-400',
-                                        'Sales' => 'text-blue-500 border-blue-300',
                                         default => 'text-gray-500 border-gray-300',
                                     };
                                 @endphp
-
                                 <span class="px-2 py-1 border text-xs rounded-full bg-white {{ $roleColor }}">
                                     {{ $role }}
                                 </span>

@@ -6,13 +6,13 @@
     @author : นนทพัทธ์ ศิลธรรม 66160104
     @create date : 05/04/2568
 --}}
-    @php
+    {{-- @php
         use Illuminate\Support\Facades\Auth;
-    @endphp
+    @endphp --}}
 
     @if ($userRole === 'CEO')
-        {{-- จัดอันดับ --}}
         <div class="pt-16 bg-white-100 w-full">
+            {{-- Icon --}}
             <div class="mb-4 px-4">
                 <div class="text-white border-[#4D55A0] text-2xl font-semibold px-4 py-3 rounded-2xl flex items-center w-full"
                     style="background-color: #4D55A0;">
@@ -20,30 +20,35 @@
                 </div>
                 <div class="flex justify-center gap-12 mt-5">
                     <div class="text-center">
-                        <div class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
                             <i class="fa-solid fa-box fa-2xl text-white"></i>
                         </div>
-                        <p class="mt-2">จำนวนยอดขาย</p>
-                        <p class="font-bold">{{ number_format($totalSales) }}</p>
+                        <p class="mt-2 text-sm">จำนวนยอดขาย</p>
+                        <p class="font-bold text-sm">{{ number_format($totalSales) }}</p>
                     </div>
 
                     <div class="text-center">
-                        <div class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
                             <i class="fa-solid fa-warehouse fa-2xl text-white"></i>
                         </div>
-                        <p class="mt-2">จำนวนสาขา</p>
-                        <p class="font-bold">{{ number_format($totalBranches) }}</p>
+                        <p class="mt-2 text-sm">จำนวนสาขา</p>
+                        <p class="font-bold text-sm">{{ number_format($totalBranches) }}</p>
                     </div>
 
                     <div class="text-center">
-                        <div class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
                             <i class="fa-solid fa-user-tie fa-2xl text-white"></i>
                         </div>
-                        <p class="mt-2">จำนวนสมาชิก</p>
-                        <p class="font-bold">{{ number_format($totalEmployees) }}</p>
+                        <p class="mt-2 text-sm">จำนวนสมาชิก</p>
+                        <p class="font-bold text-sm">{{ number_format($totalEmployees) }}</p>
                     </div>
                 </div>
             </div>
+
+            {{-- Ranking --}}
             <div class="bg-white rounded-2xl shadow border m-3 pb-4">
                 <div class="flex flex-row">
                     <h3 id="rankTitle" class="font-semibold text-lg mt-1 p-4">สาขาที่ทำยอดขายดีที่สุด</h3>
@@ -59,7 +64,7 @@
                 <div id="branchRank">
                     @foreach ($topBranch as $index => $alluser)
                         <div
-                            class="p-4 {{ $index == 0 ? 'bg-[#4D55A0] text-white w-full shadow-[0px_3px_5px_rgba(0,0,0,1)]' : 'bg-white border border-[#CAC4D0] rounded-2xl mx-4 shadow-[0px_4px_5px_rgba(0,0,0,0.2)]' }}  mb-4 pb-2 flex items-center min-h-[140px]">
+                            class="p-5 {{ $index == 0 ? 'bg-[#4D55A0] text-white w-full shadow-[0px_3px_5px_rgba(0,0,0,1)]' : 'bg-white border border-[#CAC4D0] rounded-2xl mx-4 shadow-[0px_4px_5px_rgba(0,0,0,0.2)]' }}  mb-4 pb-2 flex items-center min-h-[140px]">
                             <div class="flex flex-col">
                                 <h2 class="text-lg font-bold">สาขาที่ {{ $alluser->br_id }}</h2>
                                 <div class="flex items-center my-2">
@@ -116,7 +121,7 @@
                 <div id="userRank" style="display: none;">
                     @foreach ($topUsers as $index => $topUser)
                         <div
-                            class="p-4 {{ $index == 0 ? 'bg-[#4D55A0] text-white w-full shadow-[0px_3px_5px_rgba(0,0,0,1)]' : 'bg-white border border-[#CAC4D0] rounded-lg mx-4 shadow-[0px_4px_5px_rgba(0,0,0,0.2)]' }}  mb-4 pb-2 flex items-center min-h-[140px]">
+                            class="p-5 {{ $index == 0 ? 'bg-[#4D55A0] text-white w-full shadow-[0px_3px_5px_rgba(0,0,0,1)]' : 'bg-white border border-[#CAC4D0] rounded-2xl mx-4 shadow-[0px_4px_5px_rgba(0,0,0,0.2)]' }}  mb-4 pb-2 flex items-center min-h-[140px]">
                             <img src="{{ $topUser->us_image }}" class="w-12 h-12 rounded-full border-2 border-white"
                                 alt="user">
                             <div class="ml-4">
@@ -142,7 +147,7 @@
                                             1
                                         </span>
                                     </div>
-                                    <span class="text-sm font-semibold mt-1"
+                                    <span class=" font-semibold mt-1"
                                         id="amountUser{{ $index }}">{{ number_format($topUser->branch_count) }}
                                     </span>
                                 @elseif ($index == 1)
@@ -153,7 +158,7 @@
                                             2
                                         </span>
                                     </div>
-                                    <span class="text-sm font-semibold mt-1"
+                                    <span class="text-lg font-semibold mt-1"
                                         id="amountUser{{ $index }}">{{ number_format($topUser->branch_count) }}
                                     </span>
                                 @elseif ($index == 2)
@@ -164,11 +169,11 @@
                                             3
                                         </span>
                                     </div>
-                                    <span class="text-sm font-semibold mt-1"
+                                    <span class="text-lg font-semibold mt-1"
                                         id="amountUser{{ $index }}">{{ number_format($topUser->branch_count) }}
                                     </span>
                                 @else
-                                    <span class="text-sm font-semibold mt-1"
+                                    <span class="text-lg font-semibold mt-1"
                                         id="amountUser{{ $index }}">{{ number_format($topUser->branch_count) }}
                                     </span>
                                 @endif
@@ -181,7 +186,7 @@
 
             {{-- //@auther : boom --}}
             {{-- all Order Graph --}}
-            <div class="bg-white rounded-2xl shadow border m-3 p-4">
+            <div class="bg-white rounded-2xl shadow border m-3 p-5">
                 <div class="flex justify-between items-center">
                     <div>
                         <p class="text-gray-500 text-sm">ยอดขายทั้งหมดในปีนี้</p>
@@ -206,7 +211,7 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow border m-3 p-4">
+            <div class="bg-white rounded-2xl shadow border m-3 p-5">
                 <p class="text-lg font-bold text-gray-800 mb-2">ยอดขายในปีนี้</p>
 
                 <div class="w-full h-[400px] sm:h-[500px] relative">
@@ -279,6 +284,44 @@
         </div>
     @elseif ($userRole === 'Sales Supervisor')
         <div class="pt-16 bg-white-100 w-full">
+
+            {{-- Icon --}}
+            <div class="mb-4 px-4">
+                <div class="text-white border-[#4D55A0] text-2xl font-semibold px-4 py-3 rounded-2xl flex items-center w-full"
+                    style="background-color: #4D55A0;">
+                    ปี {{ $currentYear }} (ปัจจุบัน)
+                </div>
+                <div class="flex justify-center gap-12 mt-5">
+                    <div class="text-center">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-box fa-2xl text-white"></i>
+                        </div>
+                        <p class="mt-2 text-sm">จำนวนยอดขาย</p>
+                        <p class="font-bold text-sm">{{ number_format($totalSales) }}</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-warehouse fa-2xl text-white"></i>
+                        </div>
+                        <p class="mt-2 text-sm">จำนวนสาขา</p>
+                        <p class="font-bold text-sm">{{ number_format($totalBranches) }}</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div
+                            class="bg-[#4D55A0] w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-user-tie fa-2xl text-white"></i>
+                        </div>
+                        <p class="mt-2 text-sm">จำนวนสมาชิก</p>
+                        <p class="font-bold text-sm">{{ number_format($salesCount) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Ranking--}}
             <div class="bg-white rounded-2xl shadow border m-3 pb-4">
                 <div class="flex flex-row">
                     <h3 id="rankTitle" class="font-semibold text-lg mt-1 p-4">สาขาที่ทำยอดขายดีที่สุด</h3>
