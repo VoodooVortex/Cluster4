@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-    <div class="w-full mx-auto mt-16 mb-10 space-y-6 px-6">
+    <div class="w-full mx-auto mt-16 mb-10 space-y-6">
         <div class="mb-2 px-4">
             <label
                 class="bg-[#4D55A0] text-white border-[#4D55A0] text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full pl-4">
@@ -9,7 +9,7 @@
         </div>
         <div class="flex justify-between items-center px-4">
             <!-- ฝั่งซ้าย -->
-            <h1 class="text-3xl font-bold">ยอดรวมของปี {{ $selectedYear }}</h1>
+            <h1 class="text-xl font-bold">ยอดรวมของปี {{ $selectedYear }}</h1>
 
             <!-- ฝั่งขวา: ปุ่ม dropdown -->
             <div class="relative inline-block text-left w-[120px]" x-data="{ open: false }">
@@ -41,11 +41,11 @@
         </div>
 
         <div class="mb-4 px-4">
-            <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow">
+            <div class="bg-white border border-gray-200 rounded-2xl p-3 shadow">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500">ยอดรวมทั้งหมดของปี {{ $selectedYear }}</p>
-                        <div class="text-3xl font-bold my-3 flex items-center">
+                        <div class="text-2xl font-bold my-2 flex items-center">
                             <span>{{ number_format($totalAmount) }} ชิ้น</span>
                             @if ($growthPercentage > 0)
                                 <span class="ml-4 text-sm text-green-600">
@@ -96,7 +96,8 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500">จำนวนสาขาทั้งหมด</p>
-                        <p class="text-3xl font-bold">{{ number_format($currentYearBranches) }} สาขา</p>
+                        <p class="text-2xl font-bold my-1 flex items-center">{{ number_format($currentYearBranches) }} สาขา
+                        </p>
                         <p class="text-green-600 text-sm">จำนวนสาขาเพิ่มขึ้นเฉลี่ย {{ $growthPercentageBranches }}%</p>
                     </div>
                     <div class="flex flex-col items-center"> <!-- flex column ที่นี่ -->
@@ -114,7 +115,7 @@
         <!-- กราฟอัตราการเติบโตสาขา -->
         <div class="mb-4 px-4">
             <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow">
-                <div class="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
+                <div class="w-full h-full sm:h-[350px] md:h-[400px] lg:h-[450px]">
                     <canvas id="branchChart" class="w-full h-full max-w-full max-h-full"></canvas>
                 </div>
             </div>
@@ -125,7 +126,8 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500">จำนวนพนักงานทั้งหมด</p>
-                        <p class="text-3xl font-bold">{{ number_format($currentYearEmployeeCount) }} คน</p>
+                        <p class="text-2xl font-bold my-1 flex items-center">{{ number_format($currentYearEmployeeCount) }}
+                            คน</p>
                         <p class="text-green-600 text-sm">จำนวนพนักงานเพิ่มขึ้นเฉลี่ย {{ $growthPercentagemployee }}%</p>
                     </div>
                     <div class="flex flex-col items-center"> <!-- flex column ที่นี่ -->
@@ -154,7 +156,7 @@
         <!-- กราฟอัตราการเติบโตพนักงาน -->
         <div class="mb-4 px-4">
             <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow">
-                <div class="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
+                <div class="w-full h-full sm:h-[350px] md:h-[400px] lg:h-[450px]">
                     <canvas id="employeeChart" class="w-full h-full max-w-full max-h-full"></canvas>
                 </div>
             </div>
