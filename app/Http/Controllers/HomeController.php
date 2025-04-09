@@ -384,6 +384,7 @@ class HomeController extends Controller
             return view(
                 'homePage',
                 compact(
+                    'currentYear',
                     'userRole',
                     'topBranch',
                     'topUsers',
@@ -420,6 +421,15 @@ class HomeController extends Controller
         } else if (Auth::check() && Auth::user()->us_role === 'Sales Supervisor') {
 
             $currentUserId = Auth::user()->us_id;
+
+            // ดึงรายชื่อ user ที่มี us_head = คนที่ login
+            $userIdsOrder = User::where('us_head', $currentUserId)
+                ->pluck('us_id');
+
+            $branchIds = Branch::whereIn('br_us_id', $userIdsOrder)
+                ->pluck('br_id');
+
+
 
             //Show top 5 branch
             $currentYear = Carbon::now()->year + 543;
@@ -497,7 +507,15 @@ class HomeController extends Controller
 
             $thisYear = Carbon::now()->year + 543;
             // ยอดขายทั้งหมดปีนี้
-            $totalSales = Order::where('od_year', $thisYear)->sum('od_amount');
+            // $totalSales = Order::where('od_year', $thisYear)
+            // ->whereIn('od_br_id',$branchIds)->sum('od_amount');
+            $totalSales = Order::whereIn('od_br_id', $branchIds)->sum('od_amount');
+
+            dd($totalSales);
+
+
+
+
 
             // ยอดขายปีก่อนหน้า
             $previousYearSales = Order::where('od_year', $thisYear - 1)->sum('od_amount');
@@ -810,6 +828,7 @@ class HomeController extends Controller
             return view(
                 'homePage',
                 compact(
+                    'currentYear',
                     'userRole',
                     'topBranch',
                     'topUsers',
