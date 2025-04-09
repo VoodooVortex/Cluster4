@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('content')
-    <div class="pt-16 min-h-screen px-4 bg-white mb-12">
+    <div class="pt-16 min-h-screen px-4 bg-white">
         {{--  @author : 66160381 --}}
         {{-- Header --}}
         <div class="w-full space-y-4 pt-4 pb-4">
@@ -50,20 +50,20 @@
 
 
         {{-- กราฟยอดขาย --}}
-        <div class="bg-white border p-4 rounded-lg shadow mt-4" style="height: auto">
+        <div class="bg-white p-4 rounded-lg shadow mt-4" style="height: auto">
             <div class="flex justify-between items-center mb-4">
                 <p class="text-lg font-bold">ยอดขายในปีนี้</p>
                 <div id="custom-legend" class="flex gap-4 items-center text-sm"></div>
             </div>
-            <div class="w-full h-[400px]">
-                <canvas id="orderTotalChart"></canvas>
+            <div class="w-full" style="max-height: 400px; overflow: hidden;">
+                <canvas id="orderTotalChart" width="600" height="400"></canvas>
             </div>
         </div>
 
 
         {{-- จำนวนออเดอร์ทั้งหมด --}}
-        <div class="w-full mt-4">
-            <div class="bg-white border shadow-md rounded-2xl p-6 flex items-center justify-between">
+        <div class="w-full mt-8">
+            <div class="bg-white shadow-md rounded-2xl p-6 flex items-center justify-between">
                 <div>
                     <h4 class=" text-l mb-4">จำนวนออเดอร์ทั้งหมด</h4>
                     <h2 class="text-3xl font-bold text-gray-800">{{ number_format(array_sum($orderData)) }} ชิ้น</h2>
@@ -76,11 +76,11 @@
 
 
         {{-- ยอดขายรายเดือน --}}
-        <div class="w-full bg-white space-y-4 mt-4">
+        <div class="w-full bg-white space-y-4 mt-8">
 
             <!-- ฟอร์มแก้ไขในหน้า orderDetail.blade.php -->
             @foreach ($monthMap as $monthName => $monthNumber)
-                <div class="bg-white border shadow-md rounded-xl px-4 py-3 mt-4 flex justify-between items-center">
+                <div class="bg-white shadow-md rounded-xl px-4 py-3 mt-4 flex justify-between items-center">
                     <div>
                         <h3 class="text-base font-semibold text-gray-800">
                             ยอดขายเดือน{{ $monthName }} {{ $thisyear }}
@@ -105,7 +105,7 @@
                                     @csrf
                                     @method('PUT')
                                     <li>
-                                        <button type="submit" class="block px-4 py-2 hover:bg-gray-50 w-full text-left">
+                                        <button type="submit" class="block px-4 py-2 hover:bg-gray-100">
                                             แก้ไข
                                         </button>
                                     </li>
@@ -117,7 +117,7 @@
                                     method="POST">
                                     @csrf
                                     <li>
-                                        <button type="submit" class="block px-4 py-2 text-red-600 hover:bg-red-50 w-full text-left" onclick="deleteOrder(event, {{ $monthNumber }})"">
+                                        <button type="submit" class="block px-4 py-2 text-red-600 hover:bg-red-50" onclick="deleteOrder(event, {{ $monthNumber }})">
                                             ลบ
                                         </button>
                                     </li>
@@ -133,28 +133,33 @@
 
     </div>
 @endsection
+
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <script>
-        const monthlySales = @json($orderData ?? []);
-        const labels = @json($month ?? []);
-        const monthlyMedian = @json($medain ?? []);
+        const monthlySales = @json($orderData); // ข้อมูลยอดขายรายเดือน
+        const labels = @json($month); // ชื่อเดือนที่ใช้เป็น labels สำหรับกราฟ
+        const monthlyMedian = @json($medain); // ค่ามัธยฐานสำหรับกราฟ
 
         const ctxOrder = document.getElementById('orderTotalChart').getContext('2d');
+
+        // หาค่ามากสุดจากยอดขายในเดือนต่างๆ
         const maxSales = Math.max(...Object.values(monthlySales));
+
+
         const maxValue = Math.pow(10, Math.ceil(Math.log10(maxSales)));
 
         const salesChart = new Chart(ctxOrder, {
             type: 'line',
             data: {
-                labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
-                datasets: [
-                    {
+                labels: labels,
+                datasets: [{
                         label: 'ยอดขายในเดือนนี้',
+                        type: 'line',
                         data: Object.values(monthlySales),
                         borderColor: 'rgba(54, 79, 199, 0.8)',
-                        backgroundColor: 'rgba(54, 79, 199, 1)',
+                        backgroundColor: 'rgba(54, 79, 199, 0.8)',
                         borderWidth: 2,
                         pointRadius: 4,
                         tension: 0.3,
@@ -164,6 +169,7 @@
                     },
                     {
                         label: 'ค่ามัธยฐาน',
+                        type: 'line',
                         data: Object.values(monthlyMedian),
                         borderColor: 'rgba(255, 99, 132, 1)',
                         backgroundColor: 'rgba(255, 99, 132, 1)',
@@ -177,12 +183,12 @@
                 ]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
+                responsive: true, // ยืดหยุ่นตามขนาดหน้าจอ
+                maintainAspectRatio: false, // คงอัตราส่วนของกราฟ
                 layout: {
                     padding: {
-                        top: 20,
-                        bottom: 20
+                        top: 20, // เพิ่ม padding ด้านบนเพื่อไม่ให้กราฟถูกตัด
+                        bottom: 20 // เพิ่ม padding ด้านล่างเพื่อไม่ให้กราฟถูกตัด
                     }
                 },
                 plugins: {
@@ -197,17 +203,32 @@
                 scales: {
                     y: {
                         beginAtZero: true,
+                        type: 'logarithmic',
+                        min: 0,
+                        max: maxValue, // กำหนด max จากระดับที่คำนวณ
                         ticks: {
+                            autoSkip: false,
+                            stepSize: 1000,
                             callback: function(value) {
-                                return value.toLocaleString(); 
+                                const allowedTicks = [1, 1000, 10000, 100000, 1000000, 100000000];
+                                if (allowedTicks.includes(value)) {
+                                    return value.toLocaleString(); // แสดงตัวเลขพร้อมคอมม่า
+                                }
+                                return '';
                             }
                         },
-                    grid: {
-                        drawTicks: true, 
-                        drawOnChartArea: true, 
-                        color: 'rgba(0, 0, 0, 0.1)', 
-                        
-                    }
+                        grid: {
+                            drawTicks: true,
+                            drawOnChartArea: true,
+                            color: function(context) {
+                                const tickValue = context.tick.value;
+                                const allowedTicks = [0, 1000, 10000, 100000, 1000000, 100000000];
+                                if (allowedTicks.includes(tickValue)) {
+                                    return 'rgba(0, 0, 0, 0.1)';
+                                }
+                                return 'transparent';
+                            }
+                        }
                     },
                     x: {
                         ticks: {
@@ -221,48 +242,54 @@
             }
         });
 
-        // Custom Legend
+        // กำหนด Legend จุด . ด้านบน
         const legendContainer = document.getElementById('custom-legend');
         legendContainer.innerHTML = salesChart.data.datasets.map(dataset => {
             const color = dataset.backgroundColor || dataset.borderColor;
             return `
-                <div class="flex items-center gap-1">
-                    <span class="w-3 h-3 rounded-full inline-block" style="background-color: ${color};"></span>
-                    <span>${dataset.label}</span>
-                </div>
-            `;
+            <div class="flex items-center gap-1">
+                <span class="w-3 h-3 rounded-full inline-block" style="background-color: ${color};"></span>
+                <span>${dataset.label}</span>
+            </div>
+        `;
         }).join('');
 
         // Delete Order
         function deleteOrder(event, monthNumber) {
-            const form = document.getElementById(`deleteOrder-${monthNumber}`);
+            const deleteAlert = '/public/alert-icon/DeleteAlert.png';
+            const successAlert = '/public/alert-icon/SuccessAlert.png';
+
+            event.preventDefault(); // หยุดการส่งฟอร์ม
+
+            const form = document.getElementById('deleteOrder'); // ดึงฟอร์มลบผู้ใช้
+
             Swal.fire({
-                title: 'ยืนยันการลบยอดขาย',
-                showCancelButton: true,
-                confirmButtonText: 'ยืนยัน',
-                cancelButtonText: 'ยกเลิก',
-                reverseButtons: true,
-                imageUrl: '/public/alert-icon/DeleteAlert.png',
-                customClass: {
-                    confirmButton: 'swal2-delete-custom',
-                    cancelButton: 'swal2-cancel-custom',
-                    title: 'no-padding-title',
-                    actions: 'swal2-actions-gap',
+                title: 'ยืนยันการลบยอดขาย', // ข้อความยืนยันการลบ
+                showCancelButton: true, // แสดงปุ่มยกเลิก
+                confirmButtonText: 'ยืนยัน', // ปุ่มยืนยัน
+                cancelButtonText: 'ยกเลิก', // ปุ่มยกเลิก
+                reverseButtons: true, // ปรับตำแหน่งปุ่ม
+                imageUrl: deleteAlert, // รูปภาพแจ้งเตือน
+                customClass: { // กำหนด class ของปุ่ม
+                    confirmButton: 'swal2-delete-custom', // class ปุ่มยืนยัน
+                    cancelButton: 'swal2-cancel-custom', // class ปุ่มยกเลิก
+                    title: 'no-padding-title', // class title
+                    actions: 'swal2-actions-gap', // class actions
                 },
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: 'ดำเนินการเสร็จสิ้น',
-                        confirmButtonText: 'ตกลง',
-                        imageUrl: '/public/alert-icon/SuccessAlert.png',
-                        customClass: {
-                            confirmButton: 'swal2-success-custom',
-                            title: 'no-padding-title',
+                buttonsStyling: false // ปิดการใช้งานสไตล์ปุ่มเริ่มต้นของ SweetAlert
+            }).then((result) => { // เมื่อกดปุ่ม
+                if (result.isConfirmed) { // ถ้ากดปุ่มยืนยัน
+                    Swal.fire({ // แสดง SweetAlert ใหม่
+                        title: 'ดำเนินการเสร็จสิ้น', // ข้อความแจ้งเตือน
+                        confirmButtonText: 'ตกลง', // ปุ่มตกลง
+                        imageUrl: successAlert, // รูปภาพแจ้งเตือน
+                        customClass: { // กำหนด class ของปุ่ม
+                            confirmButton: 'swal2-success-custom', // class ปุ่มตกลง
+                            title: 'no-padding-title', // class title
                         },
-                        buttonsStyling: false
-                    }).then(() => {
-                        form.submit();
+                        buttonsStyling: false // ปิดการใช้งานสไตล์ปุ่มเริ่มต้นของ SweetAlert
+                    }).then(() => { // เมื่อกดปุ่มตกลง
+                        form.submit(); // ส่งฟอร์มลบผู้ใช้
                     });
                 }
             });
