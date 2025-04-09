@@ -62,8 +62,8 @@ Route::get('/cluster4/order-detail/{br_id}', [OrderController::class, 'order_det
 
 Route::get('/cluster4/order', [OrderController::class, 'index'])->name('order');
 
-Route::get('/cluster4/add-order', [OrderController::class, 'add_order']);
+Route::get('/cluster4/add-order/{br_id}/{month}', [OrderController::class, 'add_order'])->name('add.order');
 
-Route::get('/cluster4/order-status', [OrderController::class, 'status'])->name('order.status');
+Route::post('/cluster4/store-order', [OrderController::class, 'storeOrder'])->name('storeOrder');
 
 Route::get('/cluster4/employee', [UserController::class, 'Emp_GrowRate']);
