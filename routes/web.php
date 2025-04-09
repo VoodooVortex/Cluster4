@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SalesTeamController;
 use App\Http\Middleware\CheckGoogleLogin;
 use Doctrine\DBAL\Driver\Middleware;
@@ -66,7 +65,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         //CEO
         Route::get('/branchMyMap', [BranchController::class, 'index'])->name('branchMyMap');
-      
+
         //Sales Supervisor
         Route::get('/report/sales-supervisor', [ReportController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
 
