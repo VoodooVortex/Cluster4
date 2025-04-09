@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\reportSalesSupervisorController;
+use App\Http\Controllers\SalesSupervisorController;
 use App\Http\Controllers\NearbyController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\branchController;
 use App\Http\Controllers\HomeController;
-
 use App\Livewire\MapLocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +62,8 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::put('/edit-user', [UserController::class, 'edit_action'])->name('edit.user');
 
         Route::get('/branchMyMap', [branchController::class, 'index'])->name('branchMyMap');
+
+        Route::get('/reportSalesSupervisor', [reportSalesSupervisorController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
 
         Route::get('/map', MapLocation::class)->name('map');
 
