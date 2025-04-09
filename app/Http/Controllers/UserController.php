@@ -51,8 +51,19 @@ class UserController extends Controller
             $muser->us_lname = $request->lastname;
             $muser->us_email = $request->email;
             $muser->us_role = $request->role;
-            $muser->us_head = $request->head;
+
+            // ถ้าเป็น Sales ใส่ us_head จากฟอร์มเลย
+            if ($request->role === 'Sales') {
+                $muser->us_head = $request->head;
+            }
+
             $muser->save();
+
+            // ถ้าไม่ใช่ Sales ให้ update us_head หลังจากมี us_id แล้ว
+            if ($request->role !== 'Sales') {
+                $muser->us_head = $muser->us_id;
+                $muser->save();
+            }
 
             return redirect()->route('manage.user')->with('success', 'เพิ่มผู้ใช้งานสำเร็จ');
         }

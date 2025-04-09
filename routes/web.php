@@ -1,6 +1,8 @@
 <?php
 
+
 use App\Http\Controllers\branchSalesController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\reportSalesSupervisorController;
 use App\Http\Controllers\SalesSupervisorController;
 use App\Http\Controllers\NearbyController;
@@ -14,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SalesTeamController;
 use App\Http\Middleware\CheckGoogleLogin;
 use Doctrine\DBAL\Driver\Middleware;
@@ -64,10 +65,16 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::put('/edit-user', [UserController::class, 'edit_action'])->name('edit.user');
 
+        //CEO
         Route::get('/branchMyMap', [BranchController::class, 'index'])->name('branchMyMap');
+
+        //Sales Supervisor
+        Route::get('/report/sales-supervisor', [ReportController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
+
         Route::get('/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
-        Route::get('/reportSalesSupervisor', [reportSalesSupervisorController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
+        //Sales Supervisor ดูสาขาลูกทีม
+        Route::get('/report/sales-team', [ReportController::class, 'reportSaleTeam'])->name('reportSalesTeam');
 
         // ดูสาขาฉัน role Sales
         Route::get('/branch-Sales', [branchSalesController::class, 'branchSales'])->name('branch-Sales');
@@ -76,6 +83,8 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
 
         Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
+
+        Route::get('/cluster4/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
 
         Route::get('/order', [OrderController::class, 'index'])->name('order');

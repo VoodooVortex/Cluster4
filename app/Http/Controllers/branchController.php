@@ -13,6 +13,7 @@ class BranchController extends Controller
 {
     public function index(Request $request)
     {
+
         // รับค่าจากผู้ใช้ใช้งาน
 
         $sort = $request->get('sort', 'desc'); // sort เรียงยอดขายจากมากไปน้อยหรือน้อยไปมาก โดยที่ค่าเริ่มต้นคือมากไปน้อย
@@ -151,7 +152,7 @@ class BranchController extends Controller
             'monthMap'   => $this->monthMap,
             'thisyear'   => $thaiYear,
             'median'     => $median,
-            'totalSales' => $totalSales,
+           'totalSales' => $totalSales,
         ]);
     }
 
@@ -220,9 +221,9 @@ class BranchController extends Controller
             AND od_month IN ('$monthsStr')
         ) as ranked
         "))
-            ->where('rn', 1)
-            ->select('od_month', 'od_amount', 'od_br_id', 'od_id')
-            ->get();
+        ->where('rn', 1)
+        ->select('od_month', 'od_amount', 'od_br_id', 'od_id')
+        ->get();
 
         // จัดกลุ่มยอดขายตามเดือน
         $monthlyData = [];
@@ -265,20 +266,20 @@ class BranchController extends Controller
     private function totalSales($br_id, $thaiYear)
     {
         $totalSales = DB::table('order')
-            ->where('od_br_id', $br_id)
-            ->where('od_year', $thaiYear)
-            ->whereNull('deleted_at')
-            ->select('od_month', DB::raw('MAX(od_id) as max_od_id'))
-            ->groupBy('od_month')
-            ->get();
+        ->where('od_br_id', $br_id)
+        ->where('od_year', $thaiYear)
+        ->whereNull('deleted_at')
+        ->select('od_month', DB::raw('MAX(od_id) as max_od_id'))
+        ->groupBy('od_month')
+        ->get();
 
-        $totalSalesAmount = DB::table('order')
-            ->where('od_br_id', $br_id)
-            ->where('od_year', $thaiYear)
-            ->whereNull('deleted_at')
-            ->whereIn('od_id', $totalSales->pluck('max_od_id'))
-            ->sum('od_amount');
+    $totalSalesAmount = DB::table('order')
+        ->where('od_br_id', $br_id)
+        ->where('od_year', $thaiYear)
+        ->whereNull('deleted_at')
+        ->whereIn('od_id', $totalSales->pluck('max_od_id'))
+        ->sum('od_amount');
 
-        return $totalSalesAmount;
+    return $totalSalesAmount;
     }
 }

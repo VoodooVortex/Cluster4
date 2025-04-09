@@ -93,6 +93,7 @@
                                     $role = $branch->manager->us_role ?? '-';
                                     $roleColor = match ($role) {
                                         'Sales Supervisor' => 'text-purple-600 border-purple-400',
+                                        'Sales' => 'text-blue-300 border-blue-300',
                                         default => 'text-gray-500 border-gray-300',
                                     };
                                 @endphp
