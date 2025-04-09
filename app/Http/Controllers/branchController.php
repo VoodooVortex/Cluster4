@@ -13,6 +13,7 @@ class BranchController extends Controller
 {
     public function index(Request $request)
     {
+
         // รับค่าจากผู้ใช้ใช้งาน
 
         $sort = $request->get('sort', 'desc'); // sort เรียงยอดขายจากมากไปน้อยหรือน้อยไปมาก โดยที่ค่าเริ่มต้นคือมากไปน้อย
@@ -116,7 +117,7 @@ class BranchController extends Controller
         $thaiYear = Carbon::now()->year + 543;
         $branch = Branch::findOrFail($br_id);
         $user = User::findOrFail($branch->br_us_id);
-        
+
 
         $monthlyOrders = $this->getMonthlyOrder($br_id, $thaiYear);
         $orderData = $this->formatOrderData($monthlyOrders);
@@ -132,11 +133,11 @@ class BranchController extends Controller
             'monthMap'   => $this->monthMap,
             'thisyear'   => $thaiYear,
             'median'     => $median,
-           'totalSales' => $totalSales, 
+           'totalSales' => $totalSales,
         ]);
     }
 
-   
+
     private function getMonthlyOrder($br_id, $thisYear)
     {
         return DB::table('order as o')
@@ -170,12 +171,12 @@ class BranchController extends Controller
     {
         $data = [];
 
-        
+
         foreach (range(1, 12) as $month) {
             $data[$month] = 0;
         }
 
-       
+
         foreach ($monthlyOrders as $order) {
             $month = $this->monthMap[$order->od_month] ?? null;
             if ($month) {
@@ -197,11 +198,11 @@ class BranchController extends Controller
                 ORDER BY od_id DESC
             ) as rn
             FROM `order`
-            WHERE od_year = $thaiYear 
+            WHERE od_year = $thaiYear
             AND od_month IN ('$monthsStr')
         ) as ranked
         "))
-        ->where('rn', 1) 
+        ->where('rn', 1)
         ->select('od_month', 'od_amount', 'od_br_id', 'od_id')
         ->get();
 
@@ -221,7 +222,7 @@ class BranchController extends Controller
         foreach ($this->thaiMonths as $month) {
             if (isset($monthlyData[$month])) {
                 $amounts = $monthlyData[$month];
-                sort($amounts);  
+                sort($amounts);
 
                 $count = count($amounts);
                 $middle = floor($count / 2);
@@ -242,23 +243,23 @@ class BranchController extends Controller
         return $monthlyMedian;
     }
 
-    
+
     private function totalSales($br_id, $thaiYear)
     {
         $totalSales = DB::table('order')
         ->where('od_br_id', $br_id)
         ->where('od_year', $thaiYear)
         ->whereNull('deleted_at')
-        ->select('od_month', DB::raw('MAX(od_id) as max_od_id'))  
-        ->groupBy('od_month')  
+        ->select('od_month', DB::raw('MAX(od_id) as max_od_id'))
+        ->groupBy('od_month')
         ->get();
 
     $totalSalesAmount = DB::table('order')
         ->where('od_br_id', $br_id)
         ->where('od_year', $thaiYear)
         ->whereNull('deleted_at')
-        ->whereIn('od_id', $totalSales->pluck('max_od_id'))  
-        ->sum('od_amount');  
+        ->whereIn('od_id', $totalSales->pluck('max_od_id'))
+        ->sum('od_amount');
 
     return $totalSalesAmount;
 
@@ -266,4 +267,4 @@ class BranchController extends Controller
 
     }
 
-}    
+}
