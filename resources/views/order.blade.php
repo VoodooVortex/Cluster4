@@ -62,7 +62,8 @@
                     <option value="">เลือกจังหวัด</option>
                     <option value="กรุงเทพมหานคร" {{ request('province') == 'กรุงเทพมหานคร' ? 'selected' : '' }}>
                         กรุงเทพมหานคร</option>
-                    <option value="เชียงใหม่" {{ request('province') == 'เชียงใหม่' ? 'selected' : '' }}>เชียงใหม่</option>
+                    <option value="เชียงใหม่" {{ request('province') == 'เชียงใหม่' ? 'selected' : '' }}>เชียงใหม่
+                    </option>
                     <option value="ขอนแก่น" {{ request('province') == 'ขอนแก่น' ? 'selected' : '' }}>ขอนแก่น</option>
                     <option value="นครราชสีมา" {{ request('province') == 'นครราชสีมา' ? 'selected' : '' }}>นครราชสีมา
                     </option>
@@ -183,41 +184,6 @@
                     @endforelse
                 </ul>
             </div>
-
-            {{-- <div id="notdone-list" class="hidden">
-                <div class="border border-gray-300 rounded-lg shadow-sm max-h-[325px] mx-4 overflow-y-auto">
-                    <ul>
-                        @forelse ($branchesWithoutSales as $branch)
-                            <li class="px-4 py-4 flex items-center border-b border-gray-300">
-                                <div class="flex items-center w-1/2 space-x-4">
-                                    <img src="{{ $branch->us_image }}" class="w-12 h-12 rounded-full ml-2" alt="User Image">
-                                    <div class="flex flex-col justify-center">
-                                        <div class="flex items-baseline space-x-1 whitespace-nowrap">
-                                            <span class="text-sm font-semibold">สาขา {{ $branch->br_name }}</span>
-                                            <span class="text-xs text-gray-500">({{ $branch->br_code }})</span>
-                                        </div>
-                                        <div class="text-xs text-gray-500">{{ $branch->us_email }}</div>
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col items-end w-1/2 justify-center">
-                                    <a href="{{ route('add.order', [ $branch->br_id, $branch->missing_month_number]) }}">
-                                        <div class="flex items-baseline space-x-1">
-                                            <span class="text-xs">ยอดขาย :</span>
-                                            <span class="text-xs text-red-500">ยังไม่มีข้อมูล</span>
-                                        </div>
-                                    </a>
-                                    <span class="text-xs text-gray-500">เดือน : {{ $branch->od_month }}</span>
-                                </div>
-                            </li>
-                            @empty
-                            <li class="px-4 py-4 flex items-center">
-                                <span class="text-sm">ไม่มีข้อมูลยอดขายในขณะนี้</span>
-                            </li>
-                        @endforelse
-                    </ul>
-                </div>
-            </div> --}}
         </div>
     </div>
 @endsection
