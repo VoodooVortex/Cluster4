@@ -61,15 +61,16 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::put('/edit-user', [UserController::class, 'edit_action'])->name('edit.user');
 
-        Route::get('/branchMyMap', [branchController::class, 'index'])->name('branchMyMap');
+        Route::get('/branchMyMap', [BranchController::class, 'index'])->name('branchMyMap');
 
         Route::get('/reportSalesSupervisor', [reportSalesSupervisorController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
 
         Route::get('/map', MapLocation::class)->name('map');
 
-        // Aninthita 66160381
+       
         Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
-
+        
+        Route::get('/cluster4/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
         Route::get('/order', [OrderController::class, 'index'])->name('order');
 
