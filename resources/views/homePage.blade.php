@@ -12,7 +12,6 @@
 
     @if ($userRole === 'CEO')
         <div class="pt-16 bg-white-100 w-full">
-
             {{-- Icon --}}
             <div class="mb-4 px-4">
                 <div class="text-white border-[#4D55A0] text-2xl font-semibold px-4 py-3 rounded-2xl flex items-center w-full"
