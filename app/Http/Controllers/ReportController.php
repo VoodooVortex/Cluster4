@@ -29,7 +29,7 @@ class ReportController extends Controller
         }
 
         // ดึงข้อมูลสาขา
-        $branchesQuery = Branch::withTrashed() //withTrashed() โหลดข้อมูลแม้แต่สาขาที่ถูก soft delete
+        $branchesQuery = Branch::withoutTrashed() //withTrashed() โหลดข้อมูลแม้แต่สาขาที่ถูก soft delete
             ->with([
                 'manager',
                 'order',
@@ -113,7 +113,7 @@ class ReportController extends Controller
         }
 
         // ดึงข้อมูลสาขา
-        $branchesQuery = Branch::withTrashed() //withTrashed() โหลดข้อมูลแม้แต่สาขาที่ถูก soft delete
+        $branchesQuery = Branch::withoutTrashed() //withTrashed() โหลดข้อมูลแม้แต่สาขาที่ถูก soft delete
             ->with([
                 'manager',
                 'order',
@@ -199,7 +199,7 @@ class ReportController extends Controller
         }
 
         // ดึงข้อมูลสาขา
-        $branchesQuery = Branch::withTrashed()
+        $branchesQuery = Branch::withoutTrashed()
             ->with([
                 'manager',
                 'order',

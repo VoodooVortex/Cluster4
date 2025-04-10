@@ -2,15 +2,23 @@
 
 @section('content')
     <div class="pt-16 h-screen mx-auto p-4 bg-white min-h-screen w-full">
-        <div class="mb-4 text-white text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
-            style="background-color: #4D55A0;">
-            <a href="{{ route('branchMyMap') }}">
-                <i class="fa-solid fa-arrow-left mx-3"></i>
-            </a>
-            ข้อมูลสาขา
+        <div class="mb-4">
+            <div class="text-white text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
+                style="background-color: #4D55A0;">
+                <a
+                    href="{{ auth()->user()->us_role === 'CEO'
+                        ? route('branchMyMap')
+                        : (auth()->user()->us_role === 'Sales'
+                            ? route('branch-Sales')
+                            : '') }}">
+                    <i class="fa-solid fa-arrow-left mx-3"></i>
+                </a>
+                ข้อมูลสาขา (ปี {{ now()->year + 543 }})
+            </div>
+
         </div>
 
-        <div class="w-full bg-white pb-5">
+        <div class="w-full bg-white">
 
             {{-- ข้อมูลสาขา --}}
             <div class="bg-white p-4 rounded-lg border shadow mt-4">
@@ -18,7 +26,7 @@
                 </h2>
 
                 <div class="bg-white p-4 rounded-lg shadow border mt-4 flex items-start space-x-4">
-                    <img src="{{ $branch->manager->us_image }}" alt="Manager Avatar"
+                    <img src="{{ $branch->manager->avatar ?? 'https://via.placeholder.com/48' }}" alt="Manager Avatar"
                         class="w-12 h-12 rounded-full object-cover" />
 
                     <div>
@@ -45,7 +53,7 @@
 
 
             {{-- กราฟยอดขาย --}}
-            <div class="mt-4 p-4 border shadow rounded-lg">
+            <div class="mt-4 px-4">
                 <p class="font-semibold text-lg mb-4">จำนวนยอดขาย</p>
 
                 <div class="w-full" style="height: 400px;">
@@ -64,6 +72,7 @@
     </div>
     </div>
 @endsection
+
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
@@ -112,7 +121,7 @@
                         pointRadius: 3,
                         pointBackgroundColor: 'rgba(59, 130, 246, 1)',
                         borderWidth: 2,
-                        order: 1,
+                        order: 2,
                     },
                     {
                         label: 'ค่ามัธยฐาน',
@@ -125,7 +134,7 @@
                         tension: 0.3,
                         spanGaps: true,
                         pointStyle: 'circle',
-                        order: 2,
+                        order: 1,
                     }
                 ]
             },
@@ -139,11 +148,6 @@
                             callback: function(value) {
                                 return value.toLocaleString();
                             }
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
                         }
                     }
                 },

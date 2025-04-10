@@ -1,7 +1,9 @@
 <?php
 
+
+use App\Http\Controllers\ReportSalesSupervisorController;
+use App\Http\Controllers\branchSalesController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\reportSalesSupervisorController;
 use App\Http\Controllers\SalesSupervisorController;
 use App\Http\Controllers\NearbyController;
 use App\Http\Controllers\UserController;
@@ -44,7 +46,7 @@ Route::middleware([CheckGoogleLogin::class])->group(
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-        Route::get('/report/sales-team', [SalesTeamController::class, 'index'])->name('team');
+        Route::get('/report/sales-team', [SalesTeamController::class, 'index'])->name('salesTeamMyMap');
 
         Route::get('/report/sales-team/{id}', [SalesTeamController::class, 'detail'])->name('team.detail');
 
@@ -66,20 +68,32 @@ Route::middleware([CheckGoogleLogin::class])->group(
         //CEO
         Route::get('/branchMyMap', [BranchController::class, 'index'])->name('branchMyMap');
 
+
         //Sales Supervisor
         Route::get('/report/sales-supervisor', [ReportController::class, 'sales_supervisor'])->name('reportSalesSupervisor');
 
-        Route::get('/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
 
         //Sales Supervisor ดูสาขาลูกทีม
-        Route::get('/report/sales-team', [ReportController::class, 'reportSaleTeam'])->name('reportSalesTeam');
+        Route::get('/report/sales-supervisor/team', [ReportController::class, 'reportSaleTeam'])->name('reportSalesTeam');
+
+        // ดูสาขาฉัน role Sales
+        Route::get('/branch-Sales', [branchSalesController::class, 'branchSales'])->name('branch-Sales');
 
         Route::get('/map', MapLocation::class)->name('map');
 
 
-        Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
+        // อันนี้คือไรไม่รู้มั้นมีอยู่ไม่กล้าลบทิ้ง
+        // Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail']);
 
-        Route::get('/cluster4/branch-detail/{br_id}', [BranchController::class, 'branch_detail'])->name('branchDetail');
+        // @author 66160381 Aninthita
+        Route::get('/branch-detail/{br_id}', [branchController::class, 'branch_detail'])->name('branchDetail');
+
+        //@author ryu
+        Route::get('/editOrder/{od_id}', [OrderController::class, 'editOrder'])->name('edit.order');
+        Route::put('/edit-order/{od_id}', [OrderController::class, 'update'])->name('update.order');
+        Route::get('/order-detail/{br_id}', [OrderController::class, 'order_detail'])->name('order.detail');
+        Route::post('/delete-order/{id}', [OrderController::class, 'delete_order_detail'])->name('delete.order');
+        Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
 
 
         Route::get('/order', [OrderController::class, 'index'])->name('order');
@@ -88,11 +102,18 @@ Route::middleware([CheckGoogleLogin::class])->group(
 
         Route::get('/nearby/{branchId}', [NearbyController::class, 'index'])->name('nearby');
 
-        Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
+
+        Route::get('/add-order/{br_id}/{month}', [OrderController::class, 'add_order'])->name('add.order');
+
+        Route::post('/store-order', [OrderController::class, 'storeOrder'])->name('storeOrder');
 
         Route::get('/order-status', [OrderController::class, 'status'])->name('order.status');
+
 
         Route::get('/reportCEO', [ReportController::class, 'report_CEO'])->name('report_CEO');
         Route::get('/report/team/{id}', [SalesTeamController::class, 'detail']);
+
+        Route::get('/report/SalesSup', [ReportSalesSupervisorController::class, 'reportSalesSupervisor1'])->name('report_SalesSupervisor');
+        Route::get('/report/SaleSup/Team', [ReportSalesSupervisorController::class, 'index'])->name('reportSale_sup2');
     }
 );
