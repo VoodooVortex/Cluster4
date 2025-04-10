@@ -37,9 +37,9 @@ Route::get('/logout', function () {
     return Redirect()->route('login');
 })->name('logout');
 
-Route::get('/cluster4/auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('redirect.google');
+Route::get('/auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('redirect.google');
 
-Route::get('/cluster4/auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
+Route::get('/auth/google/callback', [GoogleLoginController::class, 'googleCallback'])->name('callback.google');
 
 Route::middleware([CheckGoogleLogin::class])->group(
     function () {

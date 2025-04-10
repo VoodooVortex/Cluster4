@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>My Map</title>
-    <link rel="icon" type="image/png" href="/public/assets/image/logo-mymap.png">
+    <link rel="icon" type="image/png" href="./public/assets/image/logo-mymap.png">
 
     <!-- โหลดฟอนต์จาก Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,7 +51,7 @@
         src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
 
 
-    <link rel="stylesheet" href="/public/css/style.css">
+    <link rel="stylesheet" href="./public/css/style.css">
 
     @yield('styles')
 </head>
