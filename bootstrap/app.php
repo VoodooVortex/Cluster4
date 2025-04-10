@@ -14,8 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
         $middleware->validateCsrfTokens(
             except: [
-                'livewire/update/*',
-                'livewire/upload-file/*',
+                '*',
             ]
         );
         //
