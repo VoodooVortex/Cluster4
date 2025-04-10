@@ -1,15 +1,16 @@
 @extends('layouts.default')
 
 @section('content')
-    <div class="pt-16 min-h-screen px-4 bg-white">
+    <div class="pt-16 min-h-screen px-4 bg-white overflow-scroll overflow-hidden">
         {{--  @author : 66160381 --}}
         {{-- Header --}}
         <div class="w-full space-y-4 pt-4 pb-4">
-            <a href="{{ url('') }}"
-                class="text-white text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full bg-indigo-800">
-                <i class="fa-solid fa-arrow-left mx-3"></i>
-                ยอดขาย (สาขา {{ $branch->br_name }})
-            </a>
+            <div class="text-white text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full bg-[#4D55A0]">
+                <a href="{{ route('order') }}">
+                    <i class="fa-solid fa-arrow-left mx-3"></i>
+                </a>
+            </div>
+            ยอดขาย (สาขา {{ $branch->br_name }})
         </div>
 
         {{-- ข้อมูลผู้ดูแล --}}
@@ -153,7 +154,8 @@
             type: 'line',
             data: {
                 labels: ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.",
-                "ธ.ค."],
+                    "ธ.ค."
+                ],
                 datasets: [{
                         label: 'ยอดขายในเดือนนี้',
                         type: 'line',
@@ -215,18 +217,18 @@
                         },
                         grid: {
                             legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: {
-                                size: 12
-                            },
-                            usePointStyle: true,
-                            pointStyle: 'circle'
+                                position: 'bottom',
+                                labels: {
+                                    font: {
+                                        size: 12
+                                    },
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
+                                }
+                            }
                         }
-                    }
-                }
-                        
-                },
+
+                    },
                     x: {
                         ticks: {
                             autoSkip: false
