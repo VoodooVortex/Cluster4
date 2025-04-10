@@ -14,6 +14,8 @@ use Livewire\WithFileUploads;
 class MapLocation extends Component
 {
     use WithFileUploads;
+
+    public $geoJsonInterest;
     public $long, $lat;
     public $center = [100.5018, 13.7563]; // Bangkok coordinates
     public $mapBoxToken;
