@@ -252,7 +252,7 @@ class MapLocation extends Component
                     foreach ($this->imageBranch as $image) {
                         $imageName = time() . '_' . $image->getClientOriginalName();
                         $image->storeAs('images_branch', $imageName, 'public');
-                        $imageUrl = Storage::url('/app/public/images_branch/' . $imageName);
+                        $imageUrl = Storage::url('app/public/images_branch/' . $imageName);
                         $branch->image()->create([
                             'i_pathUrl' => $imageUrl,
                         ]);

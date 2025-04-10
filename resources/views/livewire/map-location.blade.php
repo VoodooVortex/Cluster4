@@ -38,14 +38,10 @@
 
             {{-- tab --}}
             <div class="border rounded-lg shadow my-4 mb-0">
-                <div class="grid grid-cols-2">
-                    <button class="tab-link px-6 py-3 rounded-t-lg border-r-2 transition-all duration-300 bg-white"
+                <div class="grid border-b">
+                    <button class="tab-link px-6 py-3 rounded-t-lg text-center transition-all duration-300 bg-white"
                         onclick="_openTab(event, 'branchTab')">
                         สาขา
-                    </button>
-                    <button class="tab-link px-6 py-3 rounded-t-lg border-l-2 transition-all duration-300 bg-gray-200"
-                        onclick="_openTab(event, 'otherTab')">
-                        อื่นๆ
                     </button>
                 </div>
 
