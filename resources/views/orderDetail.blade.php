@@ -9,8 +9,8 @@
                 <a href="{{ route('order') }}">
                     <i class="fa-solid fa-arrow-left mx-3"></i>
                 </a>
+                ยอดขาย (สาขา {{ $branch->br_name }})
             </div>
-            ยอดขาย (สาขา {{ $branch->br_name }})
         </div>
 
         {{-- ข้อมูลผู้ดูแล --}}
@@ -70,7 +70,7 @@
                     <h2 class="text-3xl font-bold text-gray-800">{{ number_format(array_sum($orderData)) }} ชิ้น</h2>
                 </div>
                 <div class="p-4 ">
-                    <i class="fa-solid fa-box fa-2xl text-indigo-600"></i>
+                    <i class="fa-solid fa-box fa-2xl" style="color: #4D55A0;"></i>
                 </div>
             </div>
         </div>
