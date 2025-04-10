@@ -76,10 +76,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const successAlert = '/public/alert-icon/SuccessAlert.png';
-            const EditAlert = '/public/alert-icon/EditAlert.png';
-            const userAlert = '/public/alert-icon/UserAlert.png';
-            const errorAlert = '/public/alert-icon/ErrorAlert.png';
+            const successAlert = './public/alert-icon/SuccessAlert.png';
+            const EditAlert = './public/alert-icon/EditAlert.png';
+            const userAlert = './public/alert-icon/UserAlert.png';
+            const errorAlert = './public/alert-icon/ErrorAlert.png';
 
             const form = document.getElementById('updateForm');
             form.addEventListener('submit', function(e) {

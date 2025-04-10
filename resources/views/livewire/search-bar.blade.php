@@ -97,7 +97,7 @@
         </script>
     @endonce
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("livewire:load", () => {
             const toggleBtn = document.getElementById("filterToggle");
             const dropdown = document.getElementById("filterDropdown");
 
