@@ -51,15 +51,13 @@
                         class="w-full px-3 py-2 border rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-indigo-400">
                 </div>
 
-                <div class="fixed bottom-5 left-0 w-full px-10">
+                <div class="fixed bottom-0 left-0 w-full bg-white p-4">
                     <div class="grid grid-cols-2 gap-10 mt-5 mb-5">
                         <div class="text-right">
-                            <a href="{{ route('order') }}">
-                                <button
-                                    class="w-[120px] bg-white text-gray-600 border border-gray-600 px-6 py-2 rounded-lg font-bold text-base">
+                            <button type="button" onclick="window.location.href='{{ route('order') }}'"
+                                class="w-[120px] bg-white text-gray-600 border border-gray-600 px-6 py-2 rounded-lg font-bold text-base">
                                     ยกเลิก
-                                </button>
-                            </a>
+                            </button>
                         </div>
                         <div class="text-left">
                             <button type="submit" name="confirm" id="saveButton"
@@ -75,7 +73,7 @@
 
     @section('scripts')
         <script>
-            document.getElementById('saveButton').addEventListener('click', function() {
+            document.getElementById('saveButton').addEventListener('click', function(event) {
                 event.preventDefault(); // ป้องกันการ submit ฟอร์มทันที
 
                 // ปิดการใช้งานปุ่ม "บันทึก" เพื่อป้องกันการคลิกซ้ำ
