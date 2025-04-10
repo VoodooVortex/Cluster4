@@ -347,7 +347,7 @@ class OrderController extends Controller
                             'updated_at' => $branch->updated_at,
                             'od_month' => $this->thaiMonths[$monthNum],
                         ];
-                        // dd($missingBranches);
+                        
                     } else {
                         $branchesWithSales[] = (object) [
                             'br_id' => $branch->br_id,

@@ -51,15 +51,13 @@
                         class="w-full px-3 py-2 border rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-indigo-400">
                 </div>
 
-                <div class="fixed bottom-5 left-0 w-full px-10">
+                <div class="fixed bottom-0 left-0 w-full bg-white p-4">
                     <div class="grid grid-cols-2 gap-10 mt-5 mb-5">
                         <div class="text-right">
-                            <a href="{{ route('order') }}">
-                                <button
-                                    class="w-[120px] bg-white text-gray-600 border border-gray-600 px-6 py-2 rounded-lg font-bold text-base">
+                            <button type="button" onclick="window.location.href='{{ route('order') }}'"
+                                class="w-[120px] bg-white text-gray-600 border border-gray-600 px-6 py-2 rounded-lg font-bold text-base">
                                     ยกเลิก
-                                </button>
-                            </a>
+                            </button>
                         </div>
                         <div class="text-left">
                             <button type="submit" name="confirm" id="saveButton"
@@ -71,60 +69,62 @@
                 </div>
             </form>
         </div>
-    @endsection
+    </div>
+@endsection
+
 
     @section('scripts')
         <script>
-            document.getElementById('saveButton').addEventListener('click', function() {
+            document.getElementById('saveButton').addEventListener('click', function(event) {
                 event.preventDefault(); // ป้องกันการ submit ฟอร์มทันที
 
-                // ปิดการใช้งานปุ่ม "บันทึก" เพื่อป้องกันการคลิกซ้ำ
-                const saveButton = document.getElementById('saveButton');
-                saveButton.disabled = true;
+            // ปิดการใช้งานปุ่ม "บันทึก" เพื่อป้องกันการคลิกซ้ำ
+            const saveButton = document.getElementById('saveButton');
+            saveButton.disabled = true;
 
-                const orderAlert = './public/alert-icon/OrderAlert.png';
-                const successAlert = './public/alert-icon/SuccessAlert.png';
+            const orderAlert = './public/alert-icon/OrderAlert.png';
+            const successAlert = './public/alert-icon/SuccessAlert.png';
 
-                Swal.fire({
-                    title: 'ยืนยันการเพิ่มยอดขาย',
-                    imageUrl: orderAlert,
-                    showCancelButton: true,
-                    confirmButtonText: 'ยืนยัน',
-                    cancelButtonText: 'ยกเลิก',
-                    reverseButtons: true,
-                    customClass: {
-                        confirmButton: 'swal2-confirm-custom',
-                        cancelButton: 'swal2-cancel-custom',
-                        title: 'no-padding-title',
-                        actions: 'swal2-actions-gap',
-                    },
-                    buttonsStyling: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // ป้องกันการ submit ฟอร์มทันที
-                        const form = document.getElementById('addAmount');
-                        form.submit();
+            Swal.fire({
+                title: 'ยืนยันการเพิ่มยอดขาย',
+                imageUrl: orderAlert,
+                showCancelButton: true,
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true,
+                customClass: {
+                    confirmButton: 'swal2-confirm-custom',
+                    cancelButton: 'swal2-cancel-custom',
+                    title: 'no-padding-title',
+                    actions: 'swal2-actions-gap',
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // ป้องกันการ submit ฟอร์มทันที
+                    const form = document.getElementById('addAmount');
+                    form.submit();
 
-                        // หลังจาก submit แล้ว เปลี่ยนเส้นทางไปยังหน้า order
-                        setTimeout(function() {
-                            Swal.fire({
-                                title: 'ดำเนินการเสร็จสิ้น',
-                                imageUrl: successAlert,
-                                confirmButtonText: 'ตกลง',
-                                reverseButtons: true,
-                                customClass: {
-                                    confirmButton: 'swal2-confirm-custom',
-                                    title: 'no-padding-title',
-                                    actions: 'swal2-actions-gap',
-                                },
-                            }).then(() => {
-                                // ไปยังหน้า order หลังจากที่ยืนยันเสร็จสิ้น
-                                window.location.href =
-                                    '{{ route('order') }}'; // หรือใช้ URL ของหน้า order
-                            });
+                    // หลังจาก submit แล้ว เปลี่ยนเส้นทางไปยังหน้า order
+                    setTimeout(function() {
+                        Swal.fire({
+                            title: 'ดำเนินการเสร็จสิ้น',
+                            imageUrl: successAlert,
+                            confirmButtonText: 'ตกลง',
+                            reverseButtons: true,
+                            customClass: {
+                                confirmButton: 'swal2-confirm-custom',
+                                title: 'no-padding-title',
+                                actions: 'swal2-actions-gap',
+                            },
+                        }).then(() => {
+                            // ไปยังหน้า order หลังจากที่ยืนยันเสร็จสิ้น
+                            window.location.href =
+                                '{{ route('order') }}'; // หรือใช้ URL ของหน้า order
                         });
-                    }
-                });
+                    });
+                }
             });
-        </script>
-    @endsection
+        });
+    </script>
+@endsection
