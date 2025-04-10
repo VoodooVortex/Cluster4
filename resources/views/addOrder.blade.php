@@ -69,60 +69,62 @@
                 </div>
             </form>
         </div>
-    @endsection
+    </div>
+@endsection
+
 
     @section('scripts')
         <script>
             document.getElementById('saveButton').addEventListener('click', function(event) {
                 event.preventDefault(); // ป้องกันการ submit ฟอร์มทันที
 
-                // ปิดการใช้งานปุ่ม "บันทึก" เพื่อป้องกันการคลิกซ้ำ
-                const saveButton = document.getElementById('saveButton');
-                saveButton.disabled = true;
+            // ปิดการใช้งานปุ่ม "บันทึก" เพื่อป้องกันการคลิกซ้ำ
+            const saveButton = document.getElementById('saveButton');
+            saveButton.disabled = true;
 
-                const orderAlert = '/public/alert-icon/OrderAlert.png';
-                const successAlert = '/public/alert-icon/SuccessAlert.png';
+            const orderAlert = './public/alert-icon/OrderAlert.png';
+            const successAlert = './public/alert-icon/SuccessAlert.png';
 
-                Swal.fire({
-                    title: 'ยืนยันการเพิ่มยอดขาย',
-                    imageUrl: orderAlert,
-                    showCancelButton: true,
-                    confirmButtonText: 'ยืนยัน',
-                    cancelButtonText: 'ยกเลิก',
-                    reverseButtons: true,
-                    customClass: {
-                        confirmButton: 'swal2-confirm-custom',
-                        cancelButton: 'swal2-cancel-custom',
-                        title: 'no-padding-title',
-                        actions: 'swal2-actions-gap',
-                    },
-                    buttonsStyling: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // ป้องกันการ submit ฟอร์มทันที
-                        const form = document.getElementById('addAmount');
-                        form.submit();
+            Swal.fire({
+                title: 'ยืนยันการเพิ่มยอดขาย',
+                imageUrl: orderAlert,
+                showCancelButton: true,
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก',
+                reverseButtons: true,
+                customClass: {
+                    confirmButton: 'swal2-confirm-custom',
+                    cancelButton: 'swal2-cancel-custom',
+                    title: 'no-padding-title',
+                    actions: 'swal2-actions-gap',
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // ป้องกันการ submit ฟอร์มทันที
+                    const form = document.getElementById('addAmount');
+                    form.submit();
 
-                        // หลังจาก submit แล้ว เปลี่ยนเส้นทางไปยังหน้า order
-                        setTimeout(function() {
-                            Swal.fire({
-                                title: 'ดำเนินการเสร็จสิ้น',
-                                imageUrl: successAlert,
-                                confirmButtonText: 'ตกลง',
-                                reverseButtons: true,
-                                customClass: {
-                                    confirmButton: 'swal2-confirm-custom',
-                                    title: 'no-padding-title',
-                                    actions: 'swal2-actions-gap',
-                                },
-                            }).then(() => {
-                                // ไปยังหน้า order หลังจากที่ยืนยันเสร็จสิ้น
-                                window.location.href =
-                                    '{{ route('order') }}'; // หรือใช้ URL ของหน้า order
-                            });
+                    // หลังจาก submit แล้ว เปลี่ยนเส้นทางไปยังหน้า order
+                    setTimeout(function() {
+                        Swal.fire({
+                            title: 'ดำเนินการเสร็จสิ้น',
+                            imageUrl: successAlert,
+                            confirmButtonText: 'ตกลง',
+                            reverseButtons: true,
+                            customClass: {
+                                confirmButton: 'swal2-confirm-custom',
+                                title: 'no-padding-title',
+                                actions: 'swal2-actions-gap',
+                            },
+                        }).then(() => {
+                            // ไปยังหน้า order หลังจากที่ยืนยันเสร็จสิ้น
+                            window.location.href =
+                                '{{ route('order') }}'; // หรือใช้ URL ของหน้า order
                         });
-                    }
-                });
+                    });
+                }
             });
-        </script>
-    @endsection
+        });
+    </script>
+@endsection

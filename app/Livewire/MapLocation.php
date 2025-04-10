@@ -14,6 +14,8 @@ use Livewire\WithFileUploads;
 class MapLocation extends Component
 {
     use WithFileUploads;
+
+    public $geoJsonInterest;
     public $long, $lat;
     public $center = [100.5018, 13.7563]; // Bangkok coordinates
     public $mapBoxToken;
@@ -252,7 +254,7 @@ class MapLocation extends Component
                     foreach ($this->imageBranch as $image) {
                         $imageName = time() . '_' . $image->getClientOriginalName();
                         $image->storeAs('images_branch', $imageName, 'public');
-                        $imageUrl = Storage::url('/app/public/images_branch/' . $imageName);
+                        $imageUrl = Storage::url('app/public/images_branch/' . $imageName);
                         $branch->image()->create([
                             'i_pathUrl' => $imageUrl,
                         ]);
@@ -339,7 +341,7 @@ class MapLocation extends Component
                     foreach ($this->imageBranch as $image) {
                         $imageName = time() . '_' . $image->getClientOriginalName();
                         $image->storeAs('images_branch', $imageName, 'public');
-                        $imageUrl = Storage::url('/app/public/images_branch/' . $imageName);
+                        $imageUrl = Storage::url('app/public/images_branch/' . $imageName);
                         $branch->image()->create([
                             'i_pathUrl' => $imageUrl,
                         ]);

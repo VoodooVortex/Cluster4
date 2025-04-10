@@ -4,18 +4,16 @@
     <div class="pt-16 min-h-screen px-4 bg-white">
         {{--  @author : 66160381 --}}
         {{-- Header --}}
-        <div class="mb-4">
-            <div class="text-white border-[#4D55A0] text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full"
-                style="background-color: #4D55A0;">
-                <a href="{{ route('order') }}" class="mx-3 text-white">
-                    <i class="fa-solid fa-arrow-left fa-l"></i>
-                </a>
-                <span>ยอดขาย (สาขา {{ $branch->br_name }})</span>
-            </div>
+        <div class="w-full space-y-4 pt-4 pb-4">
+            <a href="{{ url('') }}"
+                class="text-white text-2xl font-extrabold py-3 rounded-2xl flex items-center w-full bg-indigo-800">
+                <i class="fa-solid fa-arrow-left mx-3"></i>
+                ยอดขาย (สาขา {{ $branch->br_name }})
+            </a>
         </div>
 
         {{-- ข้อมูลผู้ดูแล --}}
-        <div class="bg-white shadow border rounded-2xl p-6 flex items-center justify-between mt-4">
+        <div class="bg-white shadow rounded-2xl p-6 flex items-center justify-between mt-4">
             <div class="flex items-center">
                 <img src="{{ $user->us_image }}" class="w-16 h-16 rounded-full object-cover" alt="User Image">
                 <div class="ml-4">
@@ -52,9 +50,9 @@
 
 
         {{-- กราฟยอดขาย --}}
-        <div class="bg-white p-4 border rounded-2xl shadow mt-4" style="height: auto">
+        <div class="bg-white p-4 rounded-lg shadow mt-4" style="height: auto">
             <div class="flex justify-between items-center mb-4">
-                <p class="text font-bold">ยอดขายในปีนี้</p>
+                <p class="text-lg font-bold">ยอดขายในปีนี้</p>
                 <div id="custom-legend" class="flex gap-4 items-center text-sm"></div>
             </div>
             <div class="w-full" style="max-height: 400px; overflow: hidden;">
@@ -65,13 +63,13 @@
 
         {{-- จำนวนออเดอร์ทั้งหมด --}}
         <div class="w-full mt-8">
-            <div class="bg-white shadow-md border rounded-2xl p-6 flex items-center justify-between">
+            <div class="bg-white shadow-md rounded-2xl p-6 flex items-center justify-between">
                 <div>
-                    <h4 class="text-l mb-3">จำนวนออเดอร์ทั้งหมด</h4>
+                    <h4 class=" text-l mb-4">จำนวนออเดอร์ทั้งหมด</h4>
                     <h2 class="text-3xl font-bold text-gray-800">{{ number_format(array_sum($orderData)) }} ชิ้น</h2>
                 </div>
                 <div class="p-4 ">
-                    <i class="fa-solid fa-box fa-2xl" style="color: #4D55A0;"></i>
+                    <i class="fa-solid fa-box fa-2xl text-indigo-600"></i>
                 </div>
             </div>
         </div>
@@ -82,55 +80,52 @@
 
             <!-- ฟอร์มแก้ไขในหน้า orderDetail.blade.php -->
             @foreach ($monthMap as $monthName => $monthNumber)
-                <div class="bg-white border shadow-md rounded-2xl px-4 py-3 mt-4 flex justify-between items-center">
+                <div class="bg-white shadow-md rounded-xl px-4 py-3 mt-4 flex justify-between items-center">
                     <div>
                         <h3 class="text-base font-semibold text-gray-800">
                             ยอดขายเดือน{{ $monthName }} {{ $thisyear }}
                         </h3>
-                        <p class="text-sm text-gray-600 my-1">รหัสสาขา : {{ $branch->br_code }}</p>
+                        <p class="text-sm text-gray-600 mt-1">รหัสสาขา : {{ $branch->br_code }}</p>
                         <p class="text-sm text-gray-600">ยอดขาย :
                             {{ number_format((float) ($orderData[$monthNumber] ?? 0)) }} ชิ้น
                         </p>
                     </div>
 
                     {{-- Kebab Menu --}}
-                    @if (auth()->user()->us_role !== 'Sales')
-                        <div x-data="{ open: false }" class="relative">
-                            <button @click="open = !open" class="text-gray-500 hover:text-gray-700 p-2">
-                                <i class="fa fa-ellipsis-v"></i>
-                            </button>
-                            <div x-show="open" @click.outside="open = false" x-cloak
-                                class="absolute right-0 mt-2 bg-white shadow-md rounded-lg w-28 z-10 border border-gray-200">
-                                <ul class="divide-y text-sm text-gray-700">
-                                    {{-- แก้ไข --}}
-                                    <form action="{{ route('edit.order', ['od_id' => $orderIdMap[$monthNumber] ?? 0]) }}"
-                                        method="GET">
-                                        @csrf
-                                        @method('PUT')
-                                        <li>
-                                            <button type="submit" class="block px-4 w-full py-2 hover:bg-gray-100">
-                                                แก้ไข
-                                            </button>
-                                        </li>
-                                    </form>
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" class="text-gray-500 hover:text-gray-700 p-2">
+                            <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <div x-show="open" @click.outside="open = false" x-cloak
+                            class="absolute right-0 mt-2 bg-white shadow-md rounded-lg w-28 z-10 border border-gray-200">
+                            <ul class="divide-y text-sm text-gray-700">
+                                {{-- แก้ไข --}}
+                                <form action="{{ route('edit.order', ['od_id' => $orderIdMap[$monthNumber] ?? 0]) }}"
+                                    method="GET">
+                                    @csrf
+                                    @method('PUT')
+                                    <li>
+                                        <button type="submit" class="block px-4 py-2 hover:bg-gray-100">
+                                            แก้ไข
+                                        </button>
+                                    </li>
+                                </form>
 
-                                    {{-- ลบ --}}
-                                    <form id="deleteOrder-{{ $monthNumber }}"
-                                        action="{{ route('delete.order', ['id' => $orderIdMap[$monthNumber] ?? 0]) }}"
-                                        method="POST">
-                                        @csrf
-                                        <li>
-                                            <button type="submit"
-                                                class="block px-4 py-2 w-full text-red-600 hover:bg-red-50"
-                                                onclick="deleteOrder(event, {{ $monthNumber }})">
-                                                ลบ
-                                            </button>
-                                        </li>
-                                    </form>
-                                </ul>
-                            </div>
+                                {{-- ลบ --}}
+                                <form id="deleteOrder-{{ $monthNumber }}"
+                                    action="{{ route('delete.order', ['id' => $orderIdMap[$monthNumber] ?? 0]) }}"
+                                    method="POST">
+                                    @csrf
+                                    <li>
+                                        <button type="submit" class="block px-4 py-2 text-red-600 hover:bg-red-50"
+                                            onclick="deleteOrder(event, {{ $monthNumber }})">
+                                            ลบ
+                                        </button>
+                                    </li>
+                                </form>
+                            </ul>
                         </div>
-                    @endif
+                    </div>
                 </div>
             @endforeach
 
@@ -145,21 +140,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <script>
         const monthlySales = @json($orderData); // ข้อมูลยอดขายรายเดือน
-        const labels = @json($month); // ชื่อเดือนที่ใช้เป็น labels สำหรับกราฟ
+        //const labels = @json($month); // ชื่อเดือนที่ใช้เป็น labels สำหรับกราฟ
         const monthlyMedian = @json($medain); // ค่ามัธยฐานสำหรับกราฟ
 
         const ctxOrder = document.getElementById('orderTotalChart').getContext('2d');
 
         // หาค่ามากสุดจากยอดขายในเดือนต่างๆ
-        const maxSales = Math.max(...Object.values(monthlySales));
-
-
-        const maxValue = Math.pow(10, Math.ceil(Math.log10(maxSales)));
+        // const maxSales = Math.max(...Object.values(monthlySales));
+        // const maxValue = Math.pow(10, Math.ceil(Math.log10(maxSales)));
 
         const salesChart = new Chart(ctxOrder, {
             type: 'line',
             data: {
-                labels: labels,
+                labels: ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.",
+                "ธ.ค."],
                 datasets: [{
                         label: 'ยอดขายในเดือนนี้',
                         type: 'line',
@@ -189,12 +183,12 @@
                 ]
             },
             options: {
-                responsive: true, // ยืดหยุ่นตามขนาดหน้าจอ
-                maintainAspectRatio: false, // คงอัตราส่วนของกราฟ
+                responsive: true,
+                maintainAspectRatio: false,
                 layout: {
                     padding: {
-                        top: 20, // เพิ่ม padding ด้านบนเพื่อไม่ให้กราฟถูกตัด
-                        bottom: 20 // เพิ่ม padding ด้านล่างเพื่อไม่ให้กราฟถูกตัด
+                        top: 20,
+                        bottom: 20
                     }
                 },
                 plugins: {
@@ -209,33 +203,30 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        type: 'logarithmic',
                         min: 0,
-                        max: maxValue, // กำหนด max จากระดับที่คำนวณ
                         ticks: {
                             autoSkip: false,
-                            stepSize: 1000,
+
                             callback: function(value) {
-                                const allowedTicks = [1, 1000, 10000, 100000, 1000000, 100000000];
-                                if (allowedTicks.includes(value)) {
-                                    return value.toLocaleString(); // แสดงตัวเลขพร้อมคอมม่า
-                                }
-                                return '';
+
+                                return value.toLocaleString();
+
                             }
                         },
                         grid: {
-                            drawTicks: true,
-                            drawOnChartArea: true,
-                            color: function(context) {
-                                const tickValue = context.tick.value;
-                                const allowedTicks = [0, 1000, 10000, 100000, 1000000, 100000000];
-                                if (allowedTicks.includes(tickValue)) {
-                                    return 'rgba(0, 0, 0, 0.1)';
-                                }
-                                return 'transparent';
-                            }
+                            legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 12
+                            },
+                            usePointStyle: true,
+                            pointStyle: 'circle'
                         }
-                    },
+                    }
+                }
+                        
+                },
                     x: {
                         ticks: {
                             autoSkip: false
@@ -262,12 +253,12 @@
 
         // Delete Order
         function deleteOrder(event, monthNumber) {
-            const deleteAlert = './public/alert-icon/DeleteAlert.png';
-            const successAlert = './public/alert-icon/SuccessAlert.png';
+            const deleteAlert = '/public/alert-icon/DeleteAlert.png';
+            const successAlert = '/public/alert-icon/SuccessAlert.png';
 
             event.preventDefault(); // หยุดการส่งฟอร์ม
 
-            const form = document.getElementById(`deleteOrder-${monthNumber}`); // ดึงฟอร์มลบผู้ใช้
+            const form = document.getElementById('deleteOrder'); // ดึงฟอร์มลบผู้ใช้
 
             Swal.fire({
                 title: 'ยืนยันการลบยอดขาย', // ข้อความยืนยันการลบ
