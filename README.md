@@ -52,7 +52,7 @@ We built a full-featured web application to **analyze and manage branch location
 
 **Cluster 4 – Faculty of Informatics, Burapha University**  
 **In collaboration with:** *MyOrder Intelligence, LTD.*  
-**Bootcamp:** *OSSD#13 (Organized by Software Park Thailand)*
+**Bootcamp:** *OSSD#13 (Open Source Software Developers #13)*
 
 ---
 
